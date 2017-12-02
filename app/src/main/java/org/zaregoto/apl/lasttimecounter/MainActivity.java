@@ -1,4 +1,4 @@
-package lasttimedo.apl.zaregoto.org.myapplication;
+package org.zaregoto.apl.lasttimecounter;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;

@@ -1,4 +1,4 @@
-package lasttimedo.apl.zaregoto.org.myapplication;
+package lasttimedo.apl.zaregoto.org.lasttimecounter;
 
 import android.content.Context;
 import android.support.test.InstrumentationRegistry;
