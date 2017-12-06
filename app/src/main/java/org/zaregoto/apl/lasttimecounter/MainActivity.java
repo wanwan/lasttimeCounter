@@ -13,7 +13,7 @@ public class MainActivity extends AppCompatActivity {
 
         ListView lv = findViewById(R.id.mainlist);
         if (null != lv) {
-
+            
         }
     }
 }
