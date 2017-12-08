@@ -11,6 +11,8 @@ import android.view.View;
 
 public class ItemInputDialogFragment extends DialogFragment {
 
+    private InputDialogListener mInputDialogListener;
+
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
 
@@ -30,5 +32,27 @@ public class ItemInputDialogFragment extends DialogFragment {
                 });
         // Create the AlertDialog object and return it
         return builder.create();
+    }
+
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        if (null == mInputDialogListener && context instanceof  InputDialogListener) {
+            mInputDialogListener = (InputDialogListener) context;
+        }
+    }
+
+
+    @Override
+    public void onDetach() {
+        if (null != mInputDialogListener) {
+            mInputDialogListener = null;
+        }
+        super.onDetach();
+    }
+
+    public interface InputDialogListener {
+        void addItem(LastTimeItem item);
     }
 }

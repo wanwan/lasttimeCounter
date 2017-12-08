@@ -8,7 +8,7 @@ import android.widget.ListView;
 
 import java.util.*;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements ItemInputDialogFragment.InputDialogListener {
 
     ItemInputDialogFragment itemInputDialog;
     List<LastTimeItem> items = new ArrayList<>();
@@ -37,5 +37,12 @@ public class MainActivity extends AppCompatActivity {
         }
 
 
+    }
+
+    @Override
+    public void addItem(LastTimeItem item) {
+        if (null != adapter) {
+            adapter.add(item);
+        }
     }
 }
