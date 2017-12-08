@@ -1,5 +1,8 @@
 package org.zaregoto.apl.lasttimecounter;
 
+import android.graphics.drawable.Drawable;
+import android.media.Image;
+
 import java.util.ArrayList;
 import java.util.Date;
 
@@ -8,6 +11,7 @@ public class LastTimeItem implements Comparable<LastTimeItem> {
     private String name;
     private ArrayList<Date> times;
     private String detail;
+    private Drawable image;
 
 
     private Date lastTime;
@@ -44,6 +48,13 @@ public class LastTimeItem implements Comparable<LastTimeItem> {
         this.lastTime = lastTime;
     }
 
+    public Drawable getImage() {
+        return image;
+    }
+
+    public void setImage(Drawable image) {
+        this.image = image;
+    }
 
     @Override
     public int compareTo(LastTimeItem lastTimeItem) {

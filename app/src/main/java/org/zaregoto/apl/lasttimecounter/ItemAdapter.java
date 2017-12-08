@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -30,21 +31,18 @@ public class ItemAdapter extends ArrayAdapter<LastTimeItem> {
             convertView = mInflater.inflate(R.layout.adapter_list_item_card, parent, false);
         }
 
-        LastTimeItem info = getItem(position);
+        LastTimeItem item = getItem(position);
 
         TextView tv = (TextView) convertView.findViewById(R.id.title);
-        tv.setText(info.applicationInfo.loadLabel(packageManager));
+        tv.setText(item.getName());
 
         tv = (TextView) convertView.findViewById(R.id.sub);
-        tv.setText(info.packageName + "\n" + "versionName : " + info.versionName + "\nversionCode : " + info.versionCode);
+        tv.setText(item.getDetail());
 
         ImageView iv = (ImageView) convertView.findViewById(R.id.icon);
-        iv.setImageDrawable(info.applicationInfo.loadIcon(packageManager));
+        iv.setImageDrawable(item.getImage());
 
 
         return convertView;
-
-
-        return super.getView(position, convertView, parent);
     }
 }

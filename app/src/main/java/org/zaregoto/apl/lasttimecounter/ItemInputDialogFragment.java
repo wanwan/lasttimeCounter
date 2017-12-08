@@ -28,6 +28,9 @@ public class ItemInputDialogFragment extends DialogFragment {
                 .setNegativeButton("閉じる", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         // User cancelled the dialog
+                        LastTimeItem item = new LastTimeItem();
+                        item.setName("aaa");
+                        mInputDialogListener.addItem(item);
                     }
                 });
         // Create the AlertDialog object and return it

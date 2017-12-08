@@ -35,9 +35,8 @@ public class MainActivity extends AppCompatActivity implements ItemInputDialogFr
                 }
             });
         }
-
-
     }
+
 
     @Override
     public void addItem(LastTimeItem item) {
