@@ -9,6 +9,8 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 
+import java.util.Date;
+
 public class ItemInputDialogFragment extends DialogFragment {
 
     private InputDialogListener mInputDialogListener;
@@ -28,8 +30,7 @@ public class ItemInputDialogFragment extends DialogFragment {
                 .setNegativeButton("閉じる", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         // User cancelled the dialog
-                        LastTimeItem item = new LastTimeItem();
-                        item.setName("aaa");
+                        LastTimeItem item = new LastTimeItem("aaa", "bbb", null, null, new Date());
                         mInputDialogListener.addItem(item);
                     }
                 });

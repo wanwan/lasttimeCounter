@@ -8,13 +8,46 @@ import java.util.Date;
 
 public class LastTimeItem implements Comparable<LastTimeItem> {
 
+    private int id;
     private String name;
     private ArrayList<Date> times;
     private String detail;
     private Drawable image;
-
-
+    private Date createtime;
     private Date lastTime;
+
+
+    private LastTimeItem() {
+        id = -1;
+    }
+
+    public LastTimeItem(int id, String name, String detail, Drawable image, Date createtime, Date lastTime) {
+        this();
+        this.id = id;
+        this.name = name;
+        this.detail = detail;
+        this.image = image;
+        this.createtime = createtime;
+        this.lastTime = lastTime;
+    }
+
+    public LastTimeItem(String name, String detail, Drawable image, Date createtime, Date lastTime) {
+        this();
+        this.name = name;
+        this.detail = detail;
+        this.image = image;
+        this.createtime = createtime;
+        this.lastTime = lastTime;
+    }
+
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
 
     public String getName() {
         return name;
@@ -40,6 +73,23 @@ public class LastTimeItem implements Comparable<LastTimeItem> {
         this.detail = detail;
     }
 
+    public Drawable getImage() {
+        return image;
+    }
+
+    public void setImage(Drawable image) {
+        this.image = image;
+    }
+
+    public Date getCreatetime() {
+        return createtime;
+    }
+
+    public void setCreatetime(Date createtime) {
+        this.createtime = createtime;
+    }
+
+
     public Date getLastTime() {
         return lastTime;
     }
@@ -48,13 +98,6 @@ public class LastTimeItem implements Comparable<LastTimeItem> {
         this.lastTime = lastTime;
     }
 
-    public Drawable getImage() {
-        return image;
-    }
-
-    public void setImage(Drawable image) {
-        this.image = image;
-    }
 
     @Override
     public int compareTo(LastTimeItem lastTimeItem) {

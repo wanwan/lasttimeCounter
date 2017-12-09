@@ -17,7 +17,7 @@ public class ItemAdapter extends ArrayAdapter<LastTimeItem> {
     private LayoutInflater mInflater;
 
 
-    public ItemAdapter(Context context, int resource, List<LastTimeItem> objects) {
+    public ItemAdapter(Context context, int resource, ArrayList<LastTimeItem> objects) {
 
         super(context, resource, objects);
         mInflater = LayoutInflater.from(context);
