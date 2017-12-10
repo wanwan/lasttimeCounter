@@ -24,7 +24,6 @@ public class MainActivity extends AppCompatActivity implements ItemInputDialogFr
         setContentView(R.layout.activity_main);
 
         ItemStore.loadInitialData(this, items);
-
         ListView lv = findViewById(R.id.mainlist);
         if (null != lv) {
             adapter = new ItemAdapter(this, 0, items);
