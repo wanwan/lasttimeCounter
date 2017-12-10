@@ -47,6 +47,7 @@ public class MainActivity extends AppCompatActivity implements ItemInputDialogFr
     public void addItem(LastTimeItem item) {
         if (null != adapter) {
             adapter.add(item);
+            ItemStore.insertData(this, item);
         }
     }
 }
