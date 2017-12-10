@@ -1,12 +1,10 @@
 package org.zaregoto.apl.lasttimecounter;
 
-import android.database.sqlite.SQLiteDatabase;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ListView;
-import org.zaregoto.apl.lasttimecounter.db.ItemDBHelper;
 import org.zaregoto.apl.lasttimecounter.db.ItemStore;
 
 import java.util.*;

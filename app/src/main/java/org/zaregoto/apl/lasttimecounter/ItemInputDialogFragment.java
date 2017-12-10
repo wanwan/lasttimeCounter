@@ -26,9 +26,14 @@ public class ItemInputDialogFragment extends DialogFragment {
 
         builder.setView(content);
 
-        builder.setMessage("設定")
-                .setNegativeButton("閉じる", new DialogInterface.OnClickListener() {
+        builder.setMessage(R.string.fragment_item_input_dialog_name)
+                .setNegativeButton(R.string.fragment_item_input_dialog_cancel, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
+                    }
+                })
+                .setPositiveButton(R.string.fragment_item_input_dialog_ok, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
                         // User cancelled the dialog
                         LastTimeItem item = new LastTimeItem("aaa", "bbb", null, null, new Date());
                         mInputDialogListener.addItem(item);

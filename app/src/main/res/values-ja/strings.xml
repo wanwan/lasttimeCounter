@@ -1,0 +1,13 @@
+<resources>
+    <string name="app_name">My Application</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+
+    <string name="fragment_item_input_dialog_name">追加</string>
+    <string name="fragment_item_input_dialog_ok">OK</string>
+    <string name="fragment_item_input_dialog_cancel">キャンセル</string>
+
+
+</resources>
