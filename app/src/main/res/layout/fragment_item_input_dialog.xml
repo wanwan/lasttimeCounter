@@ -19,7 +19,7 @@
             android:ems="10"
             android:id="@+id/name" android:layout_weight="1"
             android:layout_toRightOf="@id/nameLbl"
-            />
+    />
 
     <TextView
             android:layout_width="wrap_content"
@@ -29,6 +29,17 @@
             android:ems="10"
             android:id="@+id/detailLbl" android:layout_weight="1"
             android:layout_below="@id/nameLbl"/>
+    <EditText
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:inputType="textPersonName"
+            android:text="Name"
+            android:ems="10"
+            android:id="@+id/detail" android:layout_weight="1"
+            android:layout_toRightOf="@id/detailLbl"
+            android:layout_below="@id/name"
+    />
+
 
 
 </RelativeLayout>

@@ -8,6 +8,7 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.EditText;
 
 import java.util.Date;
 
@@ -22,7 +23,7 @@ public class ItemInputDialogFragment extends DialogFragment {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 
         LayoutInflater inflater = (LayoutInflater)getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        View content = inflater.inflate(R.layout.fragment_item_input_dialog, null);
+        final View content = inflater.inflate(R.layout.fragment_item_input_dialog, null);
 
         builder.setView(content);
 
@@ -35,7 +36,14 @@ public class ItemInputDialogFragment extends DialogFragment {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
                         // User cancelled the dialog
-                        LastTimeItem item = new LastTimeItem("aaa", "bbb", null, null, new Date());
+
+                        EditText _name = content.findViewById(R.id.name);
+                        EditText _detail = content.findViewById(R.id.detail);
+                        String name = (_name != null) ? _name.getText().toString() : "";
+                        String detail = (_detail != null) ? _detail.getText().toString() : "";
+                        Date now = new Date();
+
+                        LastTimeItem item = new LastTimeItem(name, detail, null, now, now);
                         mInputDialogListener.addItem(item);
                     }
                 });
