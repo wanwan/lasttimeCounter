@@ -1,4 +1,4 @@
-package org.zaregoto.apl.lasttimecounter;
+package org.zaregoto.apl.lasttimecounter.ui;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -9,6 +9,8 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
+import org.zaregoto.apl.lasttimecounter.Item;
+import org.zaregoto.apl.lasttimecounter.R;
 
 import java.util.Date;
 
@@ -43,7 +45,7 @@ public class ItemInputDialogFragment extends DialogFragment {
                         String detail = (_detail != null) ? _detail.getText().toString() : "";
                         Date now = new Date();
 
-                        LastTimeItem item = new LastTimeItem(name, detail, null, now, now);
+                        Item item = new Item(name, detail, null, now, now);
                         mInputDialogListener.addItem(item);
                     }
                 });
@@ -70,6 +72,6 @@ public class ItemInputDialogFragment extends DialogFragment {
     }
 
     public interface InputDialogListener {
-        void addItem(LastTimeItem item);
+        void addItem(Item item);
     }
 }

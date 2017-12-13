@@ -1,7 +1,6 @@
 package org.zaregoto.apl.lasttimecounter;
 
 import android.content.Context;
-import android.content.pm.PackageInfo;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,14 +9,13 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
-import java.util.List;
 
-public class ItemAdapter extends ArrayAdapter<LastTimeItem> {
+public class ItemAdapter extends ArrayAdapter<Item> {
 
     private LayoutInflater mInflater;
 
 
-    public ItemAdapter(Context context, int resource, ArrayList<LastTimeItem> objects) {
+    public ItemAdapter(Context context, int resource, ArrayList<Item> objects) {
 
         super(context, resource, objects);
         mInflater = LayoutInflater.from(context);
@@ -31,7 +29,7 @@ public class ItemAdapter extends ArrayAdapter<LastTimeItem> {
             convertView = mInflater.inflate(R.layout.adapter_list_item_card, parent, false);
         }
 
-        LastTimeItem item = getItem(position);
+        Item item = getItem(position);
 
         TextView tv = (TextView) convertView.findViewById(R.id.title);
         tv.setText(item.getName());
@@ -40,7 +38,9 @@ public class ItemAdapter extends ArrayAdapter<LastTimeItem> {
         tv.setText(item.getDetail());
 
         ImageView iv = (ImageView) convertView.findViewById(R.id.icon);
-        iv.setImageDrawable(item.getImage());
+        if (null != item && null != item.getType() && null != item.getType().getImage()) {
+            iv.setImageDrawable(item.getType().getImage());
+        }
 
 
         return convertView;

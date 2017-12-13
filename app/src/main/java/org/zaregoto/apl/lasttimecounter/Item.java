@@ -1,41 +1,40 @@
 package org.zaregoto.apl.lasttimecounter;
 
 import android.graphics.drawable.Drawable;
-import android.media.Image;
 
 import java.util.ArrayList;
 import java.util.Date;
 
-public class LastTimeItem implements Comparable<LastTimeItem> {
+public class Item implements Comparable<Item> {
 
     private int id;
     private String name;
     private ArrayList<Date> times;
     private String detail;
-    private Drawable image;
+    private ItemType type;
     private Date createtime;
     private Date lastTime;
 
 
-    private LastTimeItem() {
+    private Item() {
         id = -1;
     }
 
-    public LastTimeItem(int id, String name, String detail, Drawable image, Date createtime, Date lastTime) {
+    public Item(int id, String name, String detail, ItemType type, Date createtime, Date lastTime) {
         this();
         this.id = id;
         this.name = name;
         this.detail = detail;
-        this.image = image;
+        this.type = type;
         this.createtime = createtime;
         this.lastTime = lastTime;
     }
 
-    public LastTimeItem(String name, String detail, Drawable image, Date createtime, Date lastTime) {
+    public Item(String name, String detail, ItemType type, Date createtime, Date lastTime) {
         this();
         this.name = name;
         this.detail = detail;
-        this.image = image;
+        this.type = type;
         this.createtime = createtime;
         this.lastTime = lastTime;
     }
@@ -73,12 +72,12 @@ public class LastTimeItem implements Comparable<LastTimeItem> {
         this.detail = detail;
     }
 
-    public Drawable getImage() {
-        return image;
+    public ItemType getType() {
+        return type;
     }
 
-    public void setImage(Drawable image) {
-        this.image = image;
+    public void setType(ItemType type) {
+        this.type = type;
     }
 
     public Date getCreatetime() {
@@ -100,7 +99,7 @@ public class LastTimeItem implements Comparable<LastTimeItem> {
 
 
     @Override
-    public int compareTo(LastTimeItem lastTimeItem) {
+    public int compareTo(Item lastTimeItem) {
         return 0;
     }
 }

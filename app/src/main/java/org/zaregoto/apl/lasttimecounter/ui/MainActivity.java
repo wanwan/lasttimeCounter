@@ -1,10 +1,13 @@
-package org.zaregoto.apl.lasttimecounter;
+package org.zaregoto.apl.lasttimecounter.ui;
 
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ListView;
+import org.zaregoto.apl.lasttimecounter.ItemAdapter;
+import org.zaregoto.apl.lasttimecounter.Item;
+import org.zaregoto.apl.lasttimecounter.R;
 import org.zaregoto.apl.lasttimecounter.db.ItemStore;
 
 import java.util.*;
@@ -12,7 +15,7 @@ import java.util.*;
 public class MainActivity extends AppCompatActivity implements ItemInputDialogFragment.InputDialogListener {
 
     ItemInputDialogFragment itemInputDialog;
-    ArrayList<LastTimeItem> items = new ArrayList<>();
+    ArrayList<Item> items = new ArrayList<>();
     ItemAdapter adapter;
 
     @Override
@@ -44,7 +47,7 @@ public class MainActivity extends AppCompatActivity implements ItemInputDialogFr
 
 
     @Override
-    public void addItem(LastTimeItem item) {
+    public void addItem(Item item) {
         if (null != adapter) {
             adapter.add(item);
             ItemStore.insertData(this, item);
