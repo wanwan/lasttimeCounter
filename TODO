@@ -29,6 +29,17 @@
   type_id = 0 が自然 itemtypes の autoincrement まわりを弄るなりして 0, default のエントリを用意する
   or hit しない場合は default にする (外部参照制約が掛けられなくなるが)
 
+* 再編集機能を作成する
+
+* edit 用 dialog を作成する
+  -> new と同じでよいか?
+
+* ソート機能の実装
+
+* フィルタ機能の実装
+
+* 履歴参照機能の実装
+
 [suspend]
 
 [done]  
