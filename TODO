@@ -1,6 +1,8 @@
-* 項目の内訳フィールド等を正しく作成する (name/detail/type/lastdate/createdate)
+[TODO]
+
+* itemtype の初期値と id を自動振りするようにする
+
 * menu 項目作成 (フィルタ/ソート/?)
-* item の更新フローの作成
 
 * lastdate の配列 (実行日時) をテーブル化し外部参照で見れるようにする.
 
@@ -8,5 +10,23 @@
 * type 用テーブルと外部参照の設定
 * type の追加/削除ロジック追加
 
-
+* items - itemtypes の間で参照関係を作成する
+  -> 外部キーでは強すぎるか?
+  -> 更新フローをどうするかは検討する必要があるが. int id では更新でテーブルが差し交わる場合
+     等での不整合があるはずだが.
   
+* "+" ボタンクリック時のアニメーションをつける
+
+* DB の version を取得できるようにする.
+  -> metainfo 的な情報格納をやる一行テーブルでも持つか?
+  -> SQLiteOpenHelper で old / new があるので何とかなるような気もするが, 他の属性が必要になる可能性があるので...
+
+* itemtypes の assets から初期値いれるロジック. context に依存しているのでコンストラクタでリスト取って,
+  onCreate で入れているがなんとかならんか?
+  -> context 覚えたくないのでやってみた苦肉の策なんだが...
+
+[suspend]
+
+[done]  
+* 項目の内訳フィールド等を正しく作成する (name/detail/type/lastdate/createdate)
+* item の更新フローの作成
