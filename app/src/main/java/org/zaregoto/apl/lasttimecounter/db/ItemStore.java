@@ -14,6 +14,9 @@ public class ItemStore {
     static final String QUERY_TABLE = "select _id, name, detail, type_id, lasttime, createtime from items order by lasttime;";
     static final String INSERT_TABLE = "insert into items (name, detail, type_id, lasttime, createtime) values (?, ?, ?, ?, ?) ;";
 
+    static final String QUERY_ITEMTYPES = "select type_id, filename from itemtypes where type_id = ?; ";
+
+
     public static boolean loadInitialData(Context context, ArrayList<Item> items) {
 
         ItemDBHelper dbhelper = new ItemDBHelper(context.getApplicationContext());
@@ -22,7 +25,7 @@ public class ItemStore {
         int _id;
         String name;
         String detail;
-        int type;
+        int type_id;
         Date lasttime;
         Date createtime;
         Item item;
@@ -37,7 +40,7 @@ public class ItemStore {
                     _id = cursor.getInt(cursor.getColumnIndex("_id"));
                     name = cursor.getString(cursor.getColumnIndex("name"));
                     detail = cursor.getString(cursor.getColumnIndex("detail"));
-                    type = cursor.getInt(cursor.getColumnIndex("type_id"));
+                    type_id = cursor.getInt(cursor.getColumnIndex("type_id"));
                     lasttime = null;
                     createtime = null;
                     item = new Item(_id, name, detail, null, createtime, lasttime);
