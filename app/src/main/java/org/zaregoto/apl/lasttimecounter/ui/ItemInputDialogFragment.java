@@ -10,11 +10,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
 import org.zaregoto.apl.lasttimecounter.Item;
+import org.zaregoto.apl.lasttimecounter.ItemType;
 import org.zaregoto.apl.lasttimecounter.R;
 
 import java.util.Date;
 
 public class ItemInputDialogFragment extends DialogFragment {
+
+    private int DEFAULT_TYPE_ID = 1;
 
     private InputDialogListener mInputDialogListener;
 
@@ -45,7 +48,9 @@ public class ItemInputDialogFragment extends DialogFragment {
                         String detail = (_detail != null) ? _detail.getText().toString() : "";
                         Date now = new Date();
 
-                        Item item = new Item(name, detail, null, now, now);
+                        ItemType type = ItemType.getItemType(getActivity(), DEFAULT_TYPE_ID);
+
+                        Item item = new Item(name, detail, type, now, now);
                         mInputDialogListener.addItem(item);
                     }
                 });

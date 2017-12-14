@@ -6,9 +6,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Iterator;
+import java.util.*;
 
 public class ItemDBHelper extends SQLiteOpenHelper {
 
@@ -26,6 +24,7 @@ public class ItemDBHelper extends SQLiteOpenHelper {
 
     static final String CREATE_ITEMTYPES_TABLE = "create table itemtypes ( " +
             "type_id integer primary key autoincrement, " +
+            "section string not null, " +
             "filename string not null );";
     static final String DROP_ITEMTYPES_TABLE = "drop table itemtypes;";
     static final String ITEMTYPES_TABLE_NAME = "itemtypes";
@@ -37,7 +36,12 @@ public class ItemDBHelper extends SQLiteOpenHelper {
     static final String HISTORIES_TABLE_NAME = "histories";
 
 
-    private ArrayList<String> types;
+    static final String CREATE_METAINFO_TABLE = "create table metainfo (" +
+            "dbversion integer," +
+            "default_type_id integer);";
+
+
+    private HashMap<String, ArrayList<String>> types;
 
     public ItemDBHelper(Context applicationContext) {
         super(applicationContext, DB, null, DB_VERSION);
@@ -51,6 +55,9 @@ public class ItemDBHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
+
+        sqLiteDatabase.execSQL(CREATE_METAINFO_TABLE);
+
         sqLiteDatabase.execSQL(CREATE_ITEMTYPES_TABLE);
         sqLiteDatabase.execSQL(CREATE_HISTORIES_TABLE);
         sqLiteDatabase.execSQL(CREATE_ITEMS_TABLE);
@@ -67,33 +74,60 @@ public class ItemDBHelper extends SQLiteOpenHelper {
     }
 
 
-    private ArrayList<String> getInitialItemTypes(Context context) throws IOException {
-        String[] list = context.getAssets().list("types");
-        if (null != list) {
-            return new ArrayList(Arrays.asList(list));
+
+    // TODO:
+    private HashMap<String, ArrayList<String>> getInitialItemTypes(Context context) throws IOException {
+
+        HashMap<String, ArrayList<String>> ret = new HashMap<>();
+        String section;
+        String[] _list;
+        ArrayList<String> array;
+
+        section = "toggle";
+        _list = context.getAssets().list("typeicons" + "/" + section);
+        if (null != _list) {
+            array = new ArrayList(Arrays.asList(_list));
+            ret.put(section, array);
         }
-        else {
-            return new ArrayList<>();
+
+        section = "alert";
+        _list = context.getAssets().list("typeicons" + "/" + section);
+        if (null != _list) {
+            array = new ArrayList(Arrays.asList(_list));
+            ret.put(section, array);
         }
+
+        return ret;
     }
 
 
-    private void insertInitialTypes(SQLiteDatabase sqLiteDatabase, ArrayList<String> types) {
+    private void insertInitialTypes(SQLiteDatabase sqLiteDatabase, HashMap<String, ArrayList<String>> types) {
 
         Iterator<String> it;
+        Iterator<String> it2;
         String type;
         ContentValues values;
+        ArrayList<String> filenames;
+        String section;
 
         try {
             sqLiteDatabase.beginTransaction();
 
             values = new ContentValues();
 
-            it = types.iterator();
+            Set<String> keys = types.keySet();
+
+            it = keys.iterator();
             while (it.hasNext()) {
-                type = it.next();
-                values.put("filename", type);
-                sqLiteDatabase.insert(ITEMTYPES_TABLE_NAME, null, values);
+                section = it.next();
+                filenames = types.get(section);
+                it2 = filenames.iterator();
+                while (it2.hasNext()) {
+                    type = it2.next();
+                    values.put("filename", type);
+                    values.put("section", section);
+                    sqLiteDatabase.insert(ITEMTYPES_TABLE_NAME, null, values);
+                }
             }
 
             sqLiteDatabase.setTransactionSuccessful();

@@ -14,7 +14,7 @@ public class ItemStore {
     static final String QUERY_TABLE = "select _id, name, detail, type_id, lasttime, createtime from items order by lasttime;";
     static final String INSERT_TABLE = "insert into items (name, detail, type_id, lasttime, createtime) values (?, ?, ?, ?, ?) ;";
 
-    static final String QUERY_ITEMTYPES = "select type_id, filename from itemtypes where type_id = ?; ";
+    static final String QUERY_ITEMTYPES = "select section, filename from itemtypes where type_id = ?; ";
 
 
     public static boolean loadInitialData(Context context, ArrayList<Item> items) {
@@ -74,4 +74,28 @@ public class ItemStore {
     }
 
 
+    // TODO:
+    public static String getItemTypeFileName(Context context, int typeId) {
+
+        ItemDBHelper dbhelper = new ItemDBHelper(context.getApplicationContext());
+        SQLiteDatabase db = dbhelper.getReadableDatabase();
+        String[] args = new String[1];
+        Cursor cursor;
+        String filename = null;
+        String section = null;
+
+        if (null != db) {
+            args[0] = Integer.toString(typeId);
+            cursor = db.rawQuery(QUERY_ITEMTYPES, args);
+            if (null != cursor) {
+                cursor.moveToFirst();
+                if (cursor.getCount() > 0) {
+                    section = cursor.getString(cursor.getColumnIndex("section"));
+                    filename = cursor.getString(cursor.getColumnIndex("filename"));
+                }
+            }
+        }
+
+        return section + "/" + filename;
+    }
 }
