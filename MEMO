@@ -1,0 +1,8 @@
+
+* Item から History 関連を分離.
+  -> 意味論的には Item -> History の依存で良いと思うが, Item を parcelable で使い廻す
+     事を考えると, 際限なく増大する可能性のある history を引き回すのは得策でないかも.
+  -> 今の予定では History は Item 単体から参照することがあるくらい, と想定しているので
+     必要に応じて引かせればそれで十分と考える.
+* ItemType から Drawble を削除
+  -> Parcelable という点で同様. 

@@ -1,8 +1,30 @@
 [TODO]
 
-* itemtype の初期値と id を自動振りするようにする
+* 再実行 -> 履歴のフローを作成する
 
-* menu 項目作成 (フィルタ/ソート/?)
+
+* 再編集機能を作成する
+
+* edit 用 dialog を作成する
+  -> new と同じでよいか?
+
+* ソート機能の実装
+
+* フィルタ機能の実装
+
+* 履歴参照機能の実装
+
+* UI インターフェースを何に何を振るか考える
+  listview
+  - 単押し
+    再実行
+  - 長押し
+    history / delete (あまり使用頻度の高くないもの?)
+  - menu
+    sort / filter / notification
+  - "+" btn
+    追加
+
 
 * lastdate の配列 (実行日時) をテーブル化し外部参照で見れるようにする.
 
@@ -29,19 +51,13 @@
   type_id = 0 が自然 itemtypes の autoincrement まわりを弄るなりして 0, default のエントリを用意する
   or hit しない場合は default にする (外部参照制約が掛けられなくなるが)
 
-* 再編集機能を作成する
-
-* edit 用 dialog を作成する
-  -> new と同じでよいか?
-
-* ソート機能の実装
-
-* フィルタ機能の実装
-
-* 履歴参照機能の実装
-
 [suspend]
 
 [done]  
 * 項目の内訳フィールド等を正しく作成する (name/detail/type/lastdate/createdate)
 * item の更新フローの作成
+
+* itemtype の初期値と id を自動振りするようにする
+  -> default はとりあえず "1" 固定で.
+
+* menu 項目作成 (フィルタ/ソート/?)

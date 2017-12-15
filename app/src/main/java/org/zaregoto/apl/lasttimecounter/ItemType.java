@@ -1,44 +1,42 @@
 package org.zaregoto.apl.lasttimecounter;
 
 import android.content.Context;
+import android.content.res.AssetManager;
 import android.graphics.drawable.Drawable;
+import android.os.Parcel;
+import android.os.Parcelable;
 import org.zaregoto.apl.lasttimecounter.db.ItemStore;
 
 import java.io.IOException;
 import java.io.InputStream;
 
-public class ItemType {
+
+public class ItemType implements Parcelable {
 
     private int typeId;
-    private Drawable image;
-
+    private String section;
+    private String filename;
 
     private ItemType() {
     }
 
-    public ItemType(int id, Drawable image) {
+    public ItemType(int id, String section, String filename) {
         this.typeId = id;
-        this.image = image;
+        this.section = section;
+        this.filename = filename;
     }
 
-    public static ItemType getItemType(Context context, int typeId) {
+    private ItemType(Parcel in) {
+        typeId = in.readInt();
+        section = in.readString();
+        filename = in.readString();
+    }
 
-        Drawable drawable;
-        ItemType ret = null;
+    public static ItemType createItemType(Context context, int typeId) {
 
-        String filename = ItemStore.getItemTypeFileName(context, typeId);
-        if (null != filename && filename.length() > 0) {
-            try {
-                InputStream is = context.getAssets().open("typeicons" + "/" + filename);
-                drawable = Drawable.createFromStream(is, filename);
-                if (null != drawable) {
-                    ret = new ItemType(typeId, drawable);
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
+        ItemType ret;
 
+        ret = ItemStore.getItemType(context, typeId);
         return ret;
     }
 
@@ -46,7 +44,54 @@ public class ItemType {
         return typeId;
     }
 
-    public Drawable getImage() {
-        return image;
+    public String getFilename() {
+        return filename;
     }
+
+    public String getSection() {
+        return section;
+    }
+
+    public Drawable getAsDrawableImage(Context context) throws IOException {
+
+        Drawable drawable = null;
+        AssetManager am;
+        InputStream is;
+
+        if (null != filename && filename.length() > 0 && null != section) {
+
+            am = context.getAssets();
+            is = am.open("typeicons" + "/" + section + "/" + filename);
+            if (null != is) {
+                drawable = Drawable.createFromStream(is, null);
+            }
+        }
+
+        return drawable;
+    }
+
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel out, int i) {
+        out.writeInt(typeId);
+        out.writeString(section);
+        out.writeString(filename);
+    }
+
+    public static final Parcelable.Creator CREATOR
+            = new Parcelable.Creator() {
+        public ItemType createFromParcel(Parcel in) {
+            return new ItemType(in);
+        }
+
+        public ItemType[] newArray(int size) {
+            return new ItemType[size];
+        }
+    };
+
 }

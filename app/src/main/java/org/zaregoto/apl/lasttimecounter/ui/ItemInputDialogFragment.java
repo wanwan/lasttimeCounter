@@ -48,7 +48,7 @@ public class ItemInputDialogFragment extends DialogFragment {
                         String detail = (_detail != null) ? _detail.getText().toString() : "";
                         Date now = new Date();
 
-                        ItemType type = ItemType.getItemType(getActivity(), DEFAULT_TYPE_ID);
+                        ItemType type = ItemType.createItemType(getActivity(), DEFAULT_TYPE_ID);
 
                         Item item = new Item(name, detail, type, now, now);
                         mInputDialogListener.addItem(item);

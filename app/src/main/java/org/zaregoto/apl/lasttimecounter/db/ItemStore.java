@@ -4,6 +4,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import org.zaregoto.apl.lasttimecounter.Item;
+import org.zaregoto.apl.lasttimecounter.ItemType;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -75,7 +76,7 @@ public class ItemStore {
 
 
     // TODO:
-    public static String getItemTypeFileName(Context context, int typeId) {
+    public static ItemType getItemType(Context context, int typeId) {
 
         ItemDBHelper dbhelper = new ItemDBHelper(context.getApplicationContext());
         SQLiteDatabase db = dbhelper.getReadableDatabase();
@@ -96,6 +97,6 @@ public class ItemStore {
             }
         }
 
-        return section + "/" + filename;
+        return new ItemType(typeId, section, filename);
     }
 }

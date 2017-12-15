@@ -1,15 +1,16 @@
 package org.zaregoto.apl.lasttimecounter;
 
 import android.graphics.drawable.Drawable;
+import android.os.Parcel;
+import android.os.Parcelable;
 
 import java.util.ArrayList;
 import java.util.Date;
 
-public class Item implements Comparable<Item> {
+public class Item implements Comparable<Item>, Parcelable {
 
     private int id;
     private String name;
-    private ArrayList<Date> times;
     private String detail;
     private ItemType type;
     private Date createtime;
@@ -39,6 +40,15 @@ public class Item implements Comparable<Item> {
         this.lastTime = lastTime;
     }
 
+    public Item(Parcel in) {
+        id = in.readInt();
+        name = in.readString();
+        detail = in.readString();
+        type = in.readParcelable(Item.class.getClassLoader());
+        createtime = (Date) in.readSerializable();
+        lastTime = (Date) in.readSerializable();
+    }
+
 
     public int getId() {
         return id;
@@ -54,14 +64,6 @@ public class Item implements Comparable<Item> {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public ArrayList<Date> getTimes() {
-        return times;
-    }
-
-    public void setTimes(ArrayList<Date> times) {
-        this.times = times;
     }
 
     public String getDetail() {
@@ -100,6 +102,34 @@ public class Item implements Comparable<Item> {
 
     @Override
     public int compareTo(Item lastTimeItem) {
+        return this.lastTime.compareTo(lastTimeItem.getLastTime());
+    }
+
+    @Override
+    public int describeContents() {
         return 0;
     }
+
+    @Override
+    public void writeToParcel(Parcel out, int i) {
+        out.writeInt(id);
+        out.writeString(name);
+        out.writeString(detail);
+        out.writeParcelable(type, 0);
+        out.writeSerializable(createtime);
+        out.writeSerializable(lastTime);
+    }
+
+
+    public static final Parcelable.Creator CREATOR
+            = new Parcelable.Creator() {
+        public Item createFromParcel(Parcel in) {
+            return new Item(in);
+        }
+
+        public Item[] newArray(int size) {
+            return new Item[size];
+        }
+    };
+
 }

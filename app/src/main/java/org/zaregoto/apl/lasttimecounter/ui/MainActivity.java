@@ -4,6 +4,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ListView;
 import org.zaregoto.apl.lasttimecounter.ItemAdapter;
 import org.zaregoto.apl.lasttimecounter.Item;
@@ -12,7 +13,7 @@ import org.zaregoto.apl.lasttimecounter.db.ItemStore;
 
 import java.util.*;
 
-public class MainActivity extends AppCompatActivity implements ItemInputDialogFragment.InputDialogListener {
+public class MainActivity extends AppCompatActivity implements ItemInputDialogFragment.InputDialogListener, AdapterView.OnItemClickListener, AdapterView.OnItemLongClickListener {
 
     ItemInputDialogFragment itemInputDialog;
     ArrayList<Item> items = new ArrayList<>();
@@ -29,6 +30,8 @@ public class MainActivity extends AppCompatActivity implements ItemInputDialogFr
         if (null != lv) {
             adapter = new ItemAdapter(this, 0, items);
             lv.setAdapter(adapter);
+            lv.setOnItemClickListener(this);
+            lv.setOnItemLongClickListener(this);
         }
 
         FloatingActionButton fab = findViewById(R.id.fab);
@@ -50,5 +53,22 @@ public class MainActivity extends AppCompatActivity implements ItemInputDialogFr
             adapter.add(item);
             ItemStore.insertData(this, item);
         }
+    }
+
+    @Override
+    public void onItemClick(AdapterView<?> adapterView, View view, int pos, long id) {
+
+        Bundle args = new Bundle();
+        Item item =  adapter.getItem(pos);
+
+        args.putParcelable("item", item);
+
+        itemInputDialog = new ItemInputDialogFragment();
+        itemInputDialog.show(getFragmentManager(), "");
+    }
+
+    @Override
+    public boolean onItemLongClick(AdapterView<?> adapterView, View view, int i, long l) {
+        return false;
     }
 }
