@@ -27,10 +27,10 @@ public class ItemStore {
         String name;
         String detail;
         int type_id;
+        ItemType type;
         Date lasttime;
         Date createtime;
         Item item;
-
 
         if (null != db) {
             cursor = db.rawQuery(QUERY_TABLE, null);
@@ -42,9 +42,10 @@ public class ItemStore {
                     name = cursor.getString(cursor.getColumnIndex("name"));
                     detail = cursor.getString(cursor.getColumnIndex("detail"));
                     type_id = cursor.getInt(cursor.getColumnIndex("type_id"));
+                    type = ItemType.createItemType(context, type_id);
                     lasttime = null;
                     createtime = null;
-                    item = new Item(_id, name, detail, null, createtime, lasttime);
+                    item = new Item(_id, name, detail, type, createtime, lasttime);
                     if (null != items) {
                         items.add(item);
                     }
@@ -65,7 +66,7 @@ public class ItemStore {
         if (null != db) {
             args[0] = item.getName();
             args[1] = item.getDetail();
-            args[2] = null;
+            args[2] = item.getType().getTypeId();
             args[3] = item.getCreatetime();
             args[4] = item.getLastTime();
             db.execSQL(INSERT_TABLE, args);

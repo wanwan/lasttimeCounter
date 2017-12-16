@@ -19,9 +19,10 @@ public class ItemDBHelper extends SQLiteOpenHelper {
             "_id integer primary key autoincrement, " +
             "name string not null, " +
             "detail string," +
-            "type_id integer references itemtypes(type_id)," +
-            "lasttime datetime," +
-            "createtime datetime);";
+            "type_id integer not null," +
+            "lasttime datetime not null," +
+            "createtime datetime not null, " +
+            "foreign key(type_id) references itemtypes(type_id));";
     static final String DROP_ITEMS_TABLE = "drop table items;";
     static final String ITEMS_TABLE_NAME = "items";
 
@@ -74,6 +75,16 @@ public class ItemDBHelper extends SQLiteOpenHelper {
         db.execSQL(DROP_HISTORIES_TABLE);
         db.execSQL(DROP_ITEMTYPES_TABLE);
         onCreate(db);
+    }
+
+
+    @Override
+    public void onOpen(SQLiteDatabase db) {
+        super.onOpen(db);
+        if (!db.isReadOnly()) {
+            // Enable foreign key constraints
+            db.execSQL("PRAGMA foreign_keys=ON;");
+        }
     }
 
 
