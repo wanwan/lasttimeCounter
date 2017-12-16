@@ -24,6 +24,11 @@ public class ItemInputDialogFragment extends DialogFragment {
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
 
+        Item item = null;
+        if (null != getArguments()) {
+            item = getArguments().getParcelable(MainActivity.ARGS_ITEM_ID);
+        }
+
         // Use the Builder class for convenient dialog construction
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 
@@ -31,7 +36,14 @@ public class ItemInputDialogFragment extends DialogFragment {
         final View content = inflater.inflate(R.layout.fragment_item_input_dialog, null);
 
         builder.setView(content);
+        if (null != item) {
+            EditText name = content.findViewById(R.id.name);
+            name.setText(item.getName());
+            EditText detail = content.findViewById(R.id.detail);
+            detail.setText(item.getDetail());
+        }
 
+        final Item finalItem = item;
         builder.setMessage(R.string.fragment_item_input_dialog_name)
                 .setNegativeButton(R.string.fragment_item_input_dialog_cancel, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
@@ -40,18 +52,33 @@ public class ItemInputDialogFragment extends DialogFragment {
                 .setPositiveButton(R.string.fragment_item_input_dialog_ok, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
-                        // User cancelled the dialog
+                        if (null == finalItem) {
+                            EditText _name = content.findViewById(R.id.name);
+                            EditText _detail = content.findViewById(R.id.detail);
+                            String name = (_name != null) ? _name.getText().toString() : "";
+                            String detail = (_detail != null) ? _detail.getText().toString() : "";
+                            Date now = new Date();
 
-                        EditText _name = content.findViewById(R.id.name);
-                        EditText _detail = content.findViewById(R.id.detail);
-                        String name = (_name != null) ? _name.getText().toString() : "";
-                        String detail = (_detail != null) ? _detail.getText().toString() : "";
-                        Date now = new Date();
+                            ItemType type = ItemType.createItemType(getActivity(), DEFAULT_TYPE_ID);
 
-                        ItemType type = ItemType.createItemType(getActivity(), DEFAULT_TYPE_ID);
+                            Item _item = new Item(name, detail, type, now, now);
+                            mInputDialogListener.addItem(_item);
+                        }
+                        else {
+                            EditText _name = content.findViewById(R.id.name);
+                            EditText _detail = content.findViewById(R.id.detail);
+                            String name = (_name != null) ? _name.getText().toString() : "";
+                            String detail = (_detail != null) ? _detail.getText().toString() : "";
+                            Date now = new Date();
 
-                        Item item = new Item(name, detail, type, now, now);
-                        mInputDialogListener.addItem(item);
+                            ItemType type = ItemType.createItemType(getActivity(), DEFAULT_TYPE_ID);
+
+                            finalItem.setName(name);
+                            finalItem.setDetail(detail);
+
+                            mInputDialogListener.updateItem(finalItem);
+
+                        }
                     }
                 });
         // Create the AlertDialog object and return it
@@ -78,5 +105,6 @@ public class ItemInputDialogFragment extends DialogFragment {
 
     public interface InputDialogListener {
         void addItem(Item item);
+        void updateItem(Item item);
     }
 }

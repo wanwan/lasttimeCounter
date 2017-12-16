@@ -12,11 +12,14 @@ public class ItemDBHelper extends SQLiteOpenHelper {
 
     static final String DB = "items.db";
     static final int DB_VERSION = 1;
+
+    static final String FOREIGN_KEY_ENABLE = "pragma foreign_keys = on;";
+
     static final String CREATE_ITEMS_TABLE = "create table items ( " +
             "_id integer primary key autoincrement, " +
             "name string not null, " +
             "detail string," +
-            "type_id integer," +
+            "type_id integer references itemtypes(type_id)," +
             "lasttime datetime," +
             "createtime datetime);";
     static final String DROP_ITEMS_TABLE = "drop table items;";
@@ -54,25 +57,31 @@ public class ItemDBHelper extends SQLiteOpenHelper {
 
 
     @Override
-    public void onCreate(SQLiteDatabase sqLiteDatabase) {
+    public void onCreate(SQLiteDatabase db) {
 
-        sqLiteDatabase.execSQL(CREATE_METAINFO_TABLE);
+        db.execSQL(FOREIGN_KEY_ENABLE);
 
-        sqLiteDatabase.execSQL(CREATE_ITEMTYPES_TABLE);
-        sqLiteDatabase.execSQL(CREATE_HISTORIES_TABLE);
-        sqLiteDatabase.execSQL(CREATE_ITEMS_TABLE);
+        db.execSQL(CREATE_ITEMTYPES_TABLE);
+        db.execSQL(CREATE_HISTORIES_TABLE);
+        db.execSQL(CREATE_ITEMS_TABLE);
 
-        insertInitialTypes(sqLiteDatabase, types);
+        insertInitialTypes(db, types);
     }
 
     @Override
-    public void onUpgrade(SQLiteDatabase sqLiteDatabase, int i, int i1) {
-        sqLiteDatabase.execSQL(DROP_ITEMS_TABLE);
-        sqLiteDatabase.execSQL(DROP_HISTORIES_TABLE);
-        sqLiteDatabase.execSQL(DROP_ITEMTYPES_TABLE);
-        onCreate(sqLiteDatabase);
+    public void onUpgrade(SQLiteDatabase db, int i, int i1) {
+        db.execSQL(DROP_ITEMS_TABLE);
+        db.execSQL(DROP_HISTORIES_TABLE);
+        db.execSQL(DROP_ITEMTYPES_TABLE);
+        onCreate(db);
     }
 
+
+    @Override
+    public void onConfigure(SQLiteDatabase db){
+        super.onConfigure(db);
+        db.setForeignKeyConstraintsEnabled(true);
+    }
 
 
     // TODO:
@@ -135,9 +144,6 @@ public class ItemDBHelper extends SQLiteOpenHelper {
         finally {
             sqLiteDatabase.endTransaction();
         }
-
-
-
 
     }
 

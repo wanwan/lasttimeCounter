@@ -19,6 +19,8 @@ public class MainActivity extends AppCompatActivity implements ItemInputDialogFr
     ArrayList<Item> items = new ArrayList<>();
     ItemAdapter adapter;
 
+    public static final String ARGS_ITEM_ID = "item";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -56,14 +58,20 @@ public class MainActivity extends AppCompatActivity implements ItemInputDialogFr
     }
 
     @Override
+    public void updateItem(Item item) {
+
+    }
+
+    @Override
     public void onItemClick(AdapterView<?> adapterView, View view, int pos, long id) {
 
         Bundle args = new Bundle();
         Item item =  adapter.getItem(pos);
 
-        args.putParcelable("item", item);
+        args.putParcelable(ARGS_ITEM_ID, item);
 
         itemInputDialog = new ItemInputDialogFragment();
+        itemInputDialog.setArguments(args);
         itemInputDialog.show(getFragmentManager(), "");
     }
 
