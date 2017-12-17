@@ -9,8 +9,10 @@
   -> new と同じでよいか?
 
 * ソート機能の実装
+  - last date
 
 * フィルタ機能の実装
+  - type
 
 * 履歴参照機能の実装
 
@@ -24,6 +26,13 @@
     sort / filter / notification
   - "+" btn
     追加
+
+* backup / restore
+  - databases で基本的に backup / 復元ができるように.
+  - backup は databases 以下を残せばいける.
+  - restore は, UI からのフローと, コピーで.
+    - db がコピーで置かれた場合 onCreate がスキップする, というイメージ.
+    - db 自身の version を DB から知らなければいけないかもしれないので metainfo を作成.
 
 
 * lastdate の配列 (実行日時) をテーブル化し外部参照で見れるようにする.

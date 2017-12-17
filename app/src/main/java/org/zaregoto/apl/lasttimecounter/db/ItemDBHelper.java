@@ -4,6 +4,7 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import org.zaregoto.apl.lasttimecounter.Item;
 
 import java.io.IOException;
 import java.util.*;
@@ -43,6 +44,7 @@ public class ItemDBHelper extends SQLiteOpenHelper {
     static final String CREATE_METAINFO_TABLE = "create table metainfo (" +
             "dbversion integer," +
             "default_type_id integer);";
+    static final String INSERT_METAINFO_TABLE = "insert into metainfo (dbversion, default_type_id) values (?, ?);";
 
 
     private HashMap<String, ArrayList<String>> types;
@@ -66,8 +68,13 @@ public class ItemDBHelper extends SQLiteOpenHelper {
         db.execSQL(CREATE_HISTORIES_TABLE);
         db.execSQL(CREATE_ITEMS_TABLE);
 
+        db.execSQL(CREATE_METAINFO_TABLE);
+
         insertInitialTypes(db, types);
+        insertMetaInfo(db, DB_VERSION, Item.DEFAULT_TYPE_ID);
+
     }
+
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int i, int i1) {
@@ -157,5 +164,18 @@ public class ItemDBHelper extends SQLiteOpenHelper {
         }
 
     }
+
+
+    private void insertMetaInfo(SQLiteDatabase db, int dbVersion, int defaultTypeId) {
+
+        Object[] args = new Object[2];
+
+        args[0] = dbVersion;
+        args[1] = defaultTypeId;
+
+        db.execSQL(INSERT_METAINFO_TABLE, args);
+    }
+
+
 
 }

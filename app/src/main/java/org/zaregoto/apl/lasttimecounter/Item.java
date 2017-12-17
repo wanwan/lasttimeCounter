@@ -9,6 +9,8 @@ import java.util.Date;
 
 public class Item implements Comparable<Item>, Parcelable {
 
+    public static int DEFAULT_TYPE_ID = 1;
+
     private int id;
     private String name;
     private String detail;

@@ -17,8 +17,6 @@ import java.util.Date;
 
 public class ItemInputDialogFragment extends DialogFragment {
 
-    private int DEFAULT_TYPE_ID = 1;
-
     private InputDialogListener mInputDialogListener;
 
     @Override
@@ -59,7 +57,7 @@ public class ItemInputDialogFragment extends DialogFragment {
                             String detail = (_detail != null) ? _detail.getText().toString() : "";
                             Date now = new Date();
 
-                            ItemType type = ItemType.createItemType(getActivity(), DEFAULT_TYPE_ID);
+                            ItemType type = ItemType.createItemType(getActivity(), Item.DEFAULT_TYPE_ID);
 
                             Item _item = new Item(name, detail, type, now, now);
                             mInputDialogListener.addItem(_item);
@@ -71,7 +69,7 @@ public class ItemInputDialogFragment extends DialogFragment {
                             String detail = (_detail != null) ? _detail.getText().toString() : "";
                             Date now = new Date();
 
-                            ItemType type = ItemType.createItemType(getActivity(), DEFAULT_TYPE_ID);
+                            ItemType type = ItemType.createItemType(getActivity(), Item.DEFAULT_TYPE_ID);
 
                             finalItem.setName(name);
                             finalItem.setDetail(detail);
