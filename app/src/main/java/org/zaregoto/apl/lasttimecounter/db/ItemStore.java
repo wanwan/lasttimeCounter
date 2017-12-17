@@ -6,6 +6,8 @@ import android.database.sqlite.SQLiteDatabase;
 import org.zaregoto.apl.lasttimecounter.Item;
 import org.zaregoto.apl.lasttimecounter.ItemType;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
@@ -32,6 +34,8 @@ public class ItemStore {
         Date createtime;
         Item item;
 
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+
         if (null != db) {
             cursor = db.rawQuery(QUERY_TABLE, null);
 
@@ -43,8 +47,18 @@ public class ItemStore {
                     detail = cursor.getString(cursor.getColumnIndex("detail"));
                     type_id = cursor.getInt(cursor.getColumnIndex("type_id"));
                     type = ItemType.createItemType(context, type_id);
-                    lasttime = null;
-                    createtime = null;
+                    try {
+                        lasttime = sdf.parse(cursor.getString(cursor.getColumnIndex("lasttime")));
+                    } catch (ParseException e) {
+                        lasttime = null;
+                        e.printStackTrace();
+                    }
+                    try {
+                        createtime = sdf.parse(cursor.getString(cursor.getColumnIndex("createtime")));
+                    } catch (ParseException e) {
+                        createtime = null;
+                        e.printStackTrace();
+                    }
                     item = new Item(_id, name, detail, type, createtime, lasttime);
                     if (null != items) {
                         items.add(item);
@@ -62,13 +76,14 @@ public class ItemStore {
         ItemDBHelper dbhelper = new ItemDBHelper(context.getApplicationContext());
         SQLiteDatabase db = dbhelper.getWritableDatabase();
         Object[] args = new Object[5];
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
         if (null != db) {
             args[0] = item.getName();
             args[1] = item.getDetail();
             args[2] = item.getType().getTypeId();
-            args[3] = item.getCreatetime();
-            args[4] = item.getLastTime();
+            args[3] = sdf.format(item.getCreatetime());
+            args[4] = sdf.format(item.getLastTime());
             db.execSQL(INSERT_TABLE, args);
         }
 
