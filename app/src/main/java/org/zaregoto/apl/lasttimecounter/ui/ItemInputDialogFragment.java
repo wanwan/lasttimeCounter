@@ -43,10 +43,6 @@ public class ItemInputDialogFragment extends DialogFragment {
 
         final Item finalItem = item;
         builder.setMessage(R.string.fragment_item_input_dialog_name)
-                .setNegativeButton(R.string.fragment_item_input_dialog_cancel, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                    }
-                })
                 .setPositiveButton(R.string.fragment_item_input_dialog_ok, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
