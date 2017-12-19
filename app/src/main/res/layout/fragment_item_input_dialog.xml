@@ -6,17 +6,29 @@
 
     <ImageView
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" app:srcCompat="@mipmap/ic_launcher"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dip"
+            android:layout_marginEnd="5dip"
+            app:srcCompat="@mipmap/ic_launcher"
             android:layout_centerVertical="true"
-            android:id="@+id/type_icon" android:layout_alignParentStart="true"/>
+            android:id="@+id/type_icon"
+            />
+    <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="type"
+            android:id="@+id/type_label"
+            android:gravity="center_horizontal"
+            android:layout_below="@+id/type_icon"/>
+
 
     <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:inputType="text"
+            android:layout_marginTop="7dip"
+            android:layout_marginBottom="7dip"
             android:text="Name"
-            android:ems="10"
-            android:id="@+id/nameLbl" android:layout_weight="1"
+            android:id="@+id/nameLbl"
             android:layout_toRightOf="@+id/type_icon"/>
     <EditText
             android:layout_width="wrap_content"
@@ -24,17 +36,18 @@
             android:inputType="text"
             android:text=""
             android:ems="10"
-            android:id="@+id/name" android:layout_weight="1"
-            android:layout_toRightOf="@id/nameLbl"
+            android:id="@+id/name"
+            android:layout_alignBaseline="@id/nameLbl"
+            android:layout_toEndOf="@id/nameLbl"
     />
 
     <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:inputType="text"
+            android:layout_marginTop="7dip"
+            android:layout_marginBottom="7dip"
             android:text="Detail"
-            android:ems="10"
-            android:id="@+id/detailLbl" android:layout_weight="1"
+            android:id="@+id/detailLbl"
             android:layout_below="@+id/nameLbl"
             android:layout_toRightOf="@+id/type_icon"/>
     <EditText
@@ -43,8 +56,9 @@
             android:inputType="text"
             android:text=""
             android:ems="10"
-            android:id="@+id/detail" android:layout_weight="1"
-            android:layout_toRightOf="@id/detailLbl"
+            android:id="@+id/detail"
+            android:layout_alignBaseline="@id/detailLbl"
+            android:layout_toEndOf="@id/detailLbl"
             android:layout_below="@id/name"
     />
 
