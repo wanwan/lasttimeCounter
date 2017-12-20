@@ -1,4 +1,8 @@
 <resources>
     <string name="app_name">Lasttime Counter</string>
 
+    <string name="fragment_item_input_dialog_name">Add Item</string>
+    <string name="fragment_item_input_dialog_ok">OK</string>
+    <string name="fragment_item_input_dialog_cancel">Cancel</string>
+
 </resources>

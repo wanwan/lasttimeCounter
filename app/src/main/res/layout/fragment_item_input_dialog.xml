@@ -4,23 +4,31 @@
              android:layout_height="match_parent"
              tools:context="org.zaregoto.apl.lasttimecounter.ui.ItemInputDialogFragment">
 
-    <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="10dip"
-            android:layout_marginEnd="5dip"
-            app:srcCompat="@mipmap/ic_launcher"
-            android:layout_centerVertical="true"
-            android:id="@+id/type_icon"
-            />
-    <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="type"
-            android:id="@+id/type_label"
-            android:gravity="center_horizontal"
-            android:layout_below="@+id/type_icon"/>
-
+    <LinearLayout android:id="@+id/icons"
+                  android:layout_width="wrap_content"
+                  android:layout_height="wrap_content"
+                  android:orientation="vertical">
+        <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dip"
+                android:layout_marginEnd="5dip"
+                app:srcCompat="@mipmap/ic_launcher"
+                android:layout_centerVertical="true"
+                android:id="@+id/type_icon"
+                android:layout_centerInParent="true"
+                />
+        <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="type"
+                android:layout_marginStart="10dip"
+                android:layout_marginEnd="5dip"
+                android:id="@+id/type_label"
+                android:layout_centerInParent="true"
+                android:gravity="center_horizontal"
+                android:layout_below="@+id/type_icon"/>
+    </LinearLayout>
 
     <TextView
             android:layout_width="wrap_content"
@@ -29,7 +37,7 @@
             android:layout_marginBottom="7dip"
             android:text="Name"
             android:id="@+id/nameLbl"
-            android:layout_toRightOf="@+id/type_icon"/>
+            android:layout_toRightOf="@+id/icons"/>
     <EditText
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -49,7 +57,7 @@
             android:text="Detail"
             android:id="@+id/detailLbl"
             android:layout_below="@+id/nameLbl"
-            android:layout_toRightOf="@+id/type_icon"/>
+            android:layout_toRightOf="@+id/icons"/>
     <EditText
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

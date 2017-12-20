@@ -76,7 +76,9 @@ public class MainActivity extends AppCompatActivity implements ItemInputDialogFr
     }
 
     @Override
-    public boolean onItemLongClick(AdapterView<?> adapterView, View view, int i, long l) {
-        return false;
+    public boolean onItemLongClick(AdapterView<?> adapterView, View view, int pos, long id) {
+        Item item = adapter.getItem(pos);
+        adapter.remove(item);
+        return true;
     }
 }
