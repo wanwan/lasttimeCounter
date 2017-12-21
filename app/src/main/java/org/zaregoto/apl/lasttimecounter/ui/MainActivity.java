@@ -1,5 +1,7 @@
 package org.zaregoto.apl.lasttimecounter.ui;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -76,9 +78,25 @@ public class MainActivity extends AppCompatActivity implements ItemInputDialogFr
     }
 
     @Override
-    public boolean onItemLongClick(AdapterView<?> adapterView, View view, int pos, long id) {
-        Item item = adapter.getItem(pos);
-        adapter.remove(item);
+    public boolean onItemLongClick(AdapterView<?> adapterView, View view, final int pos, long id) {
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("title");
+        builder.setMessage("message");
+        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                // OK button pressed
+                Item item = adapter.getItem(pos);
+                adapter.remove(item);
+                ItemStore.deleteData(MainActivity.this, item);
+            }
+        });
+        builder.setNegativeButton("Cancel", null);
+
+        AlertDialog dialog = builder.create();
+        dialog.show();
+
         return true;
     }
 }

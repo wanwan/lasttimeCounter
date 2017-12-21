@@ -44,7 +44,7 @@ public class TypeSelectDialogFragment extends DialogFragment {
 
         GridLayout grid = content.findViewById(R.id.gridview);
         if (null != grid) {
-            
+
         }
 
         builder.setMessage(R.string.fragment_type_select_dialog_name);

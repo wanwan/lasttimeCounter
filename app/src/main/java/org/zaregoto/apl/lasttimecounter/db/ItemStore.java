@@ -16,6 +16,7 @@ public class ItemStore {
 
     static final String QUERY_TABLE = "select _id, name, detail, type_id, lasttime, createtime from items order by lasttime;";
     static final String INSERT_TABLE = "insert into items (name, detail, type_id, lasttime, createtime) values (?, ?, ?, ?, ?) ;";
+    static final String DELETE_TABLE = "delete from items where _id = ?;";
 
     static final String QUERY_ITEMTYPES = "select section, filename from itemtypes where type_id = ?; ";
 
@@ -63,6 +64,7 @@ public class ItemStore {
                     if (null != items) {
                         items.add(item);
                     }
+                    cursor.moveToNext();
                 }
             }
         }
@@ -85,6 +87,21 @@ public class ItemStore {
             args[3] = sdf.format(item.getCreatetime());
             args[4] = sdf.format(item.getLastTime());
             db.execSQL(INSERT_TABLE, args);
+        }
+
+        return true;
+    }
+
+
+    public static boolean deleteData(Context context, Item item) {
+
+        ItemDBHelper dbhelper = new ItemDBHelper(context.getApplicationContext());
+        SQLiteDatabase db = dbhelper.getWritableDatabase();
+        Object[] args = new Object[1];
+
+        if (null != db) {
+            args[0] = item.getId();
+            db.execSQL(DELETE_TABLE, args);
         }
 
         return true;
