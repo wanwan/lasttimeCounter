@@ -4,6 +4,7 @@
              android:layout_height="match_parent"
              tools:context="org.zaregoto.apl.lasttimecounter.ui.ItemInputDialogFragment">
 
+    <!--
     <LinearLayout android:id="@+id/icons"
                   android:layout_width="wrap_content"
                   android:layout_height="wrap_content"
@@ -27,6 +28,9 @@
                 android:layout_centerInParent="true"
                 />
     </LinearLayout>
+    -->
+
+    <include android:id="@+id/icons" layout="@layout/item_type"/>
 
     <TextView
             android:layout_width="wrap_content"

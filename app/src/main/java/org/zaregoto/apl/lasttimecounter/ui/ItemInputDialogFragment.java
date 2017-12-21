@@ -9,10 +9,12 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.ImageView;
 import org.zaregoto.apl.lasttimecounter.Item;
 import org.zaregoto.apl.lasttimecounter.ItemType;
 import org.zaregoto.apl.lasttimecounter.R;
 
+import java.lang.reflect.Type;
 import java.util.Date;
 
 public class ItemInputDialogFragment extends DialogFragment {
@@ -41,41 +43,54 @@ public class ItemInputDialogFragment extends DialogFragment {
             detail.setText(item.getDetail());
         }
 
+
+        ImageView typeIcon = content.findViewById(R.id.type_icon);
+        if (null != typeIcon) {
+            typeIcon.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    TypeSelectDialogFragment typeSelectDialog = new TypeSelectDialogFragment();
+                    typeSelectDialog.show(getFragmentManager(), "");
+
+                }
+            });
+        }
+
         final Item finalItem = item;
-        builder.setMessage(R.string.fragment_item_input_dialog_name)
-                .setPositiveButton(R.string.fragment_item_input_dialog_ok, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        if (null == finalItem) {
-                            EditText _name = content.findViewById(R.id.name);
-                            EditText _detail = content.findViewById(R.id.detail);
-                            String name = (_name != null) ? _name.getText().toString() : "";
-                            String detail = (_detail != null) ? _detail.getText().toString() : "";
-                            Date now = new Date();
+        builder.setMessage(R.string.fragment_item_input_dialog_name);
+        builder.setPositiveButton(R.string.fragment_item_input_dialog_ok, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                if (null == finalItem) {
+                    EditText _name = content.findViewById(R.id.name);
+                    EditText _detail = content.findViewById(R.id.detail);
+                    String name = (_name != null) ? _name.getText().toString() : "";
+                    String detail = (_detail != null) ? _detail.getText().toString() : "";
+                    Date now = new Date();
 
-                            ItemType type = ItemType.createItemType(getActivity(), Item.DEFAULT_TYPE_ID);
+                    ItemType type = ItemType.createItemType(getActivity(), Item.DEFAULT_TYPE_ID);
 
-                            Item _item = new Item(name, detail, type, now, now);
-                            mInputDialogListener.addItem(_item);
-                        }
-                        else {
-                            EditText _name = content.findViewById(R.id.name);
-                            EditText _detail = content.findViewById(R.id.detail);
-                            String name = (_name != null) ? _name.getText().toString() : "";
-                            String detail = (_detail != null) ? _detail.getText().toString() : "";
-                            Date now = new Date();
+                    Item _item = new Item(name, detail, type, now, now);
+                    mInputDialogListener.addItem(_item);
+                }
+                else {
+                    EditText _name = content.findViewById(R.id.name);
+                    EditText _detail = content.findViewById(R.id.detail);
+                    String name = (_name != null) ? _name.getText().toString() : "";
+                    String detail = (_detail != null) ? _detail.getText().toString() : "";
+                    Date now = new Date();
 
-                            ItemType type = ItemType.createItemType(getActivity(), Item.DEFAULT_TYPE_ID);
+                    ItemType type = ItemType.createItemType(getActivity(), Item.DEFAULT_TYPE_ID);
 
-                            finalItem.setName(name);
-                            finalItem.setDetail(detail);
+                    finalItem.setName(name);
+                    finalItem.setDetail(detail);
 
-                            mInputDialogListener.updateItem(finalItem);
+                    mInputDialogListener.updateItem(finalItem);
 
-                        }
-                    }
-                });
-        // Create the AlertDialog object and return it
+                }
+            }
+        });
+
         return builder.create();
     }
 

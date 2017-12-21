@@ -4,5 +4,6 @@
     <string name="fragment_item_input_dialog_name">Add Item</string>
     <string name="fragment_item_input_dialog_ok">OK</string>
     <string name="fragment_item_input_dialog_cancel">Cancel</string>
+    <string name="fragment_type_select_dialog_name">Select Type</string>
 
 </resources>
