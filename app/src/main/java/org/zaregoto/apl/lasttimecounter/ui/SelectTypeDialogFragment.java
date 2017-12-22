@@ -18,9 +18,9 @@ import org.zaregoto.apl.lasttimecounter.R;
 
 import java.util.Date;
 
-public class TypeSelectDialogFragment extends DialogFragment {
+public class SelectTypeDialogFragment extends DialogFragment {
 
-    private TypeSelectDialogFragment.SelectTypeDialogListener mDialogListener;
+    private SelectTypeDialogFragment.SelectTypeDialogListener mDialogListener;
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
@@ -38,7 +38,7 @@ public class TypeSelectDialogFragment extends DialogFragment {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 
         LayoutInflater inflater = (LayoutInflater)getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        final View content = inflater.inflate(R.layout.fragment_type_select, null);
+        final View content = inflater.inflate(R.layout.fragment_select_type, null);
 
         builder.setView(content);
 

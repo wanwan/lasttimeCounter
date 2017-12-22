@@ -49,7 +49,7 @@ public class ItemInputDialogFragment extends DialogFragment {
             typeIcon.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    TypeSelectDialogFragment typeSelectDialog = new TypeSelectDialogFragment();
+                    SelectTypeDialogFragment typeSelectDialog = new SelectTypeDialogFragment();
                     typeSelectDialog.show(getFragmentManager(), "");
 
                 }
