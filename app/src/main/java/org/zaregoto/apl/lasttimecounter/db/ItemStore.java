@@ -6,6 +6,7 @@ import android.database.sqlite.SQLiteDatabase;
 import org.zaregoto.apl.lasttimecounter.Item;
 import org.zaregoto.apl.lasttimecounter.ItemType;
 
+import java.io.File;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -132,4 +133,32 @@ public class ItemStore {
 
         return new ItemType(typeId, section, filename);
     }
+
+
+    public static boolean makeBackup(Context context, File dir, String filename) {
+
+        File absoluteFile = new File(dir, filename);
+        String absoluteFileName = absoluteFile.getAbsolutePath();
+
+        ItemDBHelper dbhelper = new ItemDBHelper(context.getApplicationContext());
+        SQLiteDatabase db = dbhelper.getWritableDatabase();
+
+        String outputString = ".output " + absoluteFileName;
+
+        if (null != db) {
+            db.execSQL(outputString);
+            db.execSQL(".dump");
+        }
+
+        return true;
+    }
+
+
+    public static boolean restoreBackup(File dir, String filename) {
+
+
+
+        return true;
+    }
+
 }

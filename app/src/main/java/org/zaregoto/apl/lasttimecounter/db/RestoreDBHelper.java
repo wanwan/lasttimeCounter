@@ -6,83 +6,47 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import org.zaregoto.apl.lasttimecounter.Item;
 
-import java.io.IOException;
+import java.io.*;
 import java.util.*;
 
-public class ItemDBHelper extends SQLiteOpenHelper {
+public class RestoreDBHelper extends SQLiteOpenHelper {
 
-    static final String DB = "items.db";
-    static final int DB_VERSION = 1;
+    private static final String DB = "restore.db";
+    private static final int DB_VERSION = 1;
+    private String dumpFile;
 
-    static final String FOREIGN_KEY_ENABLE = "pragma foreign_keys = on;";
-
-    static final String CREATE_ITEMS_TABLE = "create table items ( " +
-            "_id integer primary key autoincrement, " +
-            "name string not null, " +
-            "detail string," +
-            "type_id integer not null," +
-            "lasttime string not null," +
-            "createtime string not null, " +
-            "foreign key(type_id) references itemtypes(type_id));";
-    static final String DROP_ITEMS_TABLE = "drop table items;";
-    static final String ITEMS_TABLE_NAME = "items";
-
-    static final String CREATE_ITEMTYPES_TABLE = "create table itemtypes ( " +
-            "type_id integer primary key autoincrement, " +
-            "type_name string, " +
-            "section string not null, " +
-            "filename string not null );";
-    static final String DROP_ITEMTYPES_TABLE = "drop table itemtypes;";
-    static final String ITEMTYPES_TABLE_NAME = "itemtypes";
-
-    static final String CREATE_HISTORIES_TABLE = "create table histories ( " +
-            "_id integer, " +
-            "do_date string not null );";
-    static final String DROP_HISTORIES_TABLE = "drop table histories;";
-    static final String HISTORIES_TABLE_NAME = "histories";
-
-
-    static final String CREATE_METAINFO_TABLE = "create table metainfo (" +
-            "dbversion integer," +
-            "default_type_id integer);";
-    static final String INSERT_METAINFO_TABLE = "insert into metainfo (dbversion, default_type_id) values (?, ?);";
 
 
     private HashMap<String, ArrayList<String>> types;
 
-    public ItemDBHelper(Context applicationContext) {
+    public RestoreDBHelper(Context applicationContext, String dumpFile) {
         super(applicationContext, DB, null, DB_VERSION);
-        try {
-            types = getInitialItemTypes(applicationContext);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        this.dumpFile = dumpFile;
     }
 
 
     @Override
     public void onCreate(SQLiteDatabase db) {
+        try {
+            FileReader fr = new FileReader(new FileInputStream(new File(dumpFile));
+            BufferedReader br = new BufferedReader(fr);
 
-        db.execSQL(FOREIGN_KEY_ENABLE);
+            String buf;
+            if (null != br)) {
+                while (buf = br.readLine()) {
+                    
+                }
+            }
 
-        db.execSQL(CREATE_ITEMTYPES_TABLE);
-        db.execSQL(CREATE_HISTORIES_TABLE);
-        db.execSQL(CREATE_ITEMS_TABLE);
-
-        db.execSQL(CREATE_METAINFO_TABLE);
-
-        insertInitialTypes(db, types);
-        insertMetaInfo(db, DB_VERSION, Item.DEFAULT_TYPE_ID);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
 
     }
 
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int i, int i1) {
-        db.execSQL(DROP_ITEMS_TABLE);
-        db.execSQL(DROP_HISTORIES_TABLE);
-        db.execSQL(DROP_ITEMTYPES_TABLE);
-        onCreate(db);
     }
 
 
@@ -176,5 +140,8 @@ public class ItemDBHelper extends SQLiteOpenHelper {
 
         db.execSQL(INSERT_METAINFO_TABLE, args);
     }
+
+
+
 
 }
