@@ -3,10 +3,15 @@ package org.zaregoto.apl.lasttimecounter.db;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.os.Environment;
 import org.zaregoto.apl.lasttimecounter.Item;
 import org.zaregoto.apl.lasttimecounter.ItemType;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.nio.channels.FileChannel;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -135,27 +140,31 @@ public class ItemStore {
     }
 
 
-    public static boolean makeBackup(Context context, File dir, String filename) {
+    public static boolean makeBackup(Context context, File dir, String filename) throws IOException {
 
-        File absoluteFile = new File(dir, filename);
-        String absoluteFileName = absoluteFile.getAbsolutePath();
+        File sd = Environment.getExternalStorageDirectory();
+        boolean ret = false;
 
-        ItemDBHelper dbhelper = new ItemDBHelper(context.getApplicationContext());
-        SQLiteDatabase db = dbhelper.getWritableDatabase();
+        if (sd.canWrite()) {
+            String currentDBPath = "/data/data/" + context.getPackageName() + "/databases/" + ItemDBHelper.DB;
+            File currentDB = new File(currentDBPath);
+            File backupDB = new File(sd, filename);
 
-        String outputString = ".output " + absoluteFileName;
-
-        if (null != db) {
-            db.execSQL(outputString);
-            db.execSQL(".dump");
+            if (currentDB.exists()) {
+                FileChannel src = new FileInputStream(currentDB).getChannel();
+                FileChannel dst = new FileOutputStream(backupDB).getChannel();
+                dst.transferFrom(src, 0, src.size());
+                src.close();
+                dst.close();
+                ret = true;
+            }
         }
 
-        return true;
+        return ret;
     }
 
 
     public static boolean restoreBackup(File dir, String filename) {
-
 
 
         return true;

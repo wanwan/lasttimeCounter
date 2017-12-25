@@ -27,20 +27,18 @@ public class RestoreDBHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        try {
-            FileReader fr = new FileReader(new FileInputStream(new File(dumpFile));
-            BufferedReader br = new BufferedReader(fr);
 
-            String buf;
-            if (null != br)) {
-                while (buf = br.readLine()) {
-                    
-                }
+        String sql;
+
+        if (null != dumpFile) {
+            File f = new File(dumpFile);
+            if (!f.exists() || !f.isFile() ) {
+                return;
             }
-
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
         }
+
+        sql = ".read " + dumpFile;
+        db.execSQL(sql);
 
     }
 
@@ -66,82 +64,11 @@ public class RestoreDBHelper extends SQLiteOpenHelper {
         db.setForeignKeyConstraintsEnabled(true);
     }
 
+    public boolean recoveryDatabase(Context context) {
+        // read backuped DB version
+        // read destination DB version
 
-    // TODO:
-    private HashMap<String, ArrayList<String>> getInitialItemTypes(Context context) throws IOException {
-
-        HashMap<String, ArrayList<String>> ret = new HashMap<>();
-        String section;
-        String[] _list;
-        ArrayList<String> array;
-
-        section = "toggle";
-        _list = context.getAssets().list("typeicons" + "/" + section);
-        if (null != _list) {
-            array = new ArrayList(Arrays.asList(_list));
-            ret.put(section, array);
-        }
-
-        section = "alert";
-        _list = context.getAssets().list("typeicons" + "/" + section);
-        if (null != _list) {
-            array = new ArrayList(Arrays.asList(_list));
-            ret.put(section, array);
-        }
-
-        return ret;
+        return true;
     }
-
-
-    private void insertInitialTypes(SQLiteDatabase sqLiteDatabase, HashMap<String, ArrayList<String>> types) {
-
-        Iterator<String> it;
-        Iterator<String> it2;
-        String type;
-        ContentValues values;
-        ArrayList<String> filenames;
-        String section;
-
-        try {
-            sqLiteDatabase.beginTransaction();
-
-            values = new ContentValues();
-
-            Set<String> keys = types.keySet();
-
-            it = keys.iterator();
-            while (it.hasNext()) {
-                section = it.next();
-                filenames = types.get(section);
-                it2 = filenames.iterator();
-                while (it2.hasNext()) {
-                    type = it2.next();
-                    values.put("filename", type);
-                    values.put("section", section);
-                    sqLiteDatabase.insert(ITEMTYPES_TABLE_NAME, null, values);
-                }
-            }
-
-            sqLiteDatabase.setTransactionSuccessful();
-        }
-        finally {
-            sqLiteDatabase.endTransaction();
-        }
-
-    }
-
-
-    private void insertMetaInfo(SQLiteDatabase db, int dbVersion, int defaultTypeId) {
-
-        Object[] args = new Object[2];
-
-        args[0] = dbVersion;
-        args[1] = defaultTypeId;
-
-        db.execSQL(INSERT_METAINFO_TABLE, args);
-    }
-
-
-
 
 }

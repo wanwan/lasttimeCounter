@@ -3,8 +3,10 @@ package org.zaregoto.apl.lasttimecounter.ui;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.NavigationView;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
@@ -13,6 +15,9 @@ import org.zaregoto.apl.lasttimecounter.Item;
 import org.zaregoto.apl.lasttimecounter.R;
 import org.zaregoto.apl.lasttimecounter.db.ItemStore;
 
+import java.io.File;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 public class MainActivity extends AppCompatActivity implements ItemInputDialogFragment.InputDialogListener, AdapterView.OnItemClickListener, AdapterView.OnItemLongClickListener {
@@ -48,6 +53,52 @@ public class MainActivity extends AppCompatActivity implements ItemInputDialogFr
                 }
             });
         }
+
+        NavigationView mNavigationView = findViewById(R.id.nav_view);
+        mNavigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(MenuItem menuItem) {
+
+
+                switch (menuItem.getItemId()) {
+                    case R.id.sort:
+                        break;
+                    case R.id.filter:
+                        break;
+                    case R.id.config:
+                        break;
+                    case R.id.backup:
+                        ProgressDialogFragment progressDialog = new ProgressDialogFragment();
+                        progressDialog.show(getFragmentManager(), "");
+
+                        String filename;
+                        filename = "lasttimecounter-";
+                        SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmss");
+                        Date now = new Date();
+                        String datestr = sdf.format(now);
+                        filename = filename + datestr;
+
+                        File destDir = new File("/mnt/sdcard");
+
+                        try {
+                            ItemStore.makeBackup(MainActivity.this, destDir, filename);
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        } finally {
+                            progressDialog.dismiss();
+                        }
+
+                        break;
+                    case R.id.restore:
+                        break;
+                    default:
+                        break;
+                }
+
+                return false;
+            }
+        });
+
     }
 
 

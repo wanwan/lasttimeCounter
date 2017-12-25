@@ -7,5 +7,7 @@
     <string name="fragment_type_select_dialog_name">Select Type</string>
     <string name="backup">Backup</string>
     <string name="restore">Restore</string>
+    <string name="fragment_progress_dialog_name"/>
+    <string name="fragment_progress_dialog_cancel"/>
 
 </resources>
