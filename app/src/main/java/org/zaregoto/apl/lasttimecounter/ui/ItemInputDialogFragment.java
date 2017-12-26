@@ -79,13 +79,15 @@ public class ItemInputDialogFragment extends DialogFragment {
                     DatePickerDialog dpd = new DatePickerDialog(getActivity());
                     dpd.setOnDateSetListener(new DatePickerDialog.OnDateSetListener() {
                         @Override
-                        public void onDateSet(DatePicker datePicker, int selectedYear, int selectedMonth, int selectedDay) {
+                        public void onDateSet(DatePicker datePicker, int year, int month, int day) {
                             EditText et = content.findViewById(R.id.date);
                             if (null != et) {
-                                String _str = selectedYear + "-" + selectedMonth + "-" + selectedDay;
+                                String _str = year + "-" + (month+1) + "-" + day;
                                 et.setText(_str);
+                                selectedDay.setYear(year);
+                                selectedDay.setMonth(month);
+                                selectedDay.setDate(day);
                                 //ItemInputDialogFragment.selectedDay = new GregorianCalendar(selectedYear, selectedMonth, selectedDay);.getTime();
-
                             }
                         }
                     });
@@ -110,7 +112,7 @@ public class ItemInputDialogFragment extends DialogFragment {
 
                     ItemType type = ItemType.createItemType(getActivity(), Item.DEFAULT_TYPE_ID);
 
-                    Item _item = new Item(name, detail, type, now, now);
+                    Item _item = new Item(name, detail, type, selectedDay, now);
                     mInputDialogListener.addItem(_item);
                 }
                 else {
@@ -118,12 +120,12 @@ public class ItemInputDialogFragment extends DialogFragment {
                     EditText _detail = content.findViewById(R.id.detail);
                     String name = (_name != null) ? _name.getText().toString() : "";
                     String detail = (_detail != null) ? _detail.getText().toString() : "";
-                    Date now = new Date();
 
                     ItemType type = ItemType.createItemType(getActivity(), Item.DEFAULT_TYPE_ID);
 
                     finalItem.setName(name);
                     finalItem.setDetail(detail);
+                    finalItem.setLastTime(selectedDay);
 
                     mInputDialogListener.updateItem(finalItem);
 
