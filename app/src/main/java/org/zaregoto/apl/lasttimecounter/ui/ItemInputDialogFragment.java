@@ -84,7 +84,7 @@ public class ItemInputDialogFragment extends DialogFragment {
                             if (null != et) {
                                 String _str = year + "-" + (month+1) + "-" + day;
                                 et.setText(_str);
-                                selectedDay.setYear(year);
+                                selectedDay.setYear(year-1900);
                                 selectedDay.setMonth(month);
                                 selectedDay.setDate(day);
                                 //ItemInputDialogFragment.selectedDay = new GregorianCalendar(selectedYear, selectedMonth, selectedDay);.getTime();
