@@ -1,6 +1,7 @@
 package org.zaregoto.apl.lasttimecounter.ui;
 
 import android.app.AlertDialog;
+import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
 import android.content.Context;
@@ -8,6 +9,7 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
 import org.zaregoto.apl.lasttimecounter.Item;
@@ -15,11 +17,16 @@ import org.zaregoto.apl.lasttimecounter.ItemType;
 import org.zaregoto.apl.lasttimecounter.R;
 
 import java.lang.reflect.Type;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 
 public class ItemInputDialogFragment extends DialogFragment {
 
     private InputDialogListener mInputDialogListener;
+    private Date selectedDay;
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
@@ -28,6 +35,8 @@ public class ItemInputDialogFragment extends DialogFragment {
         if (null != getArguments()) {
             item = getArguments().getParcelable(MainActivity.ARGS_ITEM_ID);
         }
+
+        selectedDay = new Date();
 
         // Use the Builder class for convenient dialog construction
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
@@ -55,6 +64,37 @@ public class ItemInputDialogFragment extends DialogFragment {
                 }
             });
         }
+
+        EditText dateText = content.findViewById(R.id.date);
+        if (null != dateText) {
+            final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+            String str = sdf.format(selectedDay);
+
+            dateText.setText(str);
+            dateText.setFocusable(false);
+
+            dateText.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    DatePickerDialog dpd = new DatePickerDialog(getActivity());
+                    dpd.setOnDateSetListener(new DatePickerDialog.OnDateSetListener() {
+                        @Override
+                        public void onDateSet(DatePicker datePicker, int selectedYear, int selectedMonth, int selectedDay) {
+                            EditText et = content.findViewById(R.id.date);
+                            if (null != et) {
+                                String _str = selectedYear + "-" + selectedMonth + "-" + selectedDay;
+                                et.setText(_str);
+                                //ItemInputDialogFragment.selectedDay = new GregorianCalendar(selectedYear, selectedMonth, selectedDay);.getTime();
+
+                            }
+                        }
+                    });
+                    dpd.show();
+                }
+            });
+
+        }
+
 
         final Item finalItem = item;
         builder.setMessage(R.string.fragment_item_input_dialog_name);

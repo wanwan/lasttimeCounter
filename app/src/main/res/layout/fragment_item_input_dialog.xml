@@ -73,7 +73,35 @@
             android:id="@+id/detail"
             android:layout_alignBaseline="@id/detailLbl"
             android:layout_toEndOf="@id/detailLbl"
+            android:layout_alignStart="@id/name"
             android:layout_below="@id/name"
     />
+
+    <TextView
+            android:text="date"
+            android:id="@+id/dateLbl"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="7dip"
+            android:layout_marginBottom="7dip"
+            android:layout_marginStart="5dip"
+            android:layout_below="@+id/detailLbl"
+            android:layout_toRightOf="@+id/icons"
+    />
+    <EditText
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="3dip"
+            android:inputType="none"
+            android:text=""
+            android:ems="10"
+            android:id="@+id/date"
+            android:layout_alignBaseline="@id/dateLbl"
+            android:layout_toEndOf="@id/dateLbl"
+            android:layout_below="@id/detail"
+            android:layout_alignStart="@id/name"
+    />
+
+
 
 </RelativeLayout>
