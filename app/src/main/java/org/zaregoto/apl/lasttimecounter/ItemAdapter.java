@@ -13,6 +13,7 @@ import org.zaregoto.apl.lasttimecounter.model.ItemHeader;
 import org.zaregoto.apl.lasttimecounter.model.ItemUnit;
 
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
 public class ItemAdapter extends ArrayAdapter<Item> {
@@ -35,13 +36,17 @@ public class ItemAdapter extends ArrayAdapter<Item> {
         Item _item = getItem(position);
         if (_item instanceof ItemUnit) {
             item = (ItemUnit) _item;
-            convertView = mInflater.inflate(R.layout.adapter_list_item_card, parent, false);
+            convertView = mInflater.inflate(R.layout.adapter_list_item_unit, parent, false);
 
             TextView tv = convertView.findViewById(R.id.title);
             tv.setText(item.getName());
 
             tv = convertView.findViewById(R.id.detail);
             tv.setText(item.getDetail());
+
+            tv = convertView.findViewById(R.id.lastupdate);
+            SimpleDateFormat spf = new SimpleDateFormat("yyyy-MM-dd");
+            tv.setText(spf.format(item.getLastTime()));
 
             ImageView iv = convertView.findViewById(R.id.icon);
             if (null != item && null != item.getType()) {
