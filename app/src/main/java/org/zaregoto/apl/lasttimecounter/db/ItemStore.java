@@ -4,7 +4,9 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Environment;
-import org.zaregoto.apl.lasttimecounter.Item;
+import org.zaregoto.apl.lasttimecounter.model.Item;
+import org.zaregoto.apl.lasttimecounter.model.ItemHeader;
+import org.zaregoto.apl.lasttimecounter.model.ItemUnit;
 import org.zaregoto.apl.lasttimecounter.ItemType;
 
 import java.io.File;
@@ -20,7 +22,8 @@ import java.util.Date;
 
 public class ItemStore {
 
-    static final String QUERY_TABLE = "select _id, name, detail, type_id, lasttime, createtime from items order by lasttime;";
+    static final String QUERY_TABLE_NEW_TO_OLD = "select _id, name, detail, type_id, lasttime, createtime from items order by lasttime desc;";
+    static final String QUERY_TABLE_OLD_TO_NEW = "select _id, name, detail, type_id, lasttime, createtime from items order by lasttime;";
     static final String INSERT_TABLE = "insert into items (name, detail, type_id, lasttime, createtime) values (?, ?, ?, ?, ?) ;";
     static final String DELETE_TABLE = "delete from items where _id = ?;";
 
@@ -28,6 +31,12 @@ public class ItemStore {
 
 
     public static boolean loadInitialData(Context context, ArrayList<Item> items) {
+        return loadData(context, items, LoadType.ORDER_TYPE_CURRENT_TO_OLD);
+    }
+
+
+
+    public static boolean loadData(Context context, ArrayList<Item> items, LoadType loadType) {
 
         ItemDBHelper dbhelper = new ItemDBHelper(context.getApplicationContext());
         SQLiteDatabase db = dbhelper.getReadableDatabase();
@@ -39,12 +48,19 @@ public class ItemStore {
         ItemType type;
         Date lasttime;
         Date createtime;
-        Item item;
+        ItemUnit item;
 
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
         if (null != db) {
-            cursor = db.rawQuery(QUERY_TABLE, null);
+            if (LoadType.ORDER_TYPE_CURRENT_TO_OLD == loadType) {
+                cursor = db.rawQuery(QUERY_TABLE_NEW_TO_OLD, null);
+                items.add(new ItemHeader("current"));
+            }
+            else {
+                cursor = db.rawQuery(QUERY_TABLE_OLD_TO_NEW, null);
+                items.add(new ItemHeader("oldest"));
+            }
 
             if (null != cursor) {
                 cursor.moveToFirst();
@@ -66,7 +82,7 @@ public class ItemStore {
                         createtime = null;
                         e.printStackTrace();
                     }
-                    item = new Item(_id, name, detail, type, createtime, lasttime);
+                    item = new ItemUnit(_id, name, detail, type, createtime, lasttime);
                     if (null != items) {
                         items.add(item);
                     }
@@ -79,7 +95,8 @@ public class ItemStore {
     }
 
 
-    public static boolean insertData(Context context, Item item) {
+
+    public static boolean insertData(Context context, ItemUnit item) {
 
         ItemDBHelper dbhelper = new ItemDBHelper(context.getApplicationContext());
         SQLiteDatabase db = dbhelper.getWritableDatabase();
@@ -105,8 +122,8 @@ public class ItemStore {
         SQLiteDatabase db = dbhelper.getWritableDatabase();
         Object[] args = new Object[1];
 
-        if (null != db) {
-            args[0] = item.getId();
+        if (null != db && item instanceof ItemUnit) {
+            args[0] = ((ItemUnit)item).getId();
             db.execSQL(DELETE_TABLE, args);
         }
 

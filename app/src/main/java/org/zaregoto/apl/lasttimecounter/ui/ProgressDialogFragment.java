@@ -8,13 +8,7 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.EditText;
-import android.widget.ImageView;
-import org.zaregoto.apl.lasttimecounter.Item;
-import org.zaregoto.apl.lasttimecounter.ItemType;
 import org.zaregoto.apl.lasttimecounter.R;
-
-import java.util.Date;
 
 public class ProgressDialogFragment extends DialogFragment {
 

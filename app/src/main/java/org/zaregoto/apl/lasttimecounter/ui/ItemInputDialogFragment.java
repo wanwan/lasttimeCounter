@@ -12,16 +12,12 @@ import android.view.View;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
-import org.zaregoto.apl.lasttimecounter.Item;
+import org.zaregoto.apl.lasttimecounter.model.ItemUnit;
 import org.zaregoto.apl.lasttimecounter.ItemType;
 import org.zaregoto.apl.lasttimecounter.R;
 
-import java.lang.reflect.Type;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.Date;
-import java.util.GregorianCalendar;
 
 public class ItemInputDialogFragment extends DialogFragment {
 
@@ -31,7 +27,7 @@ public class ItemInputDialogFragment extends DialogFragment {
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
 
-        Item item = null;
+        ItemUnit item = null;
         if (null != getArguments()) {
             item = getArguments().getParcelable(MainActivity.ARGS_ITEM_ID);
         }
@@ -98,7 +94,7 @@ public class ItemInputDialogFragment extends DialogFragment {
         }
 
 
-        final Item finalItem = item;
+        final ItemUnit finalItem = item;
         builder.setMessage(R.string.fragment_item_input_dialog_name);
         builder.setPositiveButton(R.string.fragment_item_input_dialog_ok, new DialogInterface.OnClickListener() {
             @Override
@@ -110,9 +106,9 @@ public class ItemInputDialogFragment extends DialogFragment {
                     String detail = (_detail != null) ? _detail.getText().toString() : "";
                     Date now = new Date();
 
-                    ItemType type = ItemType.createItemType(getActivity(), Item.DEFAULT_TYPE_ID);
+                    ItemType type = ItemType.createItemType(getActivity(), ItemUnit.DEFAULT_TYPE_ID);
 
-                    Item _item = new Item(name, detail, type, selectedDay, now);
+                    ItemUnit _item = new ItemUnit(name, detail, type, selectedDay, now);
                     mInputDialogListener.addItem(_item);
                 }
                 else {
@@ -121,7 +117,7 @@ public class ItemInputDialogFragment extends DialogFragment {
                     String name = (_name != null) ? _name.getText().toString() : "";
                     String detail = (_detail != null) ? _detail.getText().toString() : "";
 
-                    ItemType type = ItemType.createItemType(getActivity(), Item.DEFAULT_TYPE_ID);
+                    ItemType type = ItemType.createItemType(getActivity(), ItemUnit.DEFAULT_TYPE_ID);
 
                     finalItem.setName(name);
                     finalItem.setDetail(detail);
@@ -155,7 +151,7 @@ public class ItemInputDialogFragment extends DialogFragment {
     }
 
     public interface InputDialogListener {
-        void addItem(Item item);
-        void updateItem(Item item);
+        void addItem(ItemUnit item);
+        void updateItem(ItemUnit item);
     }
 }

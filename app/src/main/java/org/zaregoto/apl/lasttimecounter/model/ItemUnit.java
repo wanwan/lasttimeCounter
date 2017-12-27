@@ -1,13 +1,12 @@
-package org.zaregoto.apl.lasttimecounter;
+package org.zaregoto.apl.lasttimecounter.model;
 
-import android.graphics.drawable.Drawable;
 import android.os.Parcel;
 import android.os.Parcelable;
+import org.zaregoto.apl.lasttimecounter.ItemType;
 
-import java.util.ArrayList;
 import java.util.Date;
 
-public class Item implements Comparable<Item>, Parcelable {
+public class ItemUnit implements Comparable<ItemUnit>, Parcelable, Item {
 
     public static int DEFAULT_TYPE_ID = 1;
 
@@ -19,11 +18,11 @@ public class Item implements Comparable<Item>, Parcelable {
     private Date lastTime;
 
 
-    private Item() {
+    private ItemUnit() {
         id = -1;
     }
 
-    public Item(int id, String name, String detail, ItemType type, Date createtime, Date lastTime) {
+    public ItemUnit(int id, String name, String detail, ItemType type, Date createtime, Date lastTime) {
         this();
         this.id = id;
         this.name = name;
@@ -33,7 +32,7 @@ public class Item implements Comparable<Item>, Parcelable {
         this.lastTime = lastTime;
     }
 
-    public Item(String name, String detail, ItemType type, Date createtime, Date lastTime) {
+    public ItemUnit(String name, String detail, ItemType type, Date createtime, Date lastTime) {
         this();
         this.name = name;
         this.detail = detail;
@@ -42,11 +41,11 @@ public class Item implements Comparable<Item>, Parcelable {
         this.lastTime = lastTime;
     }
 
-    public Item(Parcel in) {
+    public ItemUnit(Parcel in) {
         id = in.readInt();
         name = in.readString();
         detail = in.readString();
-        type = in.readParcelable(Item.class.getClassLoader());
+        type = in.readParcelable(ItemUnit.class.getClassLoader());
         createtime = (Date) in.readSerializable();
         lastTime = (Date) in.readSerializable();
     }
@@ -103,7 +102,7 @@ public class Item implements Comparable<Item>, Parcelable {
 
 
     @Override
-    public int compareTo(Item lastTimeItem) {
+    public int compareTo(ItemUnit lastTimeItem) {
         return this.lastTime.compareTo(lastTimeItem.getLastTime());
     }
 
@@ -125,12 +124,12 @@ public class Item implements Comparable<Item>, Parcelable {
 
     public static final Parcelable.Creator CREATOR
             = new Parcelable.Creator() {
-        public Item createFromParcel(Parcel in) {
-            return new Item(in);
+        public ItemUnit createFromParcel(Parcel in) {
+            return new ItemUnit(in);
         }
 
-        public Item[] newArray(int size) {
-            return new Item[size];
+        public ItemUnit[] newArray(int size) {
+            return new ItemUnit[size];
         }
     };
 

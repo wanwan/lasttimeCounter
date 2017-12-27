@@ -1,10 +1,8 @@
 package org.zaregoto.apl.lasttimecounter.db;
 
-import android.content.ContentValues;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import org.zaregoto.apl.lasttimecounter.Item;
 
 import java.io.*;
 import java.util.*;

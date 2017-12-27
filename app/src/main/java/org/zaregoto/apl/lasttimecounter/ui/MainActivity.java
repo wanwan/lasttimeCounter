@@ -11,7 +11,8 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import org.zaregoto.apl.lasttimecounter.ItemAdapter;
-import org.zaregoto.apl.lasttimecounter.Item;
+import org.zaregoto.apl.lasttimecounter.model.Item;
+import org.zaregoto.apl.lasttimecounter.model.ItemUnit;
 import org.zaregoto.apl.lasttimecounter.R;
 import org.zaregoto.apl.lasttimecounter.db.ItemStore;
 
@@ -22,9 +23,9 @@ import java.util.*;
 
 public class MainActivity extends AppCompatActivity implements ItemInputDialogFragment.InputDialogListener, AdapterView.OnItemClickListener, AdapterView.OnItemLongClickListener {
 
-    ItemInputDialogFragment itemInputDialog;
-    ArrayList<Item> items = new ArrayList<>();
-    ItemAdapter adapter;
+    private ItemInputDialogFragment itemInputDialog;
+    private ArrayList<Item> items = new ArrayList<>();
+    private ItemAdapter adapter;
 
     public static final String ARGS_ITEM_ID = "item";
 
@@ -103,7 +104,7 @@ public class MainActivity extends AppCompatActivity implements ItemInputDialogFr
 
 
     @Override
-    public void addItem(Item item) {
+    public void addItem(ItemUnit item) {
         if (null != adapter) {
             adapter.add(item);
             ItemStore.insertData(this, item);
@@ -111,7 +112,7 @@ public class MainActivity extends AppCompatActivity implements ItemInputDialogFr
     }
 
     @Override
-    public void updateItem(Item item) {
+    public void updateItem(ItemUnit item) {
 
     }
 

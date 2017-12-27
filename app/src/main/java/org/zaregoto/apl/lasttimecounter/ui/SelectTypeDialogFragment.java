@@ -10,13 +10,9 @@ import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.WindowManager;
-import android.widget.EditText;
 import android.widget.GridLayout;
-import org.zaregoto.apl.lasttimecounter.Item;
-import org.zaregoto.apl.lasttimecounter.ItemType;
+import org.zaregoto.apl.lasttimecounter.model.ItemUnit;
 import org.zaregoto.apl.lasttimecounter.R;
-
-import java.util.Date;
 
 public class SelectTypeDialogFragment extends DialogFragment {
 
@@ -29,7 +25,7 @@ public class SelectTypeDialogFragment extends DialogFragment {
         int dialogWidth = (int) (metrics.widthPixels * 0.8);
         int dialogHeight = (int) (metrics.heightPixels * 0.8);
 
-        Item item = null;
+        ItemUnit item = null;
         if (null != getArguments()) {
             item = getArguments().getParcelable(MainActivity.ARGS_ITEM_ID);
         }
