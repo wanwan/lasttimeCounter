@@ -31,12 +31,12 @@ public class ItemStore {
 
 
     public static boolean loadInitialData(Context context, ArrayList<Item> items) {
-        return loadData(context, items, LoadType.ORDER_TYPE_CURRENT_TO_OLD);
+        return loadData(context, items, OrderType.ORDER_TYPE_CURRENT_TO_OLD);
     }
 
 
 
-    public static boolean loadData(Context context, ArrayList<Item> items, LoadType loadType) {
+    public static boolean loadData(Context context, ArrayList<Item> items, OrderType orderType) {
 
         ItemDBHelper dbhelper = new ItemDBHelper(context.getApplicationContext());
         SQLiteDatabase db = dbhelper.getReadableDatabase();
@@ -53,7 +53,7 @@ public class ItemStore {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
         if (null != db) {
-            if (LoadType.ORDER_TYPE_CURRENT_TO_OLD == loadType) {
+            if (OrderType.ORDER_TYPE_CURRENT_TO_OLD == orderType) {
                 cursor = db.rawQuery(QUERY_TABLE_NEW_TO_OLD, null);
                 items.add(new ItemHeader("current"));
             }
@@ -82,7 +82,7 @@ public class ItemStore {
                         createtime = null;
                         e.printStackTrace();
                     }
-                    item = new ItemUnit(_id, name, detail, type, createtime, lasttime);
+                    item = new ItemUnit(_id, name, detail, type, lasttime, createtime);
                     if (null != items) {
                         items.add(item);
                     }
@@ -107,8 +107,8 @@ public class ItemStore {
             args[0] = item.getName();
             args[1] = item.getDetail();
             args[2] = item.getType().getTypeId();
-            args[3] = sdf.format(item.getCreatetime());
-            args[4] = sdf.format(item.getLastTime());
+            args[3] = sdf.format(item.getLastTime());
+            args[4] = sdf.format(item.getCreatetime());
             db.execSQL(INSERT_TABLE, args);
         }
 
@@ -187,4 +187,9 @@ public class ItemStore {
         return true;
     }
 
+    public enum OrderType {
+
+        ORDER_TYPE_CURRENT_TO_OLD,
+        ORDER_TYPE_OLD_TO_CURRENT
+    }
 }

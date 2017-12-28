@@ -29,6 +29,8 @@ public class MainActivity extends AppCompatActivity implements ItemInputDialogFr
 
     public static final String ARGS_ITEM_ID = "item";
 
+    private ItemStore.OrderType orderType = ItemStore.OrderType.ORDER_TYPE_CURRENT_TO_OLD;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -106,8 +108,15 @@ public class MainActivity extends AppCompatActivity implements ItemInputDialogFr
     @Override
     public void addItem(ItemUnit item) {
         if (null != adapter) {
-            adapter.add(item);
             ItemStore.insertData(this, item);
+
+            // reload data
+            items.clear();;
+            ItemStore.loadData(this, items, orderType);
+            adapter.notifyDataSetChanged();
+            //ListView lv = findViewById(R.id.mainlist);
+            //lv.setVisibility(View.INVISIBLE);
+            //lv.setVisibility(View.VISIBLE);
         }
     }
 

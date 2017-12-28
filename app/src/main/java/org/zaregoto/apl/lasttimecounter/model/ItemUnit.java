@@ -22,23 +22,23 @@ public class ItemUnit implements Comparable<ItemUnit>, Parcelable, Item {
         id = -1;
     }
 
-    public ItemUnit(int id, String name, String detail, ItemType type, Date createtime, Date lastTime) {
+    public ItemUnit(int id, String name, String detail, ItemType type, Date lastTime, Date createtime) {
         this();
         this.id = id;
         this.name = name;
         this.detail = detail;
         this.type = type;
-        this.createtime = createtime;
         this.lastTime = lastTime;
+        this.createtime = createtime;
     }
 
-    public ItemUnit(String name, String detail, ItemType type, Date createtime, Date lastTime) {
+    public ItemUnit(String name, String detail, ItemType type, Date lastTime, Date createtime) {
         this();
         this.name = name;
         this.detail = detail;
         this.type = type;
-        this.createtime = createtime;
         this.lastTime = lastTime;
+        this.createtime = createtime;
     }
 
     public ItemUnit(Parcel in) {
@@ -46,8 +46,8 @@ public class ItemUnit implements Comparable<ItemUnit>, Parcelable, Item {
         name = in.readString();
         detail = in.readString();
         type = in.readParcelable(ItemUnit.class.getClassLoader());
-        createtime = (Date) in.readSerializable();
         lastTime = (Date) in.readSerializable();
+        createtime = (Date) in.readSerializable();
     }
 
 
