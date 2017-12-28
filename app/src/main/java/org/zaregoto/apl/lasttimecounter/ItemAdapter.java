@@ -15,6 +15,7 @@ import org.zaregoto.apl.lasttimecounter.model.ItemUnit;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
 public class ItemAdapter extends ArrayAdapter<Item> {
 
@@ -46,7 +47,11 @@ public class ItemAdapter extends ArrayAdapter<Item> {
 
             tv = convertView.findViewById(R.id.lastupdate);
             SimpleDateFormat spf = new SimpleDateFormat("yyyy-MM-dd");
-            tv.setText(spf.format(item.getLastTime()));
+            int days = diffDateBetweenToday(item.getLastTime());
+            String _str = spf.format(item.getLastTime()) + "(" + days + ")";
+            tv.setText(_str);
+
+
 
             ImageView iv = convertView.findViewById(R.id.icon);
             if (null != item && null != item.getType()) {
@@ -69,5 +74,23 @@ public class ItemAdapter extends ArrayAdapter<Item> {
         }
 
         return convertView;
+    }
+
+    private int diffDateBetweenToday(Date _lastTime) {
+
+        Date _now = new Date();
+        long now;
+        long lastTime;
+        long _ret;
+        int ret = 0;
+
+        if (null != _lastTime) {
+            now = _now.getTime();
+            lastTime = _lastTime.getTime();
+            _ret = (now - lastTime) / (24*60*60*1000);
+            ret = (int) _ret;
+        }
+
+        return ret;
     }
 }
