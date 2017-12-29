@@ -114,15 +114,19 @@ public class MainActivity extends AppCompatActivity implements ItemInputDialogFr
             items.clear();;
             ItemStore.loadData(this, items, orderType);
             adapter.notifyDataSetChanged();
-            //ListView lv = findViewById(R.id.mainlist);
-            //lv.setVisibility(View.INVISIBLE);
-            //lv.setVisibility(View.VISIBLE);
         }
     }
 
     @Override
     public void updateItem(ItemUnit item) {
+        if (null != adapter) {
+            ItemStore.updateData(this, item);
 
+            // reload data
+            items.clear();;
+            ItemStore.loadData(this, items, orderType);
+            adapter.notifyDataSetChanged();
+        }
     }
 
     @Override

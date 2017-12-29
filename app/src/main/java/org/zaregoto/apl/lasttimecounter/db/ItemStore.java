@@ -8,6 +8,7 @@ import org.zaregoto.apl.lasttimecounter.model.Item;
 import org.zaregoto.apl.lasttimecounter.model.ItemHeader;
 import org.zaregoto.apl.lasttimecounter.model.ItemUnit;
 import org.zaregoto.apl.lasttimecounter.ItemType;
+import org.zaregoto.apl.lasttimecounter.ui.MainActivity;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -25,6 +26,7 @@ public class ItemStore {
     static final String QUERY_TABLE_NEW_TO_OLD = "select _id, name, detail, type_id, lasttime, createtime from items order by lasttime desc;";
     static final String QUERY_TABLE_OLD_TO_NEW = "select _id, name, detail, type_id, lasttime, createtime from items order by lasttime;";
     static final String INSERT_TABLE = "insert into items (name, detail, type_id, lasttime, createtime) values (?, ?, ?, ?, ?) ;";
+    static final String UPDATE_TABLE = "update items set name=?, detail=?, type_id=?, lasttime=?, createtime=? where _id=? ;";
     static final String DELETE_TABLE = "delete from items where _id = ?;";
 
     static final String QUERY_ITEMTYPES = "select section, filename from itemtypes where type_id = ?; ";
@@ -116,6 +118,29 @@ public class ItemStore {
     }
 
 
+    public static boolean updateData(MainActivity context, ItemUnit item) {
+
+        // "update items set name=?, detail=?, type_id=?, lasttime=?, createtime=? where _id=? ;";
+        ItemDBHelper dbhelper = new ItemDBHelper(context.getApplicationContext());
+        SQLiteDatabase db = dbhelper.getWritableDatabase();
+        Object[] args = new Object[6];
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+
+        if (null != db) {
+            args[5] = item.getId();
+
+            args[0] = item.getName();
+            args[1] = item.getDetail();
+            args[2] = item.getType().getTypeId();
+            args[3] = sdf.format(item.getLastTime());
+            args[4] = sdf.format(item.getCreatetime());
+            db.execSQL(UPDATE_TABLE, args);
+        }
+
+        return true;
+    }
+
+
     public static boolean deleteData(Context context, Item item) {
 
         ItemDBHelper dbhelper = new ItemDBHelper(context.getApplicationContext());
@@ -186,6 +211,7 @@ public class ItemStore {
 
         return true;
     }
+
 
     public enum OrderType {
 
