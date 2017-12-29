@@ -2,7 +2,6 @@ package org.zaregoto.apl.lasttimecounter.model;
 
 import android.os.Parcel;
 import android.os.Parcelable;
-import org.zaregoto.apl.lasttimecounter.ItemType;
 
 import java.util.Date;
 

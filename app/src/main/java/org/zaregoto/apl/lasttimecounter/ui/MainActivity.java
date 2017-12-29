@@ -21,9 +21,9 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
-public class MainActivity extends AppCompatActivity implements ItemInputDialogFragment.InputDialogListener, AdapterView.OnItemClickListener, AdapterView.OnItemLongClickListener {
+public class MainActivity extends AppCompatActivity implements ItemDialogFragment.InputDialogListener, AdapterView.OnItemClickListener, AdapterView.OnItemLongClickListener {
 
-    private ItemInputDialogFragment itemInputDialog;
+    private ItemDialogFragment itemInputDialog;
     private ArrayList<Item> items = new ArrayList<>();
     private ItemAdapter adapter;
 
@@ -51,7 +51,7 @@ public class MainActivity extends AppCompatActivity implements ItemInputDialogFr
             fab.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    itemInputDialog = new ItemInputDialogFragment();
+                    itemInputDialog = new ItemDialogFragment();
                     itemInputDialog.show(getFragmentManager(), "");
                 }
             });
@@ -137,7 +137,7 @@ public class MainActivity extends AppCompatActivity implements ItemInputDialogFr
 
         args.putParcelable(ARGS_ITEM_ID, item);
 
-        itemInputDialog = new ItemInputDialogFragment();
+        itemInputDialog = new ItemDialogFragment();
         itemInputDialog.setArguments(args);
         itemInputDialog.show(getFragmentManager(), "");
     }

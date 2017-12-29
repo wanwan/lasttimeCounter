@@ -7,7 +7,7 @@ import android.os.Environment;
 import org.zaregoto.apl.lasttimecounter.model.Item;
 import org.zaregoto.apl.lasttimecounter.model.ItemHeader;
 import org.zaregoto.apl.lasttimecounter.model.ItemUnit;
-import org.zaregoto.apl.lasttimecounter.ItemType;
+import org.zaregoto.apl.lasttimecounter.model.ItemType;
 import org.zaregoto.apl.lasttimecounter.ui.MainActivity;
 
 import java.io.File;
@@ -29,7 +29,8 @@ public class ItemStore {
     static final String UPDATE_TABLE = "update items set name=?, detail=?, type_id=?, lasttime=?, createtime=? where _id=? ;";
     static final String DELETE_TABLE = "delete from items where _id = ?;";
 
-    static final String QUERY_ITEMTYPES = "select section, filename from itemtypes where type_id = ?; ";
+    static final String QUERY_ITEMTYPES = "select type_id, section, filename, label from itemtypes; ";
+    static final String QUERY_ITEMTYPE_BY_TYPEID = "select section, filename from itemtypes where type_id = ?; ";
 
 
     public static boolean loadInitialData(Context context, ArrayList<Item> items) {
@@ -156,6 +157,38 @@ public class ItemStore {
     }
 
 
+    public static ArrayList<ItemType> getAllItemTyps(Context context) {
+
+        ItemDBHelper dbhelper = new ItemDBHelper(context.getApplicationContext());
+        SQLiteDatabase db = dbhelper.getReadableDatabase();
+        Cursor cursor;
+        int typeId = -1;
+        String filename = null;
+        String section = null;
+        String label = null;
+        ArrayList<ItemType> ret = new ArrayList<>();
+        ItemType _itemType;
+
+        if (null != db) {
+            cursor = db.rawQuery(QUERY_ITEMTYPES, null);
+            if (null != cursor) {
+                cursor.moveToFirst();
+                for (int i = 0; i < cursor.getCount(); i++) {
+                    typeId = cursor.getInt(cursor.getColumnIndex("type_id"));
+                    section = cursor.getString(cursor.getColumnIndex("section"));
+                    filename = cursor.getString(cursor.getColumnIndex("filename"));
+                    label = null;
+                    _itemType = new ItemType(typeId, section, filename, label);
+                    ret.add(_itemType);
+                    cursor.moveToNext();
+                }
+            }
+        }
+
+        return ret;
+    }
+
+
     // TODO:
     public static ItemType getItemType(Context context, int typeId) {
 
@@ -165,20 +198,22 @@ public class ItemStore {
         Cursor cursor;
         String filename = null;
         String section = null;
+        String label = null;
 
         if (null != db) {
             args[0] = Integer.toString(typeId);
-            cursor = db.rawQuery(QUERY_ITEMTYPES, args);
+            cursor = db.rawQuery(QUERY_ITEMTYPE_BY_TYPEID, args);
             if (null != cursor) {
                 cursor.moveToFirst();
                 if (cursor.getCount() > 0) {
                     section = cursor.getString(cursor.getColumnIndex("section"));
                     filename = cursor.getString(cursor.getColumnIndex("filename"));
+                    label = null;
                 }
             }
         }
 
-        return new ItemType(typeId, section, filename);
+        return new ItemType(typeId, section, filename, label);
     }
 
 

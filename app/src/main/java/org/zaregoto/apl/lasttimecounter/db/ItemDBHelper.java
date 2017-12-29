@@ -31,7 +31,8 @@ public class ItemDBHelper extends SQLiteOpenHelper {
             "type_id integer primary key autoincrement, " +
             "type_name string, " +
             "section string not null, " +
-            "filename string not null );";
+            "filename string not null, " +
+            "label string not null );";
     static final String DROP_ITEMTYPES_TABLE = "drop table itemtypes;";
     static final String ITEMTYPES_TABLE_NAME = "itemtypes";
 
@@ -107,22 +108,18 @@ public class ItemDBHelper extends SQLiteOpenHelper {
     private HashMap<String, ArrayList<String>> getInitialItemTypes(Context context) throws IOException {
 
         HashMap<String, ArrayList<String>> ret = new HashMap<>();
-        String section;
         String[] _list;
+        String[] _sections;
         ArrayList<String> array;
 
-        section = "toggle";
-        _list = context.getAssets().list("typeicons" + "/" + section);
-        if (null != _list) {
-            array = new ArrayList(Arrays.asList(_list));
-            ret.put(section, array);
-        }
+        _sections = context.getAssets().list("typeicons");
+        for (String section : _sections) {
 
-        section = "alert";
-        _list = context.getAssets().list("typeicons" + "/" + section);
-        if (null != _list) {
-            array = new ArrayList(Arrays.asList(_list));
-            ret.put(section, array);
+            _list = context.getAssets().list("typeicons" + "/" + section);
+            if (null != _list) {
+                array = new ArrayList(Arrays.asList(_list));
+                ret.put(section, array);
+            }
         }
 
         return ret;
@@ -137,6 +134,7 @@ public class ItemDBHelper extends SQLiteOpenHelper {
         ContentValues values;
         ArrayList<String> filenames;
         String section;
+        String label;
 
         try {
             sqLiteDatabase.beginTransaction();
@@ -145,6 +143,7 @@ public class ItemDBHelper extends SQLiteOpenHelper {
 
             Set<String> keys = types.keySet();
 
+            label = "";
             it = keys.iterator();
             while (it.hasNext()) {
                 section = it.next();
@@ -154,6 +153,7 @@ public class ItemDBHelper extends SQLiteOpenHelper {
                     type = it2.next();
                     values.put("filename", type);
                     values.put("section", section);
+                    values.put("label", label);
                     sqLiteDatabase.insert(ITEMTYPES_TABLE_NAME, null, values);
                 }
             }

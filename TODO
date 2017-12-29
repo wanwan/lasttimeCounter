@@ -12,6 +12,11 @@
 * フィルタ機能の実装
   - type
 
+* notification 機能の追加
+  -> おおまかな日にち (1week/2week/1month/3month/6month/1year)
+  -> snooze (+1day/+3day/+1week/+2week/+1month)
+  -> db で直近の snooze の日数 + 区分 (これがないと再編集で表示がむずかしいのでは?)
+
 * UI インターフェースを何に何を振るか考える
   listview
   - 単押し
