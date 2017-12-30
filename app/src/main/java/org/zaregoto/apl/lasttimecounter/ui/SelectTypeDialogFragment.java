@@ -16,6 +16,7 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.GridLayout;
 import android.widget.ImageView;
+import android.widget.TextView;
 import org.zaregoto.apl.lasttimecounter.db.ItemStore;
 import org.zaregoto.apl.lasttimecounter.model.ItemType;
 import org.zaregoto.apl.lasttimecounter.model.ItemUnit;
@@ -36,7 +37,9 @@ public class SelectTypeDialogFragment extends DialogFragment {
         DisplayMetrics metrics = getResources().getDisplayMetrics();
         int dialogWidth = (int) (metrics.widthPixels * 0.8);
         int dialogHeight = (int) (metrics.heightPixels * 0.8);
+        double iconViewRatio = dialogHeight / dialogWidth;
 
+        Log.d(TAG, "***** width: height " + dialogWidth + " : " + dialogHeight + "*****\n");
 
         // Use the Builder class for convenient dialog construction
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
@@ -52,7 +55,7 @@ public class SelectTypeDialogFragment extends DialogFragment {
 
             ArrayList<ItemType> types = ItemStore.getAllItemTyps(getActivity());
             int total = types.size();
-            int column = 6;
+            int column = 4;
             int row = total / column;
 
             gridLayout.setColumnCount(column);
@@ -79,15 +82,25 @@ public class SelectTypeDialogFragment extends DialogFragment {
                     if (null != is) {
                         drawable = Drawable.createFromStream(is, null);
 
+                        View typeView = inflater.inflate(R.layout.item_type, null);
+
+                        //Log.d(TAG, "***** type icon width: height " + typeView.getWidth() + " " + typeView.getHeight());
+
+                        //double iconViewRatio = typeView.getHeight() / typeView.getWidth();
+                        if (null != typeView) {
+                            ImageView iconView = typeView.findViewById(R.id.type_icon);
+                            TextView labelView = typeView.findViewById(R.id.type_label);
+
+                            iconView.setImageDrawable(drawable);
+                            labelView.setText("aaaa");
+                        }
+
                         ImageView oImageView = new ImageView(getActivity());
                         oImageView.setImageDrawable(drawable);
-                        //ViewGroup.LayoutParams lp = oImageView.getLayoutParams();
                         ViewGroup.LayoutParams lp = new GridLayout.LayoutParams();
                         lp.width = 400;
                         lp.height = 400;
                         oImageView.setLayoutParams(lp);
-                        //oImageView.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-                        //oImageView.setLayoutParams(new ViewGroup.LayoutParams(200, 200));
 
                         GridLayout.Spec rowSpan = GridLayout.spec(GridLayout.UNDEFINED, 1);
                         GridLayout.Spec colspan = GridLayout.spec(GridLayout.UNDEFINED, 1);
@@ -96,10 +109,17 @@ public class SelectTypeDialogFragment extends DialogFragment {
                         //    colspan = GridLayout.spec(GridLayout.UNDEFINED, 2);
                         //    rowSpan = GridLayout.spec(GridLayout.UNDEFINED, 2);
                         //}
+
+                        int iconWidth = dialogWidth / column;
+                        int iconHeight = (int) (iconWidth * iconViewRatio);
+
                         GridLayout.LayoutParams gridParam = new GridLayout.LayoutParams(rowSpan, colspan);
-                        gridParam.width = 100;
-                        gridParam.height = 100;
-                        gridLayout.addView(oImageView, gridParam);
+                        //gridParam.width = iconWidth;
+                        //gridParam.height = iconHeight;
+                        gridParam.width = iconWidth;
+                        gridParam.height = iconHeight;
+                        //gridLayout.addView(oImageView, gridParam);
+                        gridLayout.addView(typeView, gridParam);
                     }
 
                 } catch (IOException e) {
