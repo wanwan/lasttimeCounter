@@ -10,7 +10,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
-import org.zaregoto.apl.lasttimecounter.ItemAdapter;
+import org.zaregoto.apl.lasttimecounter.ItemListAdapter;
 import org.zaregoto.apl.lasttimecounter.model.Item;
 import org.zaregoto.apl.lasttimecounter.model.ItemUnit;
 import org.zaregoto.apl.lasttimecounter.R;
@@ -21,11 +21,11 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
-public class MainActivity extends AppCompatActivity implements ItemDialogFragment.InputDialogListener, AdapterView.OnItemClickListener, AdapterView.OnItemLongClickListener {
+public class MainActivity extends AppCompatActivity implements InputItemDetailDialogFragment.InputDialogListener, AdapterView.OnItemClickListener, AdapterView.OnItemLongClickListener {
 
-    private ItemDialogFragment itemInputDialog;
+    private InputItemDetailDialogFragment itemInputDialog;
     private ArrayList<Item> items = new ArrayList<>();
-    private ItemAdapter adapter;
+    private ItemListAdapter adapter;
 
     public static final String ARGS_ITEM_ID = "item";
 
@@ -40,7 +40,7 @@ public class MainActivity extends AppCompatActivity implements ItemDialogFragmen
         ItemStore.loadInitialData(this, items);
         ListView lv = findViewById(R.id.mainlist);
         if (null != lv) {
-            adapter = new ItemAdapter(this, 0, items);
+            adapter = new ItemListAdapter(this, 0, items);
             lv.setAdapter(adapter);
             lv.setOnItemClickListener(this);
             lv.setOnItemLongClickListener(this);
@@ -51,7 +51,7 @@ public class MainActivity extends AppCompatActivity implements ItemDialogFragmen
             fab.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    itemInputDialog = new ItemDialogFragment();
+                    itemInputDialog = new InputItemDetailDialogFragment();
                     itemInputDialog.show(getFragmentManager(), "");
                 }
             });
@@ -61,7 +61,6 @@ public class MainActivity extends AppCompatActivity implements ItemDialogFragmen
         mNavigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(MenuItem menuItem) {
-
 
                 switch (menuItem.getItemId()) {
                     case R.id.sort:
@@ -137,7 +136,7 @@ public class MainActivity extends AppCompatActivity implements ItemDialogFragmen
 
         args.putParcelable(ARGS_ITEM_ID, item);
 
-        itemInputDialog = new ItemDialogFragment();
+        itemInputDialog = new InputItemDetailDialogFragment();
         itemInputDialog.setArguments(args);
         itemInputDialog.show(getFragmentManager(), "");
     }

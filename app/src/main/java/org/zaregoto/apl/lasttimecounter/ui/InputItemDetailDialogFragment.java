@@ -19,7 +19,7 @@ import org.zaregoto.apl.lasttimecounter.R;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-public class ItemDialogFragment extends DialogFragment {
+public class InputItemDetailDialogFragment extends DialogFragment {
 
     private InputDialogListener mInputDialogListener;
     private Date selectedDay;

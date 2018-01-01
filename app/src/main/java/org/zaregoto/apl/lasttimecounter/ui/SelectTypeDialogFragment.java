@@ -14,9 +14,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
-import android.widget.GridLayout;
-import android.widget.ImageView;
-import android.widget.TextView;
+import android.widget.*;
+import org.zaregoto.apl.lasttimecounter.GridTypeAdapter;
 import org.zaregoto.apl.lasttimecounter.db.ItemStore;
 import org.zaregoto.apl.lasttimecounter.model.ItemType;
 import org.zaregoto.apl.lasttimecounter.model.ItemUnit;
@@ -37,7 +36,8 @@ public class SelectTypeDialogFragment extends DialogFragment {
         DisplayMetrics metrics = getResources().getDisplayMetrics();
         int dialogWidth = (int) (metrics.widthPixels * 0.8);
         int dialogHeight = (int) (metrics.heightPixels * 0.8);
-        double iconViewRatio = dialogHeight / dialogWidth;
+        ArrayList<ItemType> types = ItemStore.getAllItemTyps(getActivity());
+        final GridTypeAdapter adapter = new GridTypeAdapter(getActivity(), android.R.layout.simple_list_item_1, types);
 
         Log.d(TAG, "***** width: height " + dialogWidth + " : " + dialogHeight + "*****\n");
 
@@ -49,102 +49,116 @@ public class SelectTypeDialogFragment extends DialogFragment {
 
         builder.setView(content);
 
-        GridLayout gridLayout = content.findViewById(R.id.gridview);
-        if (null != gridLayout) {
-            gridLayout.removeAllViews();
+        GridView gridView = content.findViewById(R.id.gridview);
+        if (null != gridView) {
+            gridView.setAdapter(adapter);
 
-            ArrayList<ItemType> types = ItemStore.getAllItemTyps(getActivity());
-            int total = types.size();
-            int column = 4;
-            int row = total / column;
-
-            gridLayout.setColumnCount(column);
-            gridLayout.setRowCount(row + 1);
-
-            AssetManager am;
-            InputStream is;
-
-            am = getActivity().getAssets();
-
-            for (int i = 0, c = 0, r = 0; i < total; i++, c++) {
-                if (c == column) {
-                    c = 0;
-                    r++;
+            gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> adapterView, View view, int pos, long id) {
+                    ItemType type = adapter.getItem(pos);
+                    Log.d(TAG, "ItemType clicked: " + type.getSection() + " " + type.getFilename());
                 }
-
-                ItemType itemType = types.get(i);
-                String filename = itemType.getFilename();
-                String section = itemType.getSection();
-                Drawable drawable = null;
-
-                try {
-                    is = am.open("typeicons" + "/" + section + "/" + filename);
-                    if (null != is) {
-                        drawable = Drawable.createFromStream(is, null);
-
-                        View typeView = inflater.inflate(R.layout.item_type, null);
-
-                        //Log.d(TAG, "***** type icon width: height " + typeView.getWidth() + " " + typeView.getHeight());
-
-                        //double iconViewRatio = typeView.getHeight() / typeView.getWidth();
-                        if (null != typeView) {
-                            ImageView iconView = typeView.findViewById(R.id.type_icon);
-                            TextView labelView = typeView.findViewById(R.id.type_label);
-
-                            iconView.setImageDrawable(drawable);
-                            labelView.setText("aaaa");
-                        }
-
-                        ImageView oImageView = new ImageView(getActivity());
-                        oImageView.setImageDrawable(drawable);
-                        ViewGroup.LayoutParams lp = new GridLayout.LayoutParams();
-                        lp.width = 400;
-                        lp.height = 400;
-                        oImageView.setLayoutParams(lp);
-
-                        GridLayout.Spec rowSpan = GridLayout.spec(GridLayout.UNDEFINED, 1);
-                        GridLayout.Spec colspan = GridLayout.spec(GridLayout.UNDEFINED, 1);
-                        //if (r == 0 && c == 0) {
-                        //    Log.e("", "spec");
-                        //    colspan = GridLayout.spec(GridLayout.UNDEFINED, 2);
-                        //    rowSpan = GridLayout.spec(GridLayout.UNDEFINED, 2);
-                        //}
-
-                        int iconWidth = dialogWidth / column;
-                        int iconHeight = (int) (iconWidth * iconViewRatio);
-
-                        GridLayout.LayoutParams gridParam = new GridLayout.LayoutParams(rowSpan, colspan);
-                        //gridParam.width = iconWidth;
-                        //gridParam.height = iconHeight;
-                        gridParam.width = iconWidth;
-                        gridParam.height = iconHeight;
-                        //gridLayout.addView(oImageView, gridParam);
-                        gridLayout.addView(typeView, gridParam);
-                    }
-
-                } catch (IOException e) {
-                    e.printStackTrace();
-                    Log.d(TAG, "cannot read drawable from asset manager");
-                }
-            }
+            });
         }
+
+
+
+
+//        GridLayout gridLayout = content.findViewById(R.id.gridview);
+//        if (null != gridLayout) {
+//            gridLayout.removeAllViews();
+//
+//            ArrayList<ItemType> types = ItemStore.getAllItemTyps(getActivity());
+//            int total = types.size();
+//            int column = 4;
+//            int row = total / column;
+//
+//            gridLayout.setColumnCount(column);
+//            gridLayout.setRowCount(row + 1);
+//
+//            AssetManager am;
+//            InputStream is;
+//
+//            am = getActivity().getAssets();
+//
+//            for (int i = 0, c = 0, r = 0; i < total; i++, c++) {
+//                if (c == column) {
+//                    c = 0;
+//                    r++;
+//                }
+//
+//                ItemType itemType = types.get(i);
+//                String filename = itemType.getFilename();
+//                String section = itemType.getSection();
+//                Drawable drawable = null;
+//
+//                try {
+//                    is = am.open("typeicons" + "/" + section + "/" + filename);
+//                    if (null != is) {
+//                        drawable = Drawable.createFromStream(is, null);
+//
+//                        View typeView = inflater.inflate(R.layout.item_type, null);
+//
+//                        //Log.d(TAG, "***** type icon width: height " + typeView.getWidth() + " " + typeView.getHeight());
+//
+//                        //double iconViewRatio = typeView.getHeight() / typeView.getWidth();
+//                        if (null != typeView) {
+//                            ImageView iconView = typeView.findViewById(R.id.type_icon);
+//                            TextView labelView = typeView.findViewById(R.id.type_label);
+//
+//                            iconView.setImageDrawable(drawable);
+//                            labelView.setText("aaaa");
+//                        }
+//
+//                        ImageView oImageView = new ImageView(getActivity());
+//                        oImageView.setImageDrawable(drawable);
+//                        ViewGroup.LayoutParams lp = new GridLayout.LayoutParams();
+//                        lp.width = 400;
+//                        lp.height = 400;
+//                        oImageView.setLayoutParams(lp);
+//
+//                        GridLayout.Spec rowSpan = GridLayout.spec(GridLayout.UNDEFINED, 1);
+//                        GridLayout.Spec colspan = GridLayout.spec(GridLayout.UNDEFINED, 1);
+//
+//                        int iconWidth = dialogWidth / column;
+//                        int iconHeight = (int) (iconWidth * iconViewRatio);
+//
+//                        GridLayout.LayoutParams gridParam = new GridLayout.LayoutParams(rowSpan, colspan);
+//                        gridParam.width = iconWidth;
+//                        gridParam.height = iconHeight;
+//                        gridLayout.addView(typeView, gridParam);
+//
+//                        typeView.setOnClickListener(new View.OnClickListener() {
+//                            @Override
+//                            public void onClick(View view) {
+//                                Log.d(TAG, "*** CLICKED ***\n");
+//                            }
+//                        });
+//                    }
+//
+//                } catch (IOException e) {
+//                    e.printStackTrace();
+//                    Log.d(TAG, "cannot read drawable from asset manager");
+//                }
+//            }
+//        }
 
 
         builder.setMessage(R.string.fragment_type_select_dialog_name);
         builder.setPositiveButton(R.string.fragment_item_input_dialog_ok, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
 
-                    }
-                }
-        );
+            }
+        });
 
         // Create the AlertDialog object and return it
         Dialog dialog = builder.create();
 
         WindowManager.LayoutParams lp = dialog.getWindow().getAttributes();
-        lp.width = dialogWidth;
-        lp.height = dialogHeight;
+        lp.width = 800;
+        lp.height = 1000;
         dialog.getWindow().setAttributes(lp);
 
         return dialog;

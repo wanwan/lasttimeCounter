@@ -17,12 +17,12 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
-public class ItemAdapter extends ArrayAdapter<Item> {
+public class ItemListAdapter extends ArrayAdapter<Item> {
 
     private LayoutInflater mInflater;
 
 
-    public ItemAdapter(Context context, int resource, ArrayList<Item> objects) {
+    public ItemListAdapter(Context context, int resource, ArrayList<Item> objects) {
 
         super(context, resource, objects);
         mInflater = LayoutInflater.from(context);
