@@ -43,7 +43,7 @@ public class GridTypeAdapter extends ArrayAdapter<ItemType> {
         String section;
         Drawable drawable;
 
-        convertView = mInflater.inflate(R.layout.item_type, parent, false);
+        convertView = mInflater.inflate(R.layout.item_type, null);
         if (null != convertView) {
             ImageView iconView = convertView.findViewById(R.id.type_icon);
             TextView labelView = convertView.findViewById(R.id.type_label);

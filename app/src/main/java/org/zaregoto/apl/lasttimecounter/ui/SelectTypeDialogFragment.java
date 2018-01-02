@@ -8,6 +8,7 @@ import android.content.DialogInterface;
 import android.content.res.AssetManager;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.support.v7.widget.RecyclerView;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -36,6 +37,7 @@ public class SelectTypeDialogFragment extends DialogFragment {
         DisplayMetrics metrics = getResources().getDisplayMetrics();
         int dialogWidth = (int) (metrics.widthPixels * 0.8);
         int dialogHeight = (int) (metrics.heightPixels * 0.8);
+        double iconViewRatio = dialogHeight / dialogWidth;
         ArrayList<ItemType> types = ItemStore.getAllItemTyps(getActivity());
         final GridTypeAdapter adapter = new GridTypeAdapter(getActivity(), android.R.layout.simple_list_item_1, types);
 
@@ -60,16 +62,15 @@ public class SelectTypeDialogFragment extends DialogFragment {
                     Log.d(TAG, "ItemType clicked: " + type.getSection() + " " + type.getFilename());
                 }
             });
+
         }
-
-
 
 
 //        GridLayout gridLayout = content.findViewById(R.id.gridview);
 //        if (null != gridLayout) {
 //            gridLayout.removeAllViews();
 //
-//            ArrayList<ItemType> types = ItemStore.getAllItemTyps(getActivity());
+//            //ArrayList<ItemType> types = ItemStore.getAllItemTyps(getActivity());
 //            int total = types.size();
 //            int column = 4;
 //            int row = total / column;
@@ -99,7 +100,7 @@ public class SelectTypeDialogFragment extends DialogFragment {
 //                        drawable = Drawable.createFromStream(is, null);
 //
 //                        View typeView = inflater.inflate(R.layout.item_type, null);
-//
+//                        Log.d(TAG, "typeView: " + typeView.getId());
 //                        //Log.d(TAG, "***** type icon width: height " + typeView.getWidth() + " " + typeView.getHeight());
 //
 //                        //double iconViewRatio = typeView.getHeight() / typeView.getWidth();
@@ -109,14 +110,9 @@ public class SelectTypeDialogFragment extends DialogFragment {
 //
 //                            iconView.setImageDrawable(drawable);
 //                            labelView.setText("aaaa");
-//                        }
 //
-//                        ImageView oImageView = new ImageView(getActivity());
-//                        oImageView.setImageDrawable(drawable);
-//                        ViewGroup.LayoutParams lp = new GridLayout.LayoutParams();
-//                        lp.width = 400;
-//                        lp.height = 400;
-//                        oImageView.setLayoutParams(lp);
+//                            Log.d(TAG, "iconView: " + iconView.getId() + " labelView: " + labelView.getId());
+//                        }
 //
 //                        GridLayout.Spec rowSpan = GridLayout.spec(GridLayout.UNDEFINED, 1);
 //                        GridLayout.Spec colspan = GridLayout.spec(GridLayout.UNDEFINED, 1);
@@ -132,7 +128,7 @@ public class SelectTypeDialogFragment extends DialogFragment {
 //                        typeView.setOnClickListener(new View.OnClickListener() {
 //                            @Override
 //                            public void onClick(View view) {
-//                                Log.d(TAG, "*** CLICKED ***\n");
+//                                Log.d(TAG, "*** CLICKED" + view.getId() + " ***\n");
 //                            }
 //                        });
 //                    }
@@ -145,21 +141,23 @@ public class SelectTypeDialogFragment extends DialogFragment {
 //        }
 
 
-        builder.setMessage(R.string.fragment_type_select_dialog_name);
-        builder.setPositiveButton(R.string.fragment_item_input_dialog_ok, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
+//        builder.setMessage(R.string.fragment_type_select_dialog_name);
+//        builder.setPositiveButton(R.string.fragment_item_input_dialog_ok, new DialogInterface.OnClickListener() {
+//            @Override
+//            public void onClick(DialogInterface dialogInterface, int i) {
+//
+//            }
+//        });
 
-            }
-        });
 
         // Create the AlertDialog object and return it
         Dialog dialog = builder.create();
 
-        WindowManager.LayoutParams lp = dialog.getWindow().getAttributes();
-        lp.width = 800;
-        lp.height = 1000;
-        dialog.getWindow().setAttributes(lp);
+//        WindowManager.LayoutParams lp = dialog.getWindow().getAttributes();
+//        lp.width = 800;
+//        lp.height = 1000;
+//        dialog.getWindow().setAttributes(lp);
+
 
         return dialog;
     }
