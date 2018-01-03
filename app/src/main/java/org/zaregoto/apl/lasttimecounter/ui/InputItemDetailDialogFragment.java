@@ -6,30 +6,48 @@ import android.app.Dialog;
 import android.app.DialogFragment;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.TextView;
 import org.zaregoto.apl.lasttimecounter.model.ItemUnit;
 import org.zaregoto.apl.lasttimecounter.model.ItemType;
 import org.zaregoto.apl.lasttimecounter.R;
 
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-public class InputItemDetailDialogFragment extends DialogFragment {
+public class InputItemDetailDialogFragment extends DialogFragment implements SelectTypeDialogFragment.SelectTypeDialogListener {
 
     private InputDialogListener mInputDialogListener;
     private Date selectedDay;
+
+    private final String TAG = "InputItemDetailDialogFragment";
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
 
         ItemUnit item = null;
+        final ItemType type;
         if (null != getArguments()) {
             item = getArguments().getParcelable(MainActivity.ARGS_ITEM_ID);
+        }
+        if (null != item) {
+            type = item.getType();
+        }
+        else {
+            String name = "";
+            String detail = "";
+            Date now = new Date();
+
+            type = ItemType.createItemType(getActivity(), ItemUnit.DEFAULT_TYPE_ID);
+            item = new ItemUnit(name, detail, type, selectedDay, now);
         }
 
         selectedDay = new Date();
@@ -51,6 +69,19 @@ public class InputItemDetailDialogFragment extends DialogFragment {
 
         ImageView typeIcon = content.findViewById(R.id.type_icon);
         if (null != typeIcon) {
+            if (null != item) {
+                try {
+                    Drawable drawable = null;
+                    drawable = item.getType().getAsDrawableImage(getActivity());
+                    typeIcon.setImageDrawable(drawable);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+            else {
+
+            }
+
             typeIcon.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -59,6 +90,23 @@ public class InputItemDetailDialogFragment extends DialogFragment {
                 }
             });
         }
+
+        TextView typeLabel = content.findViewById(R.id.type_label);
+        if (null != typeLabel) {
+
+            if (null != item) {
+                typeLabel.setText(item.getType().getLabel());
+            }
+
+            typeIcon.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    SelectTypeDialogFragment typeSelectDialog = new SelectTypeDialogFragment();
+                    typeSelectDialog.show(getFragmentManager(), "");
+                }
+            });
+        }
+
 
         EditText dateText = content.findViewById(R.id.date);
         if (null != dateText) {
@@ -98,32 +146,22 @@ public class InputItemDetailDialogFragment extends DialogFragment {
         builder.setPositiveButton(R.string.fragment_item_input_dialog_ok, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
-                if (null == finalItem) {
-                    EditText _name = content.findViewById(R.id.name);
-                    EditText _detail = content.findViewById(R.id.detail);
-                    String name = (_name != null) ? _name.getText().toString() : "";
-                    String detail = (_detail != null) ? _detail.getText().toString() : "";
-                    Date now = new Date();
 
-                    ItemType type = ItemType.createItemType(getActivity(), ItemUnit.DEFAULT_TYPE_ID);
+                EditText _name = content.findViewById(R.id.name);
+                EditText _detail = content.findViewById(R.id.detail);
+                String name = (_name != null) ? _name.getText().toString() : "";
+                String detail = (_detail != null) ? _detail.getText().toString() : "";
 
-                    ItemUnit _item = new ItemUnit(name, detail, type, selectedDay, now);
-                    mInputDialogListener.addItem(_item);
+                finalItem.setName(name);
+                finalItem.setDetail(detail);
+                finalItem.setLastTime(selectedDay);
+
+                // TODO: DB 上の有る無しは app 層の概念ではないからこの判定をここに入れるのは正しくない. ItemStore で upsert を作成するなどして吸収すること
+                if (finalItem.getId() > 0) {
+                    mInputDialogListener.updateItem(finalItem);
                 }
                 else {
-                    EditText _name = content.findViewById(R.id.name);
-                    EditText _detail = content.findViewById(R.id.detail);
-                    String name = (_name != null) ? _name.getText().toString() : "";
-                    String detail = (_detail != null) ? _detail.getText().toString() : "";
-
-                    ItemType type = ItemType.createItemType(getActivity(), ItemUnit.DEFAULT_TYPE_ID);
-
-                    finalItem.setName(name);
-                    finalItem.setDetail(detail);
-                    finalItem.setLastTime(selectedDay);
-
-                    mInputDialogListener.updateItem(finalItem);
-
+                    mInputDialogListener.addItem(finalItem);
                 }
             }
         });
@@ -147,6 +185,11 @@ public class InputItemDetailDialogFragment extends DialogFragment {
             mInputDialogListener = null;
         }
         super.onDetach();
+    }
+
+    @Override
+    public void selectType(ItemType type) {
+        Log.d(TAG, "***** type selected ****");
     }
 
     public interface InputDialogListener {

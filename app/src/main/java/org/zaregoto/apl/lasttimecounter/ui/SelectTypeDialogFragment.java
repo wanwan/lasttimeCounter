@@ -36,7 +36,7 @@ public class SelectTypeDialogFragment extends DialogFragment {
 
         DisplayMetrics metrics = getResources().getDisplayMetrics();
         int dialogWidth = (int) (metrics.widthPixels * 0.8);
-        int dialogHeight = (int) (metrics.heightPixels * 0.8);
+        int dialogHeight = (int) (metrics.heightPixels * 0.65);
         double iconViewRatio = dialogHeight / dialogWidth;
         ArrayList<ItemType> types = ItemStore.getAllItemTyps(getActivity());
         final GridTypeAdapter adapter = new GridTypeAdapter(getActivity(), android.R.layout.simple_list_item_1, types);
@@ -60,6 +60,9 @@ public class SelectTypeDialogFragment extends DialogFragment {
                 public void onItemClick(AdapterView<?> adapterView, View view, int pos, long id) {
                     ItemType type = adapter.getItem(pos);
                     Log.d(TAG, "ItemType clicked: " + type.getSection() + " " + type.getFilename());
+                    if (null != mDialogListener) {
+                        mDialogListener.selectType(type);
+                    }
                 }
             });
 
@@ -153,10 +156,10 @@ public class SelectTypeDialogFragment extends DialogFragment {
         // Create the AlertDialog object and return it
         Dialog dialog = builder.create();
 
-//        WindowManager.LayoutParams lp = dialog.getWindow().getAttributes();
-//        lp.width = 800;
-//        lp.height = 1000;
-//        dialog.getWindow().setAttributes(lp);
+        WindowManager.LayoutParams lp = dialog.getWindow().getAttributes();
+        lp.width = dialogWidth;
+        lp.height = dialogHeight;
+        dialog.getWindow().setAttributes(lp);
 
 
         return dialog;
@@ -181,6 +184,7 @@ public class SelectTypeDialogFragment extends DialogFragment {
     }
 
     public interface SelectTypeDialogListener {
+        void selectType(ItemType type);
     }
 
 }

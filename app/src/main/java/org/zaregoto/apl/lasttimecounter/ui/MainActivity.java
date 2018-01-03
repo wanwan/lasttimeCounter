@@ -6,12 +6,14 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import org.zaregoto.apl.lasttimecounter.ItemListAdapter;
 import org.zaregoto.apl.lasttimecounter.model.Item;
+import org.zaregoto.apl.lasttimecounter.model.ItemType;
 import org.zaregoto.apl.lasttimecounter.model.ItemUnit;
 import org.zaregoto.apl.lasttimecounter.R;
 import org.zaregoto.apl.lasttimecounter.db.ItemStore;
@@ -23,6 +25,7 @@ import java.util.*;
 
 public class MainActivity extends AppCompatActivity implements InputItemDetailDialogFragment.InputDialogListener, AdapterView.OnItemClickListener, AdapterView.OnItemLongClickListener {
 
+    private static final String TAG = "MainActivity";
     private InputItemDetailDialogFragment itemInputDialog;
     private ArrayList<Item> items = new ArrayList<>();
     private ItemListAdapter adapter;
@@ -110,7 +113,8 @@ public class MainActivity extends AppCompatActivity implements InputItemDetailDi
             ItemStore.insertData(this, item);
 
             // reload data
-            items.clear();;
+            items.clear();
+            ;
             ItemStore.loadData(this, items, orderType);
             adapter.notifyDataSetChanged();
         }
@@ -122,7 +126,8 @@ public class MainActivity extends AppCompatActivity implements InputItemDetailDi
             ItemStore.updateData(this, item);
 
             // reload data
-            items.clear();;
+            items.clear();
+            ;
             ItemStore.loadData(this, items, orderType);
             adapter.notifyDataSetChanged();
         }
@@ -132,7 +137,7 @@ public class MainActivity extends AppCompatActivity implements InputItemDetailDi
     public void onItemClick(AdapterView<?> adapterView, View view, int pos, long id) {
 
         Bundle args = new Bundle();
-        Item item =  adapter.getItem(pos);
+        Item item = adapter.getItem(pos);
 
         args.putParcelable(ARGS_ITEM_ID, item);
 
@@ -163,4 +168,5 @@ public class MainActivity extends AppCompatActivity implements InputItemDetailDi
 
         return true;
     }
+
 }

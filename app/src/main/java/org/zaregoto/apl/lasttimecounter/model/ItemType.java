@@ -48,12 +48,33 @@ public class ItemType implements Parcelable {
         return typeId;
     }
 
+    public void setTypeId(int typeId) {
+        this.typeId = typeId;
+    }
+
     public String getFilename() {
         return filename;
     }
 
+
+    public void setFilename(String filename) {
+        this.filename = filename;
+    }
+
     public String getSection() {
         return section;
+    }
+
+    public void setSection(String section) {
+        this.section = section;
+    }
+
+    public String getLabel() {
+        return label;
+    }
+
+    public void setLabel(String label) {
+        this.label = label;
     }
 
     public Drawable getAsDrawableImage(Context context) throws IOException {
