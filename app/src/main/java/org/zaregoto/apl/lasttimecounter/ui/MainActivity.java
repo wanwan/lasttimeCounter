@@ -30,8 +30,6 @@ public class MainActivity extends AppCompatActivity implements InputItemDetailDi
     private ArrayList<Item> items = new ArrayList<>();
     private ItemListAdapter adapter;
 
-    public static final String ARGS_ITEM_ID = "item";
-
     private ItemStore.OrderType orderType = ItemStore.OrderType.ORDER_TYPE_CURRENT_TO_OLD;
 
     @Override
@@ -54,7 +52,15 @@ public class MainActivity extends AppCompatActivity implements InputItemDetailDi
             fab.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    itemInputDialog = new InputItemDetailDialogFragment();
+
+                    String name = "";
+                    String detail = "";
+                    Date now = new Date();
+
+                    ItemType type = ItemType.createItemType(MainActivity.this, ItemUnit.DEFAULT_TYPE_ID);
+                    ItemUnit item = new ItemUnit(name, detail, type, now, now);
+
+                    itemInputDialog = InputItemDetailDialogFragment.newInstance(item);
                     itemInputDialog.show(getFragmentManager(), "");
                 }
             });
@@ -139,11 +145,10 @@ public class MainActivity extends AppCompatActivity implements InputItemDetailDi
         Bundle args = new Bundle();
         Item item = adapter.getItem(pos);
 
-        args.putParcelable(ARGS_ITEM_ID, item);
-
-        itemInputDialog = new InputItemDetailDialogFragment();
-        itemInputDialog.setArguments(args);
-        itemInputDialog.show(getFragmentManager(), "");
+        if (item instanceof ItemUnit) {
+            itemInputDialog = InputItemDetailDialogFragment.newInstance((ItemUnit) item);
+            itemInputDialog.show(getFragmentManager(), "");
+        }
     }
 
     @Override
@@ -169,4 +174,13 @@ public class MainActivity extends AppCompatActivity implements InputItemDetailDi
         return true;
     }
 
+//    @Override
+//    public void selectType(ItemType type) {
+//        Log.d(TAG, "***** MainActivity ItemType selected: " + type.getFilename() + "*****");
+//        try {
+//            itemInputDialog.selectType(type);
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+//    }
 }

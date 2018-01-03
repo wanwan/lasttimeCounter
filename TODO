@@ -1,7 +1,5 @@
 [TODO]
 
-* type の編集機能を実装する
-
 * 再実行 -> 実行履歴表示のフローを作成する
 
 * edit 用の dialog をやっつけになっているのをリファクタリングする
@@ -16,6 +14,10 @@
   -> おおまかな日にち (1week/2week/1month/3month/6month/1year)
   -> snooze (+1day/+3day/+1week/+2week/+1month)
   -> db で直近の snooze の日数 + 区分 (これがないと再編集で表示がむずかしいのでは?)
+
+* item を dialog 側で作成しているが, 空の item を activity 側で作成して修正を activity listener に一括させる.
+  -> 表示用のコピーを渡すのはありだが同期問題がでるのをどうするか?
+  -> getActivity().getCurrentItem() というような方法で取るのもok?
 
 * UI インターフェースを何に何を振るか考える
   listview
@@ -93,3 +95,5 @@
   -> おそらく日付更新の場合も必要
 
 * 再編集機能を作成する
+
+* type の編集機能を実装する

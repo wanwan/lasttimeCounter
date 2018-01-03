@@ -25,29 +25,38 @@ import java.util.Date;
 
 public class InputItemDetailDialogFragment extends DialogFragment implements SelectTypeDialogFragment.SelectTypeDialogListener {
 
+    public static final String ARGS_ITEM_ID = "item";
+
     private InputDialogListener mInputDialogListener;
     private Date selectedDay;
 
     private final String TAG = "InputItemDetailDialogFragment";
+    private View root;
+
+    ItemUnit item = null;
+    ItemType type;
+
+
+    public static InputItemDetailDialogFragment newInstance(ItemUnit item) {
+
+        InputItemDetailDialogFragment instance = new InputItemDetailDialogFragment();
+
+        Bundle args = new Bundle();
+        args.putParcelable(ARGS_ITEM_ID, item);
+        instance.setArguments(args);
+
+        return instance;
+    }
+
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
 
-        ItemUnit item = null;
-        final ItemType type;
         if (null != getArguments()) {
-            item = getArguments().getParcelable(MainActivity.ARGS_ITEM_ID);
+            item = getArguments().getParcelable(ARGS_ITEM_ID);
         }
         if (null != item) {
             type = item.getType();
-        }
-        else {
-            String name = "";
-            String detail = "";
-            Date now = new Date();
-
-            type = ItemType.createItemType(getActivity(), ItemUnit.DEFAULT_TYPE_ID);
-            item = new ItemUnit(name, detail, type, selectedDay, now);
         }
 
         selectedDay = new Date();
@@ -57,6 +66,7 @@ public class InputItemDetailDialogFragment extends DialogFragment implements Sel
 
         LayoutInflater inflater = (LayoutInflater)getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         final View content = inflater.inflate(R.layout.fragment_item_input_dialog, null);
+        root = content;
 
         builder.setView(content);
         if (null != item) {
@@ -85,7 +95,8 @@ public class InputItemDetailDialogFragment extends DialogFragment implements Sel
             typeIcon.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    SelectTypeDialogFragment typeSelectDialog = new SelectTypeDialogFragment();
+                    SelectTypeDialogFragment typeSelectDialog = SelectTypeDialogFragment.newInstance();
+                    typeSelectDialog.setDialogListener(InputItemDetailDialogFragment.this);
                     typeSelectDialog.show(getFragmentManager(), "");
                 }
             });
@@ -101,7 +112,8 @@ public class InputItemDetailDialogFragment extends DialogFragment implements Sel
             typeIcon.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    SelectTypeDialogFragment typeSelectDialog = new SelectTypeDialogFragment();
+                    SelectTypeDialogFragment typeSelectDialog = SelectTypeDialogFragment.newInstance();
+                    typeSelectDialog.setDialogListener(InputItemDetailDialogFragment.this);
                     typeSelectDialog.show(getFragmentManager(), "");
                 }
             });
@@ -189,8 +201,42 @@ public class InputItemDetailDialogFragment extends DialogFragment implements Sel
 
     @Override
     public void selectType(ItemType type) {
-        Log.d(TAG, "***** type selected ****");
+        Log.d("", "***** InputItemDetailDialogFragment ItemType selected: " + type.getFilename() + "*****");
+
+        if (null != item) {
+            item.setType(type);
+            try {
+                update(item);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
     }
+
+
+    public void update(ItemUnit item) throws IOException {
+
+        if (null != root) {
+            EditText _name = root.findViewById(R.id.name);
+            _name.setText(item.getName());
+            EditText _detail = root.findViewById(R.id.detail);
+            _detail.setText(item.getDetail());
+
+            EditText _dateText = root.findViewById(R.id.date);
+            final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+            String str = sdf.format(selectedDay);
+            _dateText.setText(str);
+
+            ImageView _typeIcon = root.findViewById(R.id.type_icon);
+            Drawable drawable = null;
+            drawable = item.getType().getAsDrawableImage(getActivity());
+            _typeIcon.setImageDrawable(drawable);
+
+            TextView _typeLabel = root.findViewById(R.id.type_label);
+            _typeLabel.setText(item.getType().getLabel());
+        }
+    }
+
 
     public interface InputDialogListener {
         void addItem(ItemUnit item);

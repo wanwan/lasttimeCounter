@@ -3,6 +3,7 @@ package org.zaregoto.apl.lasttimecounter.ui;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
+import android.app.Fragment;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.res.AssetManager;
@@ -30,6 +31,17 @@ public class SelectTypeDialogFragment extends DialogFragment {
 
     private final String TAG = "TypeDialogFragment";
     private SelectTypeDialogFragment.SelectTypeDialogListener mDialogListener;
+
+    public static SelectTypeDialogFragment newInstance() {
+
+        SelectTypeDialogFragment instance = new SelectTypeDialogFragment();
+        Bundle args = new Bundle();
+
+        instance.setArguments(args);
+
+        return instance;
+    }
+
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
@@ -63,6 +75,7 @@ public class SelectTypeDialogFragment extends DialogFragment {
                     if (null != mDialogListener) {
                         mDialogListener.selectType(type);
                     }
+                    dismiss();
                 }
             });
 
@@ -181,6 +194,12 @@ public class SelectTypeDialogFragment extends DialogFragment {
             mDialogListener = null;
         }
         super.onDetach();
+    }
+
+
+    // TODO: onAttach との整合の問題があるが, 上書きというルールであるとする. 通常は問題ないはずだが, 回転等の再作成を経る場合があるので良いやりかたではないはず
+    public void setDialogListener(SelectTypeDialogListener listener) {
+        this.mDialogListener = listener;
     }
 
     public interface SelectTypeDialogListener {
