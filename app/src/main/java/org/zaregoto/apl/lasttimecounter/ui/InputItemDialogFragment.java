@@ -23,23 +23,23 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-public class InputItemDetailDialogFragment extends DialogFragment implements SelectTypeDialogFragment.SelectTypeDialogListener {
+public class InputItemDialogFragment extends DialogFragment implements SelectTypeDialogFragment.SelectTypeDialogListener {
 
     public static final String ARGS_ITEM_ID = "item";
 
     private InputDialogListener mInputDialogListener;
     private Date selectedDay;
 
-    private final String TAG = "InputItemDetailDialogFragment";
+    private final String TAG = "InputItemDialogFragment";
     private View root;
 
     ItemUnit item = null;
     ItemType type;
 
 
-    public static InputItemDetailDialogFragment newInstance(ItemUnit item) {
+    public static InputItemDialogFragment newInstance(ItemUnit item) {
 
-        InputItemDetailDialogFragment instance = new InputItemDetailDialogFragment();
+        InputItemDialogFragment instance = new InputItemDialogFragment();
 
         Bundle args = new Bundle();
         args.putParcelable(ARGS_ITEM_ID, item);
@@ -65,7 +65,7 @@ public class InputItemDetailDialogFragment extends DialogFragment implements Sel
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 
         LayoutInflater inflater = (LayoutInflater)getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        final View content = inflater.inflate(R.layout.fragment_item_input_dialog, null);
+        final View content = inflater.inflate(R.layout.fragment_input_item_dialog, null);
         root = content;
 
         builder.setView(content);
@@ -96,7 +96,7 @@ public class InputItemDetailDialogFragment extends DialogFragment implements Sel
                 @Override
                 public void onClick(View view) {
                     SelectTypeDialogFragment typeSelectDialog = SelectTypeDialogFragment.newInstance();
-                    typeSelectDialog.setDialogListener(InputItemDetailDialogFragment.this);
+                    typeSelectDialog.setDialogListener(InputItemDialogFragment.this);
                     typeSelectDialog.show(getFragmentManager(), "");
                 }
             });
@@ -113,7 +113,7 @@ public class InputItemDetailDialogFragment extends DialogFragment implements Sel
                 @Override
                 public void onClick(View view) {
                     SelectTypeDialogFragment typeSelectDialog = SelectTypeDialogFragment.newInstance();
-                    typeSelectDialog.setDialogListener(InputItemDetailDialogFragment.this);
+                    typeSelectDialog.setDialogListener(InputItemDialogFragment.this);
                     typeSelectDialog.show(getFragmentManager(), "");
                 }
             });
@@ -147,6 +147,23 @@ public class InputItemDetailDialogFragment extends DialogFragment implements Sel
                         }
                     });
                     dpd.show();
+                }
+            });
+        }
+
+
+        EditText alarmText = content.findViewById(R.id.alarm);
+        if (null != alarmText) {
+
+            String str = "";
+            alarmText.setText(str);
+            alarmText.setFocusable(false);
+
+            alarmText.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    InputAlarmDialogFragment dialog = InputAlarmDialogFragment.newInstance();
+                    dialog.show(getFragmentManager(), "");
                 }
             });
 
@@ -201,7 +218,7 @@ public class InputItemDetailDialogFragment extends DialogFragment implements Sel
 
     @Override
     public void selectType(ItemType type) {
-        Log.d("", "***** InputItemDetailDialogFragment ItemType selected: " + type.getFilename() + "*****");
+        Log.d("", "***** InputItemDialogFragment ItemType selected: " + type.getFilename() + "*****");
 
         if (null != item) {
             item.setType(type);

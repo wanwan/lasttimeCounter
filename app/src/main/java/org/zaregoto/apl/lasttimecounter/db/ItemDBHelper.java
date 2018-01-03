@@ -42,6 +42,11 @@ public class ItemDBHelper extends SQLiteOpenHelper {
     static final String DROP_HISTORIES_TABLE = "drop table histories;";
     static final String HISTORIES_TABLE_NAME = "histories";
 
+    static final String CREATE_ALARMS_TABLE = "create table alarms ( " +
+            "_id integer, " +
+            "day_after_lastdate integer );";
+    static final String DROP_ALARMS_TABLE = "drop table alarms;";
+    static final String ALARMS_TABLE_NAME = "alarms";
 
     static final String CREATE_METAINFO_TABLE = "create table metainfo (" +
             "dbversion integer," +
@@ -66,6 +71,7 @@ public class ItemDBHelper extends SQLiteOpenHelper {
 
         db.execSQL(FOREIGN_KEY_ENABLE);
 
+        db.execSQL(CREATE_ALARMS_TABLE);
         db.execSQL(CREATE_ITEMTYPES_TABLE);
         db.execSQL(CREATE_HISTORIES_TABLE);
         db.execSQL(CREATE_ITEMS_TABLE);

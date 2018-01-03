@@ -1,0 +1,42 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:app="http://schemas.android.com/apk/res-auto"
+              xmlns:tools="http://schemas.android.com/tools"
+              android:layout_height="wrap_content"
+              android:layout_width="wrap_content"
+              android:orientation="vertical"
+              tools:context="org.zaregoto.apl.lasttimecounter.ui.InputAlarmDialogFragment">
+
+    <RelativeLayout
+            android:layout_width="match_parent"
+             android:layout_height="match_parent"
+             >
+
+        <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="7dip"
+                android:layout_marginBottom="7dip"
+                android:layout_marginStart="5dip"
+                android:text="Duration"
+                android:id="@+id/durationLbl"
+                android:layout_toRightOf="@+id/icons"/>
+        <Spinner
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="3dip"
+                android:inputType="text"
+                android:text=""
+                android:ems="10"
+                android:id="@+id/name"
+                android:layout_alignBaseline="@id/durationLbl"
+                android:layout_toEndOf="@id/durationLbl"
+        />
+
+    </RelativeLayout>
+    <CalendarView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:id="@+id/datePicker"/>
+
+</LinearLayout>

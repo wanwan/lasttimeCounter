@@ -6,7 +6,6 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
@@ -23,10 +22,10 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
-public class MainActivity extends AppCompatActivity implements InputItemDetailDialogFragment.InputDialogListener, AdapterView.OnItemClickListener, AdapterView.OnItemLongClickListener {
+public class MainActivity extends AppCompatActivity implements InputItemDialogFragment.InputDialogListener, AdapterView.OnItemClickListener, AdapterView.OnItemLongClickListener {
 
     private static final String TAG = "MainActivity";
-    private InputItemDetailDialogFragment itemInputDialog;
+    private InputItemDialogFragment itemInputDialog;
     private ArrayList<Item> items = new ArrayList<>();
     private ItemListAdapter adapter;
 
@@ -60,7 +59,7 @@ public class MainActivity extends AppCompatActivity implements InputItemDetailDi
                     ItemType type = ItemType.createItemType(MainActivity.this, ItemUnit.DEFAULT_TYPE_ID);
                     ItemUnit item = new ItemUnit(name, detail, type, now, now);
 
-                    itemInputDialog = InputItemDetailDialogFragment.newInstance(item);
+                    itemInputDialog = InputItemDialogFragment.newInstance(item);
                     itemInputDialog.show(getFragmentManager(), "");
                 }
             });
@@ -146,7 +145,7 @@ public class MainActivity extends AppCompatActivity implements InputItemDetailDi
         Item item = adapter.getItem(pos);
 
         if (item instanceof ItemUnit) {
-            itemInputDialog = InputItemDetailDialogFragment.newInstance((ItemUnit) item);
+            itemInputDialog = InputItemDialogFragment.newInstance((ItemUnit) item);
             itemInputDialog.show(getFragmentManager(), "");
         }
     }
