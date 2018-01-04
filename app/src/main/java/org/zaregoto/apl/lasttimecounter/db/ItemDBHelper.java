@@ -43,7 +43,8 @@ public class ItemDBHelper extends SQLiteOpenHelper {
     static final String HISTORIES_TABLE_NAME = "histories";
 
     static final String CREATE_ALARMS_TABLE = "create table alarms ( " +
-            "_id integer, " +
+            "_id integer primary key, " +
+            "alarm_id integer not null," +
             "day_after_lastdate integer );";
     static final String DROP_ALARMS_TABLE = "drop table alarms;";
     static final String ALARMS_TABLE_NAME = "alarms";

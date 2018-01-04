@@ -4,10 +4,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Environment;
-import org.zaregoto.apl.lasttimecounter.model.Item;
-import org.zaregoto.apl.lasttimecounter.model.ItemHeader;
-import org.zaregoto.apl.lasttimecounter.model.ItemUnit;
-import org.zaregoto.apl.lasttimecounter.model.ItemType;
+import org.zaregoto.apl.lasttimecounter.model.*;
 import org.zaregoto.apl.lasttimecounter.ui.MainActivity;
 
 import java.io.File;
@@ -23,8 +20,8 @@ import java.util.Date;
 
 public class ItemStore {
 
-    static final String QUERY_TABLE_NEW_TO_OLD = "select _id, name, detail, type_id, lasttime, createtime from items order by lasttime desc;";
-    static final String QUERY_TABLE_OLD_TO_NEW = "select _id, name, detail, type_id, lasttime, createtime from items order by lasttime;";
+    static final String QUERY_TABLE_NEW_TO_OLD = "select items._id as _id, name, detail, type_id, lasttime, createtime, alarm_id, day_after_lastdate from items left join alarms on items._id = alarms._id order by lasttime desc;";
+    static final String QUERY_TABLE_OLD_TO_NEW = "select items._id as _id, name, detail, type_id, lasttime, createtime, alarm_id, day_after_lastdate from items left join alarms on items._id = alarms._id order by lasttime;";
     static final String INSERT_TABLE = "insert into items (name, detail, type_id, lasttime, createtime) values (?, ?, ?, ?, ?) ;";
     static final String UPDATE_TABLE = "update items set name=?, detail=?, type_id=?, lasttime=?, createtime=? where _id=? ;";
     static final String DELETE_TABLE = "delete from items where _id = ?;";
@@ -51,6 +48,11 @@ public class ItemStore {
         ItemType type;
         Date lasttime;
         Date createtime;
+
+        int alarm_id;
+        int day_after_lastdate;
+        Alarm alarm;
+
         ItemUnit item;
 
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -72,6 +74,16 @@ public class ItemStore {
                     name = cursor.getString(cursor.getColumnIndex("name"));
                     detail = cursor.getString(cursor.getColumnIndex("detail"));
                     type_id = cursor.getInt(cursor.getColumnIndex("type_id"));
+
+                    if (! cursor.isNull(cursor.getColumnIndex("alarm_id"))) {
+                        alarm_id = cursor.getInt(cursor.getColumnIndex("alarm_id"));
+                        day_after_lastdate = cursor.getInt(cursor.getColumnIndex("day_after_lastdate"));
+                        alarm = new Alarm(alarm_id, day_after_lastdate);
+                    }
+                    else {
+                        alarm = null;
+                    }
+
                     type = ItemType.createItemType(context, type_id);
                     try {
                         lasttime = sdf.parse(cursor.getString(cursor.getColumnIndex("lasttime")));
@@ -85,7 +97,7 @@ public class ItemStore {
                         createtime = null;
                         e.printStackTrace();
                     }
-                    item = new ItemUnit(_id, name, detail, type, lasttime, createtime);
+                    item = new ItemUnit(_id, name, detail, type, lasttime, createtime, alarm);
                     if (null != items) {
                         items.add(item);
                     }

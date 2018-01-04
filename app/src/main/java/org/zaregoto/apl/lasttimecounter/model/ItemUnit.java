@@ -16,12 +16,14 @@ public class ItemUnit implements Comparable<ItemUnit>, Parcelable, Item {
     private Date createtime;
     private Date lastTime;
 
+    private Alarm alarm;
+
 
     private ItemUnit() {
         id = -1;
     }
 
-    public ItemUnit(int id, String name, String detail, ItemType type, Date lastTime, Date createtime) {
+    public ItemUnit(int id, String name, String detail, ItemType type, Date lastTime, Date createtime, Alarm alarm) {
         this();
         this.id = id;
         this.name = name;
@@ -29,15 +31,19 @@ public class ItemUnit implements Comparable<ItemUnit>, Parcelable, Item {
         this.type = type;
         this.lastTime = lastTime;
         this.createtime = createtime;
+
+        this.alarm = alarm;
     }
 
-    public ItemUnit(String name, String detail, ItemType type, Date lastTime, Date createtime) {
+    public ItemUnit(String name, String detail, ItemType type, Date lastTime, Date createtime, Alarm alarm) {
         this();
         this.name = name;
         this.detail = detail;
         this.type = type;
         this.lastTime = lastTime;
         this.createtime = createtime;
+
+        this.alarm = alarm;
     }
 
     public ItemUnit(Parcel in) {
@@ -97,6 +103,14 @@ public class ItemUnit implements Comparable<ItemUnit>, Parcelable, Item {
 
     public void setLastTime(Date lastTime) {
         this.lastTime = lastTime;
+    }
+
+    public Alarm getAlarm() {
+        return alarm;
+    }
+
+    public void setAlarm(Alarm alarm) {
+        this.alarm = alarm;
     }
 
 

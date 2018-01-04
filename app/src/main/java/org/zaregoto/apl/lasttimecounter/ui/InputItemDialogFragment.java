@@ -15,6 +15,7 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+import org.zaregoto.apl.lasttimecounter.model.Alarm;
 import org.zaregoto.apl.lasttimecounter.model.ItemUnit;
 import org.zaregoto.apl.lasttimecounter.model.ItemType;
 import org.zaregoto.apl.lasttimecounter.R;
@@ -162,7 +163,8 @@ public class InputItemDialogFragment extends DialogFragment implements SelectTyp
             alarmText.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    InputAlarmDialogFragment dialog = InputAlarmDialogFragment.newInstance();
+                    Alarm alarm = item.getAlarm();
+                    InputAlarmDialogFragment dialog = InputAlarmDialogFragment.newInstance(alarm);
                     dialog.show(getFragmentManager(), "");
                 }
             });

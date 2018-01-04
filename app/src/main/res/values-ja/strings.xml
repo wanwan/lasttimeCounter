@@ -10,4 +10,17 @@
     <string name="fragment_progress_dialog_name"/>
     <string name="fragment_progress_dialog_cancel"/>
 
+    <string-array name="planets_array">
+        <item>なし</item>
+        <item>明日</item>
+        <item>1 週間後</item>
+        <item>2 週間後</item>
+        <item>1 ヶ月後</item>
+        <item>2 ヶ月後</item>
+        <item>3 ヶ月後</item>
+        <item>6 ヶ月後</item>
+        <item>1 年後</item>
+        <item>カレンダーから選択</item>
+    </string-array>
+
 </resources>

@@ -8,8 +8,9 @@
 
     <RelativeLayout
             android:layout_width="match_parent"
-             android:layout_height="match_parent"
-             >
+            android:layout_height="match_parent"
+            android:layout_margin="15dp"
+    >
 
         <TextView
                 android:layout_width="wrap_content"
@@ -19,7 +20,7 @@
                 android:layout_marginStart="5dip"
                 android:text="Duration"
                 android:id="@+id/durationLbl"
-                android:layout_toRightOf="@+id/icons"/>
+                />
         <Spinner
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -27,7 +28,7 @@
                 android:inputType="text"
                 android:text=""
                 android:ems="10"
-                android:id="@+id/name"
+                android:id="@+id/alarmSpinner"
                 android:layout_alignBaseline="@id/durationLbl"
                 android:layout_toEndOf="@id/durationLbl"
         />
@@ -37,6 +38,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
-            android:id="@+id/datePicker"/>
+            android:id="@+id/alarmCalendar"/>
 
 </LinearLayout>

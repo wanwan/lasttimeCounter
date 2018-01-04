@@ -10,4 +10,17 @@
     <string name="fragment_progress_dialog_name"/>
     <string name="fragment_progress_dialog_cancel"/>
 
+    <string-array name="planets_array">
+        <item>None</item>
+        <item>Tomorrow</item>
+        <item>1 Week</item>
+        <item>2 Week</item>
+        <item>1 Month</item>
+        <item>2 Month</item>
+        <item>3 Month</item>
+        <item>6 Month</item>
+        <item>1 Year</item>
+        <item>Set Day By Calendar</item>
+    </string-array>
+
 </resources>

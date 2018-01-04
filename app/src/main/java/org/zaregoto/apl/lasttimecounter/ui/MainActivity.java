@@ -11,6 +11,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import org.zaregoto.apl.lasttimecounter.ItemListAdapter;
+import org.zaregoto.apl.lasttimecounter.model.Alarm;
 import org.zaregoto.apl.lasttimecounter.model.Item;
 import org.zaregoto.apl.lasttimecounter.model.ItemType;
 import org.zaregoto.apl.lasttimecounter.model.ItemUnit;
@@ -57,7 +58,8 @@ public class MainActivity extends AppCompatActivity implements InputItemDialogFr
                     Date now = new Date();
 
                     ItemType type = ItemType.createItemType(MainActivity.this, ItemUnit.DEFAULT_TYPE_ID);
-                    ItemUnit item = new ItemUnit(name, detail, type, now, now);
+                    Alarm alarm = new Alarm(Alarm.ALARM_TYPE.ALARM_TYPE_NONE, 0);
+                    ItemUnit item = new ItemUnit(name, detail, type, now, now, alarm);
 
                     itemInputDialog = InputItemDialogFragment.newInstance(item);
                     itemInputDialog.show(getFragmentManager(), "");
