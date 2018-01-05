@@ -10,7 +10,7 @@
     <string name="fragment_progress_dialog_name"/>
     <string name="fragment_progress_dialog_cancel"/>
 
-    <string-array name="planets_array">
+    <string-array name="alarm_type_array">
         <item>なし</item>
         <item>明日</item>
         <item>1 週間後</item>

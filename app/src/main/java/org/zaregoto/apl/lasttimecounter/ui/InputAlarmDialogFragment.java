@@ -1,25 +1,16 @@
 package org.zaregoto.apl.lasttimecounter.ui;
 
 import android.app.AlertDialog;
-import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.*;
 import org.zaregoto.apl.lasttimecounter.R;
 import org.zaregoto.apl.lasttimecounter.model.Alarm;
-import org.zaregoto.apl.lasttimecounter.model.ItemType;
-import org.zaregoto.apl.lasttimecounter.model.ItemUnit;
-
-import java.io.IOException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 
 public class InputAlarmDialogFragment extends DialogFragment {
 
@@ -56,7 +47,7 @@ public class InputAlarmDialogFragment extends DialogFragment {
         if (null != spinner) {
 
             final ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getActivity(),
-                    R.array.planets_array, android.R.layout.simple_spinner_item);
+                    R.array.alarm_type_array, android.R.layout.simple_spinner_item);
             adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
             spinner.setAdapter(adapter);
 

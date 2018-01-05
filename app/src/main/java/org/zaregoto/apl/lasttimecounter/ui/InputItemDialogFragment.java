@@ -156,8 +156,10 @@ public class InputItemDialogFragment extends DialogFragment implements SelectTyp
         EditText alarmText = content.findViewById(R.id.alarm);
         if (null != alarmText) {
 
-            String str = "";
+            Alarm alarm = item.getAlarm();
+            String str = alarm.getAlarmLabel(getActivity());
             alarmText.setText(str);
+
             alarmText.setFocusable(false);
 
             alarmText.setOnClickListener(new View.OnClickListener() {
@@ -168,7 +170,6 @@ public class InputItemDialogFragment extends DialogFragment implements SelectTyp
                     dialog.show(getFragmentManager(), "");
                 }
             });
-
         }
 
 

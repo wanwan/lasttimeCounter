@@ -1,37 +1,100 @@
 package org.zaregoto.apl.lasttimecounter.model;
 
+import android.content.Context;
 import android.os.Parcel;
 import android.os.Parcelable;
+import org.zaregoto.apl.lasttimecounter.R;
 
 public class Alarm implements Parcelable {
 
     public enum ALARM_TYPE {
-        ALARM_TYPE_NONE(0),
-        ALARM_TYPE_DAY_BY_DAY(1),
-        ALARM_TYPE_1WEEK(2),
-        ALARM_TYPE_2WEEK(3),
-        ALARM_TYPE_1MONTH(4),
-        ALARM_TYPE_2MONTH(5),
-        ALARM_TYPE_3MONTH(6),
-        ALARM_TYPE_6MONTH(7),
-        ALARM_TYPE_1YEAR(8),
-        ALARM_TYPE_SET_SPECIFIC_DAY(9),;
+        ALARM_TYPE_NONE(0, 0, 0),
+        ALARM_TYPE_DAY_BY_DAY(1, 1, 1),
+        ALARM_TYPE_1WEEK(2, 7, 2),
+        ALARM_TYPE_2WEEK(3, 14, 3),
+        ALARM_TYPE_1MONTH(4, 30, 4),
+        ALARM_TYPE_2MONTH(5, 60, 5),
+        ALARM_TYPE_3MONTH(6, 90, 6),
+        ALARM_TYPE_6MONTH(7, 180, 7),
+        ALARM_TYPE_1YEAR(8, 365, 8),
+        ALARM_TYPE_SET_SPECIFIC_DAY(9, null, 9),;
 
-        private final int id;
+        private final int typeId;
+        private final Integer defaultDurationDays;
+        private final int strIdx;
 
-        ALARM_TYPE(int id) {
-            this.id = id;
+        ALARM_TYPE(int id, Integer days, int strIdx) {
+            this.typeId = id;
+            this.defaultDurationDays = days;
+            this.strIdx = strIdx;
         }
 
         public int getInt() {
-            return this.id;
+            return this.typeId;
+        }
+
+        public static ALARM_TYPE getAlarmTypeByTypeId(int typeId) {
+
+            ALARM_TYPE ret;
+
+            if (typeId == ALARM_TYPE_NONE.getInt()) {
+                ret = ALARM_TYPE_NONE;
+            }
+            else if (typeId == ALARM_TYPE_DAY_BY_DAY.getInt()) {
+                ret = ALARM_TYPE_DAY_BY_DAY;
+            }
+            else if (typeId == ALARM_TYPE_1WEEK.getInt()) {
+                ret = ALARM_TYPE_1WEEK;
+            }
+            else if (typeId == ALARM_TYPE_2WEEK.getInt()) {
+                ret = ALARM_TYPE_2WEEK;
+            }
+            else if (typeId == ALARM_TYPE_1MONTH.getInt()) {
+                ret = ALARM_TYPE_1MONTH;
+            }
+            else if (typeId == ALARM_TYPE_2MONTH.getInt()) {
+                ret = ALARM_TYPE_2MONTH;
+            }
+            else if (typeId == ALARM_TYPE_3MONTH.getInt()) {
+                ret = ALARM_TYPE_3MONTH;
+            }
+            else if (typeId == ALARM_TYPE_6MONTH.getInt()) {
+                ret = ALARM_TYPE_6MONTH;
+            }
+            else if (typeId == ALARM_TYPE_1YEAR.getInt()) {
+                ret = ALARM_TYPE_1YEAR;
+            }
+            else if (typeId == ALARM_TYPE_SET_SPECIFIC_DAY.getInt()) {
+                ret = ALARM_TYPE_SET_SPECIFIC_DAY;
+            }
+            else {
+                ret = null;
+            }
+            return ret;
+        }
+
+        public int getTypeId() {
+            return typeId;
+        }
+
+        public int getStrIdx() {
+            return strIdx;
+        }
+
+        public Integer getDefaultDurationDays() {
+            return defaultDurationDays;
         }
     }
 
     private ALARM_TYPE type;
-    private int days;
+    private Integer days;
 
     private Alarm() {
+    }
+
+    public Alarm (ALARM_TYPE type) {
+        this.type = type;
+        this.days = null;
     }
 
     public Alarm (ALARM_TYPE type, int days) {
@@ -40,75 +103,15 @@ public class Alarm implements Parcelable {
     }
 
     public Alarm(int _type, int days) {
-
-        if (_type == ALARM_TYPE.ALARM_TYPE_NONE.getInt()) {
-            type = ALARM_TYPE.ALARM_TYPE_NONE;
-        }
-        else if (_type == ALARM_TYPE.ALARM_TYPE_DAY_BY_DAY.getInt()) {
-            type = ALARM_TYPE.ALARM_TYPE_DAY_BY_DAY;
-        }
-        else if (_type == ALARM_TYPE.ALARM_TYPE_1WEEK.getInt()) {
-            type = ALARM_TYPE.ALARM_TYPE_1WEEK;
-        }
-        else if (_type == ALARM_TYPE.ALARM_TYPE_2WEEK.getInt()) {
-            type = ALARM_TYPE.ALARM_TYPE_2WEEK;
-        }
-        else if (_type == ALARM_TYPE.ALARM_TYPE_1MONTH.getInt()) {
-            type = ALARM_TYPE.ALARM_TYPE_1MONTH;
-        }
-        else if (_type == ALARM_TYPE.ALARM_TYPE_2MONTH.getInt()) {
-            type = ALARM_TYPE.ALARM_TYPE_2MONTH;
-        }
-        else if (_type == ALARM_TYPE.ALARM_TYPE_3MONTH.getInt()) {
-            type = ALARM_TYPE.ALARM_TYPE_3MONTH;
-        }
-        else if (_type == ALARM_TYPE.ALARM_TYPE_6MONTH.getInt()) {
-            type = ALARM_TYPE.ALARM_TYPE_6MONTH;
-        }
-        else if (_type == ALARM_TYPE.ALARM_TYPE_1YEAR.getInt()) {
-            type = ALARM_TYPE.ALARM_TYPE_1YEAR;
-        }
-        else if (_type == ALARM_TYPE.ALARM_TYPE_SET_SPECIFIC_DAY.getInt()) {
-            type = ALARM_TYPE.ALARM_TYPE_SET_SPECIFIC_DAY;
-        }
-
+        this.type = ALARM_TYPE.getAlarmTypeByTypeId(_type);
         this.days = days;
     }
 
 
     public Alarm(Parcel in) {
         int _type = in.readInt();
-        days = in.readInt();
-        if (_type == ALARM_TYPE.ALARM_TYPE_NONE.getInt()) {
-            type = ALARM_TYPE.ALARM_TYPE_NONE;
-        }
-        else if (_type == ALARM_TYPE.ALARM_TYPE_DAY_BY_DAY.getInt()) {
-            type = ALARM_TYPE.ALARM_TYPE_DAY_BY_DAY;
-        }
-        else if (_type == ALARM_TYPE.ALARM_TYPE_1WEEK.getInt()) {
-            type = ALARM_TYPE.ALARM_TYPE_1WEEK;
-        }
-        else if (_type == ALARM_TYPE.ALARM_TYPE_2WEEK.getInt()) {
-            type = ALARM_TYPE.ALARM_TYPE_2WEEK;
-        }
-        else if (_type == ALARM_TYPE.ALARM_TYPE_1MONTH.getInt()) {
-            type = ALARM_TYPE.ALARM_TYPE_1MONTH;
-        }
-        else if (_type == ALARM_TYPE.ALARM_TYPE_2MONTH.getInt()) {
-            type = ALARM_TYPE.ALARM_TYPE_2MONTH;
-        }
-        else if (_type == ALARM_TYPE.ALARM_TYPE_3MONTH.getInt()) {
-            type = ALARM_TYPE.ALARM_TYPE_3MONTH;
-        }
-        else if (_type == ALARM_TYPE.ALARM_TYPE_6MONTH.getInt()) {
-            type = ALARM_TYPE.ALARM_TYPE_6MONTH;
-        }
-        else if (_type == ALARM_TYPE.ALARM_TYPE_1YEAR.getInt()) {
-            type = ALARM_TYPE.ALARM_TYPE_1YEAR;
-        }
-        else if (_type == ALARM_TYPE.ALARM_TYPE_SET_SPECIFIC_DAY.getInt()) {
-            type = ALARM_TYPE.ALARM_TYPE_SET_SPECIFIC_DAY;
-        }
+        days = (Integer) in.readValue(Integer.class.getClassLoader());
+        type = ALARM_TYPE.getAlarmTypeByTypeId(_type);
     }
 
     public ALARM_TYPE getType() {
@@ -119,12 +122,25 @@ public class Alarm implements Parcelable {
         this.type = type;
     }
 
-    public int getDays() {
+    public Integer getDays() {
         return days;
     }
 
-    public void setDays(int days) {
+    public void setDays(Integer days) {
         this.days = days;
+    }
+
+    public String getAlarmLabel(Context context) {
+        String str = "";
+        String[] array;
+        if (null != type) {
+            array = context.getResources().getStringArray(R.array.alarm_type_array);
+            if (null != array && type.getStrIdx() < array.length) {
+                str = array[type.getStrIdx()];
+            }
+        }
+
+        return str;
     }
 
     @Override
@@ -135,7 +151,7 @@ public class Alarm implements Parcelable {
     @Override
     public void writeToParcel(Parcel out, int i) {
         out.writeInt(type.getInt());
-        out.writeInt(days);
+        out.writeValue(days);
     }
 
     public static final Parcelable.Creator CREATOR
