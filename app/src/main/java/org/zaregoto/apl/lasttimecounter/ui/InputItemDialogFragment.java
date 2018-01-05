@@ -24,7 +24,7 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-public class InputItemDialogFragment extends DialogFragment implements SelectTypeDialogFragment.SelectTypeDialogListener {
+public class InputItemDialogFragment extends DialogFragment implements SelectTypeDialogFragment.SelectTypeDialogListener, InputAlarmDialogFragment.InputAlarmDialogListener {
 
     public static final String ARGS_ITEM_ID = "item";
 
@@ -167,6 +167,7 @@ public class InputItemDialogFragment extends DialogFragment implements SelectTyp
                 public void onClick(View view) {
                     Alarm alarm = item.getAlarm();
                     InputAlarmDialogFragment dialog = InputAlarmDialogFragment.newInstance(alarm);
+                    dialog.setDialogListener(InputItemDialogFragment.this);
                     dialog.show(getFragmentManager(), "");
                 }
             });
@@ -236,6 +237,8 @@ public class InputItemDialogFragment extends DialogFragment implements SelectTyp
 
     public void update(ItemUnit item) throws IOException {
 
+        String str = "";
+
         if (null != root) {
             EditText _name = root.findViewById(R.id.name);
             _name.setText(item.getName());
@@ -244,7 +247,7 @@ public class InputItemDialogFragment extends DialogFragment implements SelectTyp
 
             EditText _dateText = root.findViewById(R.id.date);
             final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-            String str = sdf.format(selectedDay);
+            str = sdf.format(selectedDay);
             _dateText.setText(str);
 
             ImageView _typeIcon = root.findViewById(R.id.type_icon);
@@ -254,6 +257,21 @@ public class InputItemDialogFragment extends DialogFragment implements SelectTyp
 
             TextView _typeLabel = root.findViewById(R.id.type_label);
             _typeLabel.setText(item.getType().getLabel());
+
+            EditText alarmText = root.findViewById(R.id.alarm);
+            Alarm alarm = item.getAlarm();
+            str = alarm.getAlarmLabel(getActivity());
+            alarmText.setText(str);
+        }
+    }
+
+    @Override
+    public void setAlarm(Alarm alarm) {
+        item.setAlarm(alarm);
+        try {
+            update(item);
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 

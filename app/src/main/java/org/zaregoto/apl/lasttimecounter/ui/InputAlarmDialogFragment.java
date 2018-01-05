@@ -14,20 +14,21 @@ import org.zaregoto.apl.lasttimecounter.model.Alarm;
 
 public class InputAlarmDialogFragment extends DialogFragment {
 
-    private static final String ALARM_ID = "ALARM_ID";
+    private static final String ARGS_ALARM_ID = "ALARM_ID";
 
     private InputAlarmDialogListener mInputDialogListener;
     private final String TAG = "InputAlarmDialogFragment";
     private Alarm alarm;
 
     private View content;
+    private InputAlarmDialogListener mDialogListener;
 
     public static InputAlarmDialogFragment newInstance(Alarm alarm) {
 
         InputAlarmDialogFragment instance = new InputAlarmDialogFragment();
 
         Bundle args = new Bundle();
-        args.putParcelable(ALARM_ID, alarm);
+        args.putParcelable(ARGS_ALARM_ID, alarm);
         instance.setArguments(args);
 
         return instance;
@@ -36,6 +37,10 @@ public class InputAlarmDialogFragment extends DialogFragment {
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
+
+        if (null != getArguments()) {
+            alarm = getArguments().getParcelable(ARGS_ALARM_ID);
+        }
 
         // Use the Builder class for convenient dialog construction
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
@@ -54,8 +59,11 @@ public class InputAlarmDialogFragment extends DialogFragment {
             spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                 @Override
                 public void onItemSelected(AdapterView<?> adapterView, View view, int pos, long id) {
-                    // TODO: pos と enum の関係を暗黙に一致するとしてしまっているのをなんとかする
-                    if (Alarm.ALARM_TYPE.ALARM_TYPE_SET_SPECIFIC_DAY.getInt() == pos) {
+
+                    Alarm.ALARM_TYPE _type = Alarm.ALARM_TYPE.getAlarmTypeByStrIdx(pos);
+                    alarm.setType(_type);
+
+                    if (Alarm.ALARM_TYPE.ALARM_TYPE_SET_SPECIFIC_DAY == _type) {
                         CalendarView cv = content.findViewById(R.id.alarmCalendar);
                         if (null != cv) {
                             cv.setEnabled(true);
@@ -79,7 +87,9 @@ public class InputAlarmDialogFragment extends DialogFragment {
         builder.setPositiveButton(R.string.fragment_item_input_dialog_ok, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
-
+                if (null != mDialogListener) {
+                    mDialogListener.setAlarm(alarm);
+                }
                 dismiss();
             }
         });
@@ -105,7 +115,14 @@ public class InputAlarmDialogFragment extends DialogFragment {
         super.onDetach();
     }
 
+    // TODO: onAttach との整合の問題があるが, 上書きというルールであるとする. 通常は問題ないはずだが, 回転等の再作成を経る場合があるので良いやりかたではないはず
+    public void setDialogListener(InputAlarmDialogListener listener) {
+        this.mDialogListener = listener;
+    }
+
     public interface InputAlarmDialogListener {
         void setAlarm(Alarm alarm);
     }
+
+
 }

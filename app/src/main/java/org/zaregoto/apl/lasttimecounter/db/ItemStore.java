@@ -81,7 +81,7 @@ public class ItemStore {
                         alarm = new Alarm(alarm_id, day_after_lastdate);
                     }
                     else {
-                        alarm = null;
+                        alarm = new Alarm(Alarm.ALARM_TYPE.ALARM_TYPE_NONE);
                     }
 
                     type = ItemType.createItemType(context, type_id);

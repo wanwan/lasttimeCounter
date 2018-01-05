@@ -73,6 +73,46 @@ public class Alarm implements Parcelable {
             return ret;
         }
 
+        public static ALARM_TYPE getAlarmTypeByStrIdx(int strIdx) {
+
+            ALARM_TYPE ret;
+
+            if (strIdx == ALARM_TYPE_NONE.getStrIdx()) {
+                ret = ALARM_TYPE_NONE;
+            }
+            else if (strIdx == ALARM_TYPE_DAY_BY_DAY.getStrIdx()) {
+                ret = ALARM_TYPE_DAY_BY_DAY;
+            }
+            else if (strIdx == ALARM_TYPE_1WEEK.getStrIdx()) {
+                ret = ALARM_TYPE_1WEEK;
+            }
+            else if (strIdx == ALARM_TYPE_2WEEK.getStrIdx()) {
+                ret = ALARM_TYPE_2WEEK;
+            }
+            else if (strIdx == ALARM_TYPE_1MONTH.getStrIdx()) {
+                ret = ALARM_TYPE_1MONTH;
+            }
+            else if (strIdx == ALARM_TYPE_2MONTH.getStrIdx()) {
+                ret = ALARM_TYPE_2MONTH;
+            }
+            else if (strIdx == ALARM_TYPE_3MONTH.getStrIdx()) {
+                ret = ALARM_TYPE_3MONTH;
+            }
+            else if (strIdx == ALARM_TYPE_6MONTH.getStrIdx()) {
+                ret = ALARM_TYPE_6MONTH;
+            }
+            else if (strIdx == ALARM_TYPE_1YEAR.getStrIdx()) {
+                ret = ALARM_TYPE_1YEAR;
+            }
+            else if (strIdx == ALARM_TYPE_SET_SPECIFIC_DAY.getStrIdx()) {
+                ret = ALARM_TYPE_SET_SPECIFIC_DAY;
+            }
+            else {
+                ret = null;
+            }
+            return ret;
+        }
+
         public int getTypeId() {
             return typeId;
         }
