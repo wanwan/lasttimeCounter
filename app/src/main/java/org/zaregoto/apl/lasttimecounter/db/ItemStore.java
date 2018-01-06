@@ -20,14 +20,20 @@ import java.util.Date;
 
 public class ItemStore {
 
-    static final String QUERY_TABLE_NEW_TO_OLD = "select items._id as _id, name, detail, type_id, lasttime, createtime, alarm_id, day_after_lastdate from items left join alarms on items._id = alarms._id order by lasttime desc;";
-    static final String QUERY_TABLE_OLD_TO_NEW = "select items._id as _id, name, detail, type_id, lasttime, createtime, alarm_id, day_after_lastdate from items left join alarms on items._id = alarms._id order by lasttime;";
+    static final String QUERY_TABLE_NEW_TO_OLD = "select items._id as _id, name, detail, type_id, lasttime, createtime, alarm_type, day_after_lastdate from items left join alarms on items._id = alarms._id order by lasttime desc;";
+    static final String QUERY_TABLE_OLD_TO_NEW = "select items._id as _id, name, detail, type_id, lasttime, createtime, alarm_type, day_after_lastdate from items left join alarms on items._id = alarms._id order by lasttime;";
     static final String INSERT_TABLE = "insert into items (name, detail, type_id, lasttime, createtime) values (?, ?, ?, ?, ?) ;";
     static final String UPDATE_TABLE = "update items set name=?, detail=?, type_id=?, lasttime=?, createtime=? where _id=? ;";
     static final String DELETE_TABLE = "delete from items where _id = ?;";
 
     static final String QUERY_ITEMTYPES = "select type_id, section, filename, label from itemtypes; ";
     static final String QUERY_ITEMTYPE_BY_TYPEID = "select section, filename from itemtypes where type_id = ?; ";
+
+    static final String QUERY_ALARMS  = "select _id, alarm_type, day_after_lastdate from alarms where _id = ?;";
+    static final String INSERT_ALARMS = "insert into alarms (_id, alarm_type, day_after_lastdate) values (?, ?, ?) ;";
+    static final String UPDATE_ALARMS = "update alarms set alarm_type=?, day_after_lastdate=? where _id=? ;";
+    static final String DELETE_ALARMS = "delete from alarms where _id = ?;";
+
 
 
     public static boolean loadInitialData(Context context, ArrayList<Item> items) {
@@ -49,7 +55,7 @@ public class ItemStore {
         Date lasttime;
         Date createtime;
 
-        int alarm_id;
+        int alarm_type;
         int day_after_lastdate;
         Alarm alarm;
 
@@ -75,10 +81,10 @@ public class ItemStore {
                     detail = cursor.getString(cursor.getColumnIndex("detail"));
                     type_id = cursor.getInt(cursor.getColumnIndex("type_id"));
 
-                    if (! cursor.isNull(cursor.getColumnIndex("alarm_id"))) {
-                        alarm_id = cursor.getInt(cursor.getColumnIndex("alarm_id"));
+                    if (! cursor.isNull(cursor.getColumnIndex("alarm_type"))) {
+                        alarm_type = cursor.getInt(cursor.getColumnIndex("alarm_type"));
                         day_after_lastdate = cursor.getInt(cursor.getColumnIndex("day_after_lastdate"));
-                        alarm = new Alarm(alarm_id, day_after_lastdate);
+                        alarm = new Alarm(alarm_type, day_after_lastdate);
                     }
                     else {
                         alarm = new Alarm(Alarm.ALARM_TYPE.ALARM_TYPE_NONE);
@@ -116,15 +122,32 @@ public class ItemStore {
         ItemDBHelper dbhelper = new ItemDBHelper(context.getApplicationContext());
         SQLiteDatabase db = dbhelper.getWritableDatabase();
         Object[] args = new Object[5];
+        Object[] alarmargs = new Object[3];
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
         if (null != db) {
-            args[0] = item.getName();
-            args[1] = item.getDetail();
-            args[2] = item.getType().getTypeId();
-            args[3] = sdf.format(item.getLastTime());
-            args[4] = sdf.format(item.getCreatetime());
-            db.execSQL(INSERT_TABLE, args);
+            try {
+                db.beginTransaction();
+
+                args[0] = item.getName();
+                args[1] = item.getDetail();
+                args[2] = item.getType().getTypeId();
+                args[3] = sdf.format(item.getLastTime());
+                args[4] = sdf.format(item.getCreatetime());
+                db.execSQL(INSERT_TABLE, args);
+
+                Alarm alarm = item.getAlarm();
+                if (null != alarm) {
+                    alarmargs[0] = new Integer(item.getId());
+                    alarmargs[1] = alarm.getType().getTypeId();
+                    alarmargs[2] = alarm.getDays();
+
+                    db.execSQL(INSERT_ALARMS, alarmargs);
+                }
+                db.setTransactionSuccessful();
+            } finally {
+                db.endTransaction();
+            }
         }
 
         return true;
@@ -137,17 +160,48 @@ public class ItemStore {
         ItemDBHelper dbhelper = new ItemDBHelper(context.getApplicationContext());
         SQLiteDatabase db = dbhelper.getWritableDatabase();
         Object[] args = new Object[6];
+        Object[] alarmargs = new Object[3];
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
         if (null != db) {
-            args[5] = item.getId();
+            try {
+                db.beginTransaction();
 
-            args[0] = item.getName();
-            args[1] = item.getDetail();
-            args[2] = item.getType().getTypeId();
-            args[3] = sdf.format(item.getLastTime());
-            args[4] = sdf.format(item.getCreatetime());
-            db.execSQL(UPDATE_TABLE, args);
+                args[5] = item.getId();
+
+                args[0] = item.getName();
+                args[1] = item.getDetail();
+                args[2] = item.getType().getTypeId();
+                args[3] = sdf.format(item.getLastTime());
+                args[4] = sdf.format(item.getCreatetime());
+                db.execSQL(UPDATE_TABLE, args);
+
+                Alarm alarm = item.getAlarm();
+                if (null != alarm) {
+                    String[] _o = new String[]{String.valueOf(item.getId())};
+                    Cursor c = db.rawQuery(QUERY_ALARMS, _o);
+                    if (0 == c.getCount()) {
+
+                        alarmargs[0] = new Integer(item.getId());
+                        alarmargs[1] = alarm.getType().getTypeId();
+                        alarmargs[2] = alarm.getDays();
+
+                        db.execSQL(INSERT_ALARMS, alarmargs);
+                    }
+                    else {
+                        alarmargs[2] = item.getId();
+
+                        alarmargs[0] = alarm.getType().getTypeId();
+                        alarmargs[1] = alarm.getDays();
+                        db.execSQL(UPDATE_ALARMS, alarmargs);
+                    }
+                }
+
+                db.setTransactionSuccessful();
+            }
+            finally {
+                db.endTransaction();
+            }
         }
 
         return true;
