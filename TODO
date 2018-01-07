@@ -41,6 +41,9 @@
 
 * 自動テスト作成
 
+* item update/insert dialog のボタン色を holo からひっぱってきているので dialog の OK/Cancel といった
+  default と微妙にずれているのを修正する.
+
 * DB スキーマのアップデートロジックを作成
 
 * type の追加/削除ロジック追加

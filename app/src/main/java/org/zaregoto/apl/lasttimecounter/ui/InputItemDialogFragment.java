@@ -11,10 +11,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.DatePicker;
-import android.widget.EditText;
-import android.widget.ImageView;
-import android.widget.TextView;
+import android.widget.*;
 import org.zaregoto.apl.lasttimecounter.model.Alarm;
 import org.zaregoto.apl.lasttimecounter.model.ItemUnit;
 import org.zaregoto.apl.lasttimecounter.model.ItemType;
@@ -65,9 +62,14 @@ public class InputItemDialogFragment extends DialogFragment implements SelectTyp
         // Use the Builder class for convenient dialog construction
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 
+        final View content;
         LayoutInflater inflater = (LayoutInflater)getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        final View content = inflater.inflate(R.layout.fragment_input_item_dialog, null);
-        root = content;
+        if (isNewItem(item)) {
+            content = inflater.inflate(R.layout.fragment_insert_item_dialog, null);
+        }
+        else {
+            content = inflater.inflate(R.layout.fragment_update_item_dialog, null);
+        }
 
         builder.setView(content);
         if (null != item) {
@@ -174,30 +176,90 @@ public class InputItemDialogFragment extends DialogFragment implements SelectTyp
         }
 
 
-        final ItemUnit finalItem = item;
-        builder.setMessage(R.string.fragment_item_input_dialog_name);
-        builder.setPositiveButton(R.string.fragment_item_input_dialog_ok, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
+        if (isNewItem(item)) {
+            builder.setMessage(R.string.fragment_item_input_dialog_name);
 
-                EditText _name = content.findViewById(R.id.name);
-                EditText _detail = content.findViewById(R.id.detail);
-                String name = (_name != null) ? _name.getText().toString() : "";
-                String detail = (_detail != null) ? _detail.getText().toString() : "";
+            Button btn = content.findViewById(R.id.insertBtn);
+            btn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    ItemUnit _item = item;
 
-                finalItem.setName(name);
-                finalItem.setDetail(detail);
-                finalItem.setLastTime(selectedDay);
+                    EditText _name = content.findViewById(R.id.name);
+                    EditText _detail = content.findViewById(R.id.detail);
+                    String name = (_name != null) ? _name.getText().toString() : "";
+                    String detail = (_detail != null) ? _detail.getText().toString() : "";
 
-                // TODO: DB 上の有る無しは app 層の概念ではないからこの判定をここに入れるのは正しくない. ItemStore で upsert を作成するなどして吸収すること
-                if (finalItem.getId() > 0) {
-                    mInputDialogListener.updateItem(finalItem);
+                    _item.setName(name);
+                    _item.setDetail(detail);
+                    _item.setLastTime(selectedDay);
+
+                    mInputDialogListener.addItem(_item);
+                    dismiss();
                 }
-                else {
-                    mInputDialogListener.addItem(finalItem);
+            });
+        }
+        else {
+            builder.setMessage(R.string.fragment_item_input_dialog_name);
+
+            Button btn = content.findViewById(R.id.updateBtn);
+            btn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    ItemUnit _item = item;
+
+                    EditText _name = content.findViewById(R.id.name);
+                    EditText _detail = content.findViewById(R.id.detail);
+                    String name = (_name != null) ? _name.getText().toString() : "";
+                    String detail = (_detail != null) ? _detail.getText().toString() : "";
+
+                    _item.setName(name);
+                    _item.setDetail(detail);
+                    _item.setLastTime(selectedDay);
+
+                    mInputDialogListener.updateItem(_item);
+                    dismiss();
                 }
-            }
-        });
+            });
+
+            btn = content.findViewById(R.id.redoBtn);
+            btn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    ItemUnit _item = item;
+
+                    _item.setLastTime(selectedDay);
+                    mInputDialogListener.redoItem(_item);
+                    dismiss();
+                }
+            });
+
+        }
+
+//        final ItemUnit finalItem = item;
+//        builder.setMessage(R.string.fragment_item_input_dialog_name);
+//        builder.setPositiveButton(R.string.fragment_item_input_dialog_ok, new DialogInterface.OnClickListener() {
+//            @Override
+//            public void onClick(DialogInterface dialogInterface, int i) {
+//
+//                EditText _name = content.findViewById(R.id.name);
+//                EditText _detail = content.findViewById(R.id.detail);
+//                String name = (_name != null) ? _name.getText().toString() : "";
+//                String detail = (_detail != null) ? _detail.getText().toString() : "";
+//
+//                finalItem.setName(name);
+//                finalItem.setDetail(detail);
+//                finalItem.setLastTime(selectedDay);
+//
+//                // TODO: DB 上の有る無しは app 層の概念ではないからこの判定をここに入れるのは正しくない. ItemStore で upsert を作成するなどして吸収すること
+//                if (finalItem.getId() > 0) {
+//                    mInputDialogListener.updateItem(finalItem);
+//                }
+//                else {
+//                    mInputDialogListener.addItem(finalItem);
+//                }
+//            }
+//        });
 
         return builder.create();
     }
@@ -276,8 +338,19 @@ public class InputItemDialogFragment extends DialogFragment implements SelectTyp
     }
 
 
+    private boolean isNewItem(ItemUnit item) {
+        if (item.getId() < 0) {
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
+
     public interface InputDialogListener {
         void addItem(ItemUnit item);
         void updateItem(ItemUnit item);
+
+        void redoItem(ItemUnit item);
     }
 }

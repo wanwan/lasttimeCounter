@@ -11,6 +11,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import org.zaregoto.apl.lasttimecounter.ItemListAdapter;
+import org.zaregoto.apl.lasttimecounter.db.ItemDBException;
 import org.zaregoto.apl.lasttimecounter.model.Alarm;
 import org.zaregoto.apl.lasttimecounter.model.Item;
 import org.zaregoto.apl.lasttimecounter.model.ItemType;
@@ -137,6 +138,24 @@ public class MainActivity extends AppCompatActivity implements InputItemDialogFr
             ;
             ItemStore.loadData(this, items, orderType);
             adapter.notifyDataSetChanged();
+        }
+    }
+
+    @Override
+    public void redoItem(ItemUnit item) {
+
+        if (null != adapter) {
+            try {
+                ItemStore.redoData(this, item);
+
+                // reload data
+                items.clear();
+                ;
+                ItemStore.loadData(this, items, orderType);
+                adapter.notifyDataSetChanged();
+            } catch (ItemDBException e) {
+                e.printStackTrace();
+            }
         }
     }
 

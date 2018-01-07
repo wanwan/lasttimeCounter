@@ -1,5 +1,6 @@
 package org.zaregoto.apl.lasttimecounter.db;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -22,6 +23,7 @@ public class ItemStore {
 
     static final String QUERY_TABLE_NEW_TO_OLD = "select items._id as _id, name, detail, type_id, lasttime, createtime, alarm_type, day_after_lastdate from items left join alarms on items._id = alarms._id order by lasttime desc;";
     static final String QUERY_TABLE_OLD_TO_NEW = "select items._id as _id, name, detail, type_id, lasttime, createtime, alarm_type, day_after_lastdate from items left join alarms on items._id = alarms._id order by lasttime;";
+    static final String QUERY_ITEMS = "select items._id as _id, name, detail, type_id, lasttime, createtime, alarm_type, day_after_lastdate from items left join alarms on items._id = alarms._id where items._id = ?;";
     static final String INSERT_TABLE = "insert into items (name, detail, type_id, lasttime, createtime) values (?, ?, ?, ?, ?) ;";
     static final String UPDATE_TABLE = "update items set name=?, detail=?, type_id=?, lasttime=?, createtime=? where _id=? ;";
     static final String DELETE_TABLE = "delete from items where _id = ?;";
@@ -221,6 +223,63 @@ public class ItemStore {
 
         return true;
     }
+
+
+    public static void redoData(Context context, ItemUnit item) throws ItemDBException {
+
+        int itemId;
+        String prevLasttime;
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+
+        if (null != context) {
+            ItemDBHelper dbhelper = new ItemDBHelper(context.getApplicationContext());
+
+            if (null != dbhelper) {
+                SQLiteDatabase db = dbhelper.getReadableDatabase();
+                if (null != db) {
+                    try {
+                        db.beginTransaction();
+
+                        String[] _o = new String[]{String.valueOf(item.getId())};
+                        Cursor cursor = db.rawQuery(QUERY_ITEMS, _o);
+                        if (cursor.getCount() > 0) {
+                            cursor.moveToFirst();
+
+                            itemId = cursor.getInt(cursor.getColumnIndex("_id"));
+                            prevLasttime = cursor.getString(cursor.getColumnIndex("lasttime"));
+
+                            cursor.close();
+
+                            // add histories
+                            ContentValues cv = new ContentValues();
+                            cv.put("_id", itemId);
+                            cv.put("do_date", prevLasttime);
+                            db.insert("histories", null, cv);
+
+                            // modify lasttime date in items table
+                            cv = new ContentValues();
+                            cv.put("lasttime", sdf.format(item.getLastTime()));
+                            String selection = "_id = ?";
+                            String[] args = new String[]{String.valueOf(itemId)};
+                            db.update("items", cv, selection, args);
+
+                        }
+                        else {
+                            throw new ItemDBException();
+                        }
+
+                        db.setTransactionSuccessful();
+                    }
+                    finally {
+                        db.endTransaction();
+                    }
+                }
+            }
+
+        }
+    }
+
+
 
 
     public static ArrayList<ItemType> getAllItemTyps(Context context) {
