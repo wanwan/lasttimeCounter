@@ -220,8 +220,22 @@ public class ItemStore {
         Object[] args = new Object[1];
 
         if (null != db && item instanceof ItemUnit) {
-            args[0] = ((ItemUnit)item).getId();
-            db.execSQL(DELETE_TABLE, args);
+            try {
+                db.beginTransaction();
+
+                args[0] = ((ItemUnit) item).getId();
+                db.execSQL(DELETE_TABLE, args);
+
+                Alarm alarm = ((ItemUnit) item).getAlarm();
+                if (null != alarm) {
+                    db.execSQL(DELETE_ALARMS, args);
+                }
+
+                db.setTransactionSuccessful();
+            }
+            finally {
+                db.endTransaction();
+            }
         }
 
         return true;
