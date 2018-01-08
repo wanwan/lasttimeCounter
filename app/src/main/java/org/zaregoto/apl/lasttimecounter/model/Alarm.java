@@ -126,6 +126,7 @@ public class Alarm implements Parcelable {
         }
     }
 
+    private int id = -1;
     private ALARM_TYPE type;
     private Integer days;
 
@@ -152,6 +153,10 @@ public class Alarm implements Parcelable {
         int _type = in.readInt();
         days = (Integer) in.readValue(Integer.class.getClassLoader());
         type = ALARM_TYPE.getAlarmTypeByTypeId(_type);
+    }
+
+    public int getId() {
+        return id;
     }
 
     public ALARM_TYPE getType() {

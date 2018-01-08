@@ -36,6 +36,7 @@ public class ItemStore {
     static final String UPDATE_ALARMS = "update alarms set alarm_type=?, day_after_lastdate=? where _id=? ;";
     static final String DELETE_ALARMS = "delete from alarms where _id = ?;";
 
+    static final String READ_SEQ_NO = "select seq from sqlite_sequence where name = ?";
 
 
     public static boolean loadInitialData(Context context, ArrayList<Item> items) {
@@ -138,9 +139,11 @@ public class ItemStore {
                 args[4] = sdf.format(item.getCreatetime());
                 db.execSQL(INSERT_TABLE, args);
 
+                Integer itemId = readSeqNo(db, "items");
+
                 Alarm alarm = item.getAlarm();
-                if (null != alarm) {
-                    alarmargs[0] = new Integer(item.getId());
+                if (null != alarm && null != itemId) {
+                    alarmargs[0] = itemId;
                     alarmargs[1] = alarm.getType().getTypeId();
                     alarmargs[2] = alarm.getDays();
 
@@ -370,6 +373,21 @@ public class ItemStore {
 
 
         return true;
+    }
+
+
+    private static Integer readSeqNo(SQLiteDatabase db, String tableName) {
+
+        Integer ret = null;
+        String[] args = new String[]{tableName};
+        Cursor cursor = db.rawQuery(READ_SEQ_NO, args);
+
+        if (null != cursor && cursor.getCount() > 0) {
+            cursor.moveToFirst();
+            ret = cursor.getInt((cursor.getColumnIndex("seq")));
+        }
+
+        return ret;
     }
 
 
