@@ -231,6 +231,8 @@ public class ItemStore {
                     db.execSQL(DELETE_ALARMS, args);
                 }
 
+                // TODO: drop histories
+
                 db.setTransactionSuccessful();
             }
             finally {
