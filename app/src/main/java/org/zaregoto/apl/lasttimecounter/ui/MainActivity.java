@@ -1,6 +1,7 @@
 package org.zaregoto.apl.lasttimecounter.ui;
 
 import android.app.AlertDialog;
+import android.app.FragmentManager;
 import android.content.DialogInterface;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
@@ -10,6 +11,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import org.zaregoto.apl.lasttimecounter.ItemAction;
 import org.zaregoto.apl.lasttimecounter.ItemListAdapter;
 import org.zaregoto.apl.lasttimecounter.db.ItemDBException;
 import org.zaregoto.apl.lasttimecounter.model.Alarm;
@@ -32,6 +34,8 @@ public class MainActivity extends AppCompatActivity implements InputItemDialogFr
     private ItemListAdapter adapter;
 
     private ItemStore.OrderType orderType = ItemStore.OrderType.ORDER_TYPE_CURRENT_TO_OLD;
+
+    private ArrayList<ItemAction> itemActions = new ArrayList();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -174,33 +178,28 @@ public class MainActivity extends AppCompatActivity implements InputItemDialogFr
     @Override
     public boolean onItemLongClick(AdapterView<?> adapterView, View view, final int pos, long id) {
 
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("title");
-        builder.setMessage("message");
-        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                // OK button pressed
-                Item item = adapter.getItem(pos);
-                adapter.remove(item);
-                ItemStore.deleteData(MainActivity.this, item);
-            }
-        });
-        builder.setNegativeButton("Cancel", null);
+//        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+//        builder.setTitle("title");
+//        builder.setMessage("message");
+//        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+//            @Override
+//            public void onClick(DialogInterface dialog, int which) {
+//                // OK button pressed
+//                Item item = adapter.getItem(pos);
+//                adapter.remove(item);
+//                ItemStore.deleteData(MainActivity.this, item);
+//            }
+//        });
+//        builder.setNegativeButton("Cancel", null);
+//
+//        AlertDialog dialog = builder.create();
+//        dialog.show();
 
-        AlertDialog dialog = builder.create();
-        dialog.show();
+        FragmentManager fm = getFragmentManager();
+        ItemActionDialogFragment actionDlg = ItemActionDialogFragment.newInstance();
+        actionDlg.show(fm, "");
 
         return true;
     }
 
-//    @Override
-//    public void selectType(ItemType type) {
-//        Log.d(TAG, "***** MainActivity ItemType selected: " + type.getFilename() + "*****");
-//        try {
-//            itemInputDialog.selectType(type);
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
-//    }
 }

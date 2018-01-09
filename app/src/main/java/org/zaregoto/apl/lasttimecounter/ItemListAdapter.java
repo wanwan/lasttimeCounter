@@ -21,7 +21,6 @@ public class ItemListAdapter extends ArrayAdapter<Item> {
 
     private LayoutInflater mInflater;
 
-
     public ItemListAdapter(Context context, int resource, ArrayList<Item> objects) {
 
         super(context, resource, objects);

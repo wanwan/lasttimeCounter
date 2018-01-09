@@ -5,7 +5,6 @@
   -> redo 時の name/detail/alarm の編集をどうする?
      -> とりあえず編集でボタンのl disable ということは可能か? or 無条件で update?
 
-
 * ソート機能の実装
   - last date
 

@@ -10,10 +10,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.*;
 import org.zaregoto.apl.lasttimecounter.ActionAdapter;
+import org.zaregoto.apl.lasttimecounter.ItemAction;
 import org.zaregoto.apl.lasttimecounter.R;
 import org.zaregoto.apl.lasttimecounter.model.Alarm;
 
-public class ItemActionDialogFragment extends DialogFragment {
+import java.util.ArrayList;
+
+public class ItemActionDialogFragment extends DialogFragment implements AdapterView.OnItemClickListener {
 
     private InputAlarmDialogListener mInputDialogListener;
     private final String TAG = "ItemActionDialogFragment";
@@ -21,6 +24,8 @@ public class ItemActionDialogFragment extends DialogFragment {
 
     private View content;
     private InputAlarmDialogListener mDialogListener;
+
+    private ListAdapter adapter;
 
     public static ItemActionDialogFragment newInstance() {
 
@@ -45,22 +50,16 @@ public class ItemActionDialogFragment extends DialogFragment {
         LayoutInflater inflater = (LayoutInflater)getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         content = inflater.inflate(R.layout.fragment_item_action_dialog, null);
 
+
         ListView lv = content.findViewById(R.id.actions);
         if (null != lv) {
-            ListAdapter adapter = new ActionAdapter();
-            lv.setAdapter();
+            ArrayList<ItemAction> actions = ItemAction.getInitialActions(getContext());
+            adapter = new ActionAdapter(getContext(), 0, actions);
+            lv.setAdapter(adapter);
+            lv.setOnItemClickListener(this);
         }
 
         builder.setView(content);
-        builder.setPositiveButton(R.string.fragment_item_input_dialog_ok, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-                if (null != mDialogListener) {
-                    mDialogListener.setAlarm(alarm);
-                }
-                dismiss();
-            }
-        });
 
         return builder.create();
     }
@@ -86,6 +85,17 @@ public class ItemActionDialogFragment extends DialogFragment {
     // TODO: onAttach との整合の問題があるが, 上書きというルールであるとする. 通常は問題ないはずだが, 回転等の再作成を経る場合があるので良いやりかたではないはず
     public void setDialogListener(InputAlarmDialogListener listener) {
         this.mDialogListener = listener;
+    }
+
+    @Override
+    public void onItemClick(AdapterView<?> adapterView, View view, int pos, long id) {
+
+        ItemAction action = (ItemAction) adapter.getItem(pos);
+        if (null != action) {
+            if (action.process(getContext())) {
+                dismiss();
+            }
+        }
     }
 
     public interface InputAlarmDialogListener {
