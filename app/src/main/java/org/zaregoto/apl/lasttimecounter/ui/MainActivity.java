@@ -3,6 +3,7 @@ package org.zaregoto.apl.lasttimecounter.ui;
 import android.app.AlertDialog;
 import android.app.FragmentManager;
 import android.content.DialogInterface;
+import android.os.Vibrator;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.v7.app.AppCompatActivity;
@@ -194,6 +195,9 @@ public class MainActivity extends AppCompatActivity implements InputItemDialogFr
 //
 //        AlertDialog dialog = builder.create();
 //        dialog.show();
+
+        Vibrator vibrator = (Vibrator) getSystemService(VIBRATOR_SERVICE);
+        vibrator.vibrate(100);
 
         FragmentManager fm = getFragmentManager();
         ItemActionDialogFragment actionDlg = ItemActionDialogFragment.newInstance();
