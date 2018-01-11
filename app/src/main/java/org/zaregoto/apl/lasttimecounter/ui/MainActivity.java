@@ -1,13 +1,12 @@
 package org.zaregoto.apl.lasttimecounter.ui;
 
-import android.app.AlertDialog;
 import android.app.FragmentManager;
-import android.content.DialogInterface;
 import android.os.Vibrator;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
@@ -27,7 +26,12 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
-public class MainActivity extends AppCompatActivity implements InputItemDialogFragment.InputDialogListener, AdapterView.OnItemClickListener, AdapterView.OnItemLongClickListener {
+public class MainActivity
+        extends AppCompatActivity
+        implements InputItemDialogFragment.InputDialogListener,
+        AdapterView.OnItemClickListener,
+        AdapterView.OnItemLongClickListener,
+        RemoveItemAlertDialogFragment.AlertDialogListener {
 
     private static final String TAG = "MainActivity";
     private InputItemDialogFragment itemInputDialog;
@@ -208,4 +212,15 @@ public class MainActivity extends AppCompatActivity implements InputItemDialogFr
         return true;
     }
 
+    @Override
+    public void removeItemConfirm(ItemUnit item) {
+        Log.d(TAG, "*** ok called ***");
+        adapter.remove(item);
+        ItemStore.deleteData(MainActivity.this, item);
+    }
+
+    @Override
+    public void cancelRemoveItem(ItemUnit item) {
+        Log.d(TAG, "*** cancelRemoveItem called ***");
+    }
 }

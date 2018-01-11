@@ -1,14 +1,11 @@
 package org.zaregoto.apl.lasttimecounter;
 
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.app.FragmentManager;
 import android.content.Context;
-import android.content.DialogInterface;
-import org.zaregoto.apl.lasttimecounter.db.ItemStore;
 import org.zaregoto.apl.lasttimecounter.model.Item;
 import org.zaregoto.apl.lasttimecounter.model.ItemUnit;
-import org.zaregoto.apl.lasttimecounter.ui.AlertDialogFragment;
+import org.zaregoto.apl.lasttimecounter.ui.RemoveItemAlertDialogFragment;
 
 import java.util.ArrayList;
 
@@ -80,19 +77,19 @@ public abstract class ItemAction {
 //                AlertDialog dialog = builder.create();
 //                dialog.show();
 
-                AlertDialogFragment alertDlg = AlertDialogFragment.newInstance((ItemUnit) item, "title", "remove?");
+                RemoveItemAlertDialogFragment alertDlg = RemoveItemAlertDialogFragment.newInstance((ItemUnit) item, "title", "remove?");
                 Activity activity = (Activity) context;
                 FragmentManager fm = activity.getFragmentManager();
-                alertDlg.setAlertDialogListener(new AlertDialogFragment.AlertDialogListener() {
-                    @Override
-                    public void ok() {
-                        ItemStore.deleteData(context, item);
-                    }
-                    @Override
-                    public void cancel() {
-                        // do nothing
-                    }
-                });
+//                alertDlg.setAlertDialogListener(new RemoveItemAlertDialogFragment.AlertDialogListener() {
+//                    @Override
+//                    public void ok() {
+//                        ItemStore.deleteData(context, item);
+//                    }
+//                    @Override
+//                    public void cancelRemoveItem() {
+//                        // do nothing
+//                    }
+//                });
                 alertDlg.show(fm, "");
 
                 return true;

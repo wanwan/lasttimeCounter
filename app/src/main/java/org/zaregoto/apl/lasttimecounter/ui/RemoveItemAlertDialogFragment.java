@@ -13,7 +13,7 @@ import org.zaregoto.apl.lasttimecounter.R;
 import org.zaregoto.apl.lasttimecounter.model.ItemUnit;
 
 
-public class AlertDialogFragment extends DialogFragment {
+public class RemoveItemAlertDialogFragment extends DialogFragment {
 
     private static final String ARGS_ITEM_ID = "ARGS_ITEM";
     private static final String ARGS_TITLE_ID = "ARGS_TITLE";
@@ -26,9 +26,9 @@ public class AlertDialogFragment extends DialogFragment {
     private String msg;
     private String title;
 
-    public static AlertDialogFragment newInstance(ItemUnit item, String title, String msg) {
+    public static RemoveItemAlertDialogFragment newInstance(ItemUnit item, String title, String msg) {
 
-        AlertDialogFragment instance = new AlertDialogFragment();
+        RemoveItemAlertDialogFragment instance = new RemoveItemAlertDialogFragment();
 
         Bundle args = new Bundle();
         args.putParcelable(ARGS_ITEM_ID, item);
@@ -66,7 +66,7 @@ public class AlertDialogFragment extends DialogFragment {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
                 if (null != mListener) {
-                    mListener.ok();
+                    mListener.removeItemConfirm(item);
                 }
             }
         });
@@ -74,7 +74,7 @@ public class AlertDialogFragment extends DialogFragment {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
                 if (null != mListener) {
-                    mListener.cancel();
+                    mListener.cancelRemoveItem(item);
                 }
             }
         });
@@ -101,8 +101,8 @@ public class AlertDialogFragment extends DialogFragment {
     }
 
     public interface AlertDialogListener {
-        void ok();
-        void cancel();
+        void removeItemConfirm(ItemUnit item);
+        void cancelRemoveItem(ItemUnit item);
     }
 
     public void setAlertDialogListener(AlertDialogListener listener) {
