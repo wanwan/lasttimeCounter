@@ -27,7 +27,12 @@
   - 長押し
     history / delete (あまり使用頻度の高くないもの?)
   - menu
-    sort / filter / notification
+    * sort
+      (order by lastdate/order by lastdate desc/notification date)
+    * filter
+      (type id/alarm?)
+    * notification
+      ?
   - "+" btn
     追加
 

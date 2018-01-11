@@ -199,8 +199,10 @@ public class MainActivity extends AppCompatActivity implements InputItemDialogFr
         Vibrator vibrator = (Vibrator) getSystemService(VIBRATOR_SERVICE);
         vibrator.vibrate(100);
 
+        Item item = adapter.getItem(pos);
+
         FragmentManager fm = getFragmentManager();
-        ItemActionDialogFragment actionDlg = ItemActionDialogFragment.newInstance();
+        ItemActionDialogFragment actionDlg = ItemActionDialogFragment.newInstance(item);
         actionDlg.show(fm, "");
 
         return true;

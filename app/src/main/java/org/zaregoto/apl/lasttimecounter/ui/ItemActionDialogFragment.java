@@ -13,10 +13,13 @@ import org.zaregoto.apl.lasttimecounter.ActionAdapter;
 import org.zaregoto.apl.lasttimecounter.ItemAction;
 import org.zaregoto.apl.lasttimecounter.R;
 import org.zaregoto.apl.lasttimecounter.model.Alarm;
+import org.zaregoto.apl.lasttimecounter.model.Item;
 
 import java.util.ArrayList;
 
 public class ItemActionDialogFragment extends DialogFragment implements AdapterView.OnItemClickListener {
+
+    private static final String ARGS_ITEM_ID = "ARGS_ITEM_ID";
 
     private InputAlarmDialogListener mInputDialogListener;
     private final String TAG = "ItemActionDialogFragment";
@@ -27,11 +30,14 @@ public class ItemActionDialogFragment extends DialogFragment implements AdapterV
 
     private ListAdapter adapter;
 
-    public static ItemActionDialogFragment newInstance() {
+    private Item selectedItem;
+
+    public static ItemActionDialogFragment newInstance(Item item) {
 
         ItemActionDialogFragment instance = new ItemActionDialogFragment();
 
         Bundle args = new Bundle();
+        args.putParcelable(ARGS_ITEM_ID, item);
         instance.setArguments(args);
 
         return instance;
@@ -42,6 +48,8 @@ public class ItemActionDialogFragment extends DialogFragment implements AdapterV
     public Dialog onCreateDialog(Bundle savedInstanceState) {
 
         if (null != getArguments()) {
+            Bundle bundle = getArguments();
+            selectedItem = bundle.getParcelable(ARGS_ITEM_ID);
         }
 
         // Use the Builder class for convenient dialog construction
@@ -92,7 +100,7 @@ public class ItemActionDialogFragment extends DialogFragment implements AdapterV
 
         ItemAction action = (ItemAction) adapter.getItem(pos);
         if (null != action) {
-            if (action.process(getContext())) {
+            if (action.process(getContext(), selectedItem)) {
                 dismiss();
             }
         }
