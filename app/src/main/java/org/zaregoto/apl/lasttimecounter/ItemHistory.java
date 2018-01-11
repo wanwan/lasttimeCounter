@@ -1,6 +1,6 @@
 package org.zaregoto.apl.lasttimecounter;
 
-import org.zaregoto.apl.lasttimecounter.model.ItemUnit;
+import org.zaregoto.apl.lasttimecounter.model.Item;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -12,7 +12,7 @@ public class ItemHistory {
     private ItemHistory() {
     }
 
-    public static ItemHistory getHistoryFromItem(ItemUnit item) {
+    public static ItemHistory getHistoryFromItem(Item item) {
         return new ItemHistory();
     }
 }

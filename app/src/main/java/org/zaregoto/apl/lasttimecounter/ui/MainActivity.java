@@ -16,8 +16,8 @@ import org.zaregoto.apl.lasttimecounter.ItemListAdapter;
 import org.zaregoto.apl.lasttimecounter.db.ItemDBException;
 import org.zaregoto.apl.lasttimecounter.model.Alarm;
 import org.zaregoto.apl.lasttimecounter.model.Item;
+import org.zaregoto.apl.lasttimecounter.model.ListableUnit;
 import org.zaregoto.apl.lasttimecounter.model.ItemType;
-import org.zaregoto.apl.lasttimecounter.model.ItemUnit;
 import org.zaregoto.apl.lasttimecounter.R;
 import org.zaregoto.apl.lasttimecounter.db.ItemStore;
 
@@ -35,7 +35,7 @@ public class MainActivity
 
     private static final String TAG = "MainActivity";
     private InputItemDialogFragment itemInputDialog;
-    private ArrayList<Item> items = new ArrayList<>();
+    private ArrayList<ListableUnit> items = new ArrayList<>();
     private ItemListAdapter adapter;
 
     private ItemStore.OrderType orderType = ItemStore.OrderType.ORDER_TYPE_CURRENT_TO_OLD;
@@ -67,9 +67,9 @@ public class MainActivity
                     String detail = "";
                     Date now = new Date();
 
-                    ItemType type = ItemType.createItemType(MainActivity.this, ItemUnit.DEFAULT_TYPE_ID);
+                    ItemType type = ItemType.createItemType(MainActivity.this, Item.DEFAULT_TYPE_ID);
                     Alarm alarm = new Alarm(Alarm.ALARM_TYPE.ALARM_TYPE_NONE, 0);
-                    ItemUnit item = new ItemUnit(name, detail, type, now, now, alarm);
+                    Item item = new Item(name, detail, type, now, now, alarm);
 
                     itemInputDialog = InputItemDialogFragment.newInstance(item);
                     itemInputDialog.show(getFragmentManager(), "");
@@ -125,7 +125,7 @@ public class MainActivity
 
 
     @Override
-    public void addItem(ItemUnit item) {
+    public void addItem(Item item) {
         if (null != adapter) {
             ItemStore.insertData(this, item);
 
@@ -138,7 +138,7 @@ public class MainActivity
     }
 
     @Override
-    public void updateItem(ItemUnit item) {
+    public void updateItem(Item item) {
         if (null != adapter) {
             ItemStore.updateData(this, item);
 
@@ -151,7 +151,7 @@ public class MainActivity
     }
 
     @Override
-    public void redoItem(ItemUnit item) {
+    public void redoItem(Item item) {
 
         if (null != adapter) {
             try {
@@ -172,10 +172,10 @@ public class MainActivity
     public void onItemClick(AdapterView<?> adapterView, View view, int pos, long id) {
 
         Bundle args = new Bundle();
-        Item item = adapter.getItem(pos);
+        ListableUnit item = adapter.getItem(pos);
 
-        if (item instanceof ItemUnit) {
-            itemInputDialog = InputItemDialogFragment.newInstance((ItemUnit) item);
+        if (item instanceof Item) {
+            itemInputDialog = InputItemDialogFragment.newInstance((Item) item);
             itemInputDialog.show(getFragmentManager(), "");
         }
     }
@@ -190,7 +190,7 @@ public class MainActivity
 //            @Override
 //            public void onClick(DialogInterface dialog, int which) {
 //                // OK button pressed
-//                Item item = adapter.getItem(pos);
+//                ListableUnit item = adapter.getItem(pos);
 //                adapter.remove(item);
 //                ItemStore.deleteData(MainActivity.this, item);
 //            }
@@ -203,7 +203,7 @@ public class MainActivity
         Vibrator vibrator = (Vibrator) getSystemService(VIBRATOR_SERVICE);
         vibrator.vibrate(100);
 
-        Item item = adapter.getItem(pos);
+        ListableUnit item = adapter.getItem(pos);
 
         FragmentManager fm = getFragmentManager();
         ItemActionDialogFragment actionDlg = ItemActionDialogFragment.newInstance(item);
@@ -213,14 +213,14 @@ public class MainActivity
     }
 
     @Override
-    public void removeItemConfirm(ItemUnit item) {
+    public void removeItemConfirm(Item item) {
         Log.d(TAG, "*** ok called ***");
         adapter.remove(item);
         ItemStore.deleteData(MainActivity.this, item);
     }
 
     @Override
-    public void cancelRemoveItem(ItemUnit item) {
+    public void cancelRemoveItem(Item item) {
         Log.d(TAG, "*** cancelRemoveItem called ***");
     }
 }

@@ -39,13 +39,13 @@ public class ItemStore {
     static final String READ_SEQ_NO = "select seq from sqlite_sequence where name = ?";
 
 
-    public static boolean loadInitialData(Context context, ArrayList<Item> items) {
+    public static boolean loadInitialData(Context context, ArrayList<ListableUnit> items) {
         return loadData(context, items, OrderType.ORDER_TYPE_CURRENT_TO_OLD);
     }
 
 
 
-    public static boolean loadData(Context context, ArrayList<Item> items, OrderType orderType) {
+    public static boolean loadData(Context context, ArrayList<ListableUnit> items, OrderType orderType) {
 
         ItemDBHelper dbhelper = new ItemDBHelper(context.getApplicationContext());
         SQLiteDatabase db = dbhelper.getReadableDatabase();
@@ -62,7 +62,7 @@ public class ItemStore {
         int day_after_lastdate;
         Alarm alarm;
 
-        ItemUnit item;
+        Item item;
 
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
@@ -106,7 +106,7 @@ public class ItemStore {
                         createtime = null;
                         e.printStackTrace();
                     }
-                    item = new ItemUnit(_id, name, detail, type, lasttime, createtime, alarm);
+                    item = new Item(_id, name, detail, type, lasttime, createtime, alarm);
                     if (null != items) {
                         items.add(item);
                     }
@@ -120,7 +120,7 @@ public class ItemStore {
 
 
 
-    public static boolean insertData(Context context, ItemUnit item) {
+    public static boolean insertData(Context context, Item item) {
 
         ItemDBHelper dbhelper = new ItemDBHelper(context.getApplicationContext());
         SQLiteDatabase db = dbhelper.getWritableDatabase();
@@ -159,7 +159,7 @@ public class ItemStore {
     }
 
 
-    public static boolean updateData(MainActivity context, ItemUnit item) {
+    public static boolean updateData(MainActivity context, Item item) {
 
         // "update items set name=?, detail=?, type_id=?, lasttime=?, createtime=? where _id=? ;";
         ItemDBHelper dbhelper = new ItemDBHelper(context.getApplicationContext());
@@ -213,20 +213,20 @@ public class ItemStore {
     }
 
 
-    public static boolean deleteData(Context context, Item item) {
+    public static boolean deleteData(Context context, ListableUnit item) {
 
         ItemDBHelper dbhelper = new ItemDBHelper(context.getApplicationContext());
         SQLiteDatabase db = dbhelper.getWritableDatabase();
         Object[] args = new Object[1];
 
-        if (null != db && item instanceof ItemUnit) {
+        if (null != db && item instanceof Item) {
             try {
                 db.beginTransaction();
 
-                args[0] = ((ItemUnit) item).getId();
+                args[0] = ((Item) item).getId();
                 db.execSQL(DELETE_TABLE, args);
 
-                Alarm alarm = ((ItemUnit) item).getAlarm();
+                Alarm alarm = ((Item) item).getAlarm();
                 if (null != alarm) {
                     db.execSQL(DELETE_ALARMS, args);
                 }
@@ -244,7 +244,7 @@ public class ItemStore {
     }
 
 
-    public static void redoData(Context context, ItemUnit item) throws ItemDBException {
+    public static void redoData(Context context, Item item) throws ItemDBException {
 
         int itemId;
         String prevLasttime;

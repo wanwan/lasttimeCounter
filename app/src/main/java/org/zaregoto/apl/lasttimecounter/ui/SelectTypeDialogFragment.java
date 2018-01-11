@@ -3,28 +3,19 @@ package org.zaregoto.apl.lasttimecounter.ui;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
-import android.app.Fragment;
 import android.content.Context;
-import android.content.DialogInterface;
-import android.content.res.AssetManager;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.support.v7.widget.RecyclerView;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.*;
 import org.zaregoto.apl.lasttimecounter.GridTypeAdapter;
 import org.zaregoto.apl.lasttimecounter.db.ItemStore;
 import org.zaregoto.apl.lasttimecounter.model.ItemType;
-import org.zaregoto.apl.lasttimecounter.model.ItemUnit;
 import org.zaregoto.apl.lasttimecounter.R;
 
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
 
 public class SelectTypeDialogFragment extends DialogFragment {

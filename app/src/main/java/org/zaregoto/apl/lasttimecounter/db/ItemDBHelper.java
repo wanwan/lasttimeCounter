@@ -4,7 +4,7 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import org.zaregoto.apl.lasttimecounter.model.ItemUnit;
+import org.zaregoto.apl.lasttimecounter.model.Item;
 
 import java.io.IOException;
 import java.util.*;
@@ -80,7 +80,7 @@ public class ItemDBHelper extends SQLiteOpenHelper {
         db.execSQL(CREATE_METAINFO_TABLE);
 
         insertInitialTypes(db, types);
-        insertMetaInfo(db, DB_VERSION, ItemUnit.DEFAULT_TYPE_ID);
+        insertMetaInfo(db, DB_VERSION, Item.DEFAULT_TYPE_ID);
 
     }
 

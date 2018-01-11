@@ -4,7 +4,6 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,7 +12,7 @@ import org.zaregoto.apl.lasttimecounter.ActionAdapter;
 import org.zaregoto.apl.lasttimecounter.ItemAction;
 import org.zaregoto.apl.lasttimecounter.R;
 import org.zaregoto.apl.lasttimecounter.model.Alarm;
-import org.zaregoto.apl.lasttimecounter.model.Item;
+import org.zaregoto.apl.lasttimecounter.model.ListableUnit;
 
 import java.util.ArrayList;
 
@@ -30,9 +29,9 @@ public class ItemActionDialogFragment extends DialogFragment implements AdapterV
 
     private ListAdapter adapter;
 
-    private Item selectedItem;
+    private ListableUnit selectedItem;
 
-    public static ItemActionDialogFragment newInstance(Item item) {
+    public static ItemActionDialogFragment newInstance(ListableUnit item) {
 
         ItemActionDialogFragment instance = new ItemActionDialogFragment();
 

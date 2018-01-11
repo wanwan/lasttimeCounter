@@ -9,19 +9,19 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 import org.zaregoto.apl.lasttimecounter.model.Item;
+import org.zaregoto.apl.lasttimecounter.model.ListableUnit;
 import org.zaregoto.apl.lasttimecounter.model.ItemHeader;
-import org.zaregoto.apl.lasttimecounter.model.ItemUnit;
 
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
-public class ItemListAdapter extends ArrayAdapter<Item> {
+public class ItemListAdapter extends ArrayAdapter<ListableUnit> {
 
     private LayoutInflater mInflater;
 
-    public ItemListAdapter(Context context, int resource, ArrayList<Item> objects) {
+    public ItemListAdapter(Context context, int resource, ArrayList<ListableUnit> objects) {
 
         super(context, resource, objects);
         mInflater = LayoutInflater.from(context);
@@ -31,11 +31,11 @@ public class ItemListAdapter extends ArrayAdapter<Item> {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
 
-        ItemUnit item;
+        Item item;
         ItemHeader header;
-        Item _item = getItem(position);
-        if (_item instanceof ItemUnit) {
-            item = (ItemUnit) _item;
+        ListableUnit _listableUnit = getItem(position);
+        if (_listableUnit instanceof Item) {
+            item = (Item) _listableUnit;
             convertView = mInflater.inflate(R.layout.adapter_list_item_unit, parent, false);
 
             TextView tv = convertView.findViewById(R.id.title);
@@ -62,8 +62,8 @@ public class ItemListAdapter extends ArrayAdapter<Item> {
                 }
             }
         }
-        else if (_item instanceof ItemHeader) {
-            header = (ItemHeader) _item;
+        else if (_listableUnit instanceof ItemHeader) {
+            header = (ItemHeader) _listableUnit;
             convertView = mInflater.inflate(R.layout.adapter_list_item_header, parent, false);
 
             TextView tv = convertView.findViewById(R.id.header_title);

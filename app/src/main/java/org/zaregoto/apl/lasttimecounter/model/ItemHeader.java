@@ -3,7 +3,7 @@ package org.zaregoto.apl.lasttimecounter.model;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-public class ItemHeader implements Item {
+public class ItemHeader implements ListableUnit {
 
     private String name;
 

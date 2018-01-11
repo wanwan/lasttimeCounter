@@ -4,7 +4,7 @@ import android.app.Activity;
 import android.app.FragmentManager;
 import android.content.Context;
 import org.zaregoto.apl.lasttimecounter.model.Item;
-import org.zaregoto.apl.lasttimecounter.model.ItemUnit;
+import org.zaregoto.apl.lasttimecounter.model.ListableUnit;
 import org.zaregoto.apl.lasttimecounter.ui.RemoveItemAlertDialogFragment;
 
 import java.util.ArrayList;
@@ -39,7 +39,7 @@ public abstract class ItemAction {
         this.detail = detail;
     }
 
-    public abstract boolean process(Context context, Item item);
+    public abstract boolean process(Context context, ListableUnit item);
 
 
     public static ArrayList<ItemAction> getInitialActions(Context context) {
@@ -50,7 +50,7 @@ public abstract class ItemAction {
         // TODO: 文字列を resources に移動させる
         action = new ItemAction() {
             @Override
-            public boolean process(Context context, Item item) {
+            public boolean process(Context context, ListableUnit item) {
                 return true;
             }
         };
@@ -60,7 +60,7 @@ public abstract class ItemAction {
 
         action = new ItemAction() {
             @Override
-            public boolean process(final Context context, final Item item) {
+            public boolean process(final Context context, final ListableUnit item) {
 
 //                AlertDialog.Builder builder = new AlertDialog.Builder(context);
 //                builder.setTitle("title");
@@ -77,7 +77,7 @@ public abstract class ItemAction {
 //                AlertDialog dialog = builder.create();
 //                dialog.show();
 
-                RemoveItemAlertDialogFragment alertDlg = RemoveItemAlertDialogFragment.newInstance((ItemUnit) item, "title", "remove?");
+                RemoveItemAlertDialogFragment alertDlg = RemoveItemAlertDialogFragment.newInstance((Item) item, "title", "remove?");
                 Activity activity = (Activity) context;
                 FragmentManager fm = activity.getFragmentManager();
 //                alertDlg.setAlertDialogListener(new RemoveItemAlertDialogFragment.AlertDialogListener() {

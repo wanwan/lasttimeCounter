@@ -5,7 +5,6 @@ import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.util.Log;
@@ -13,7 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.*;
 import org.zaregoto.apl.lasttimecounter.model.Alarm;
-import org.zaregoto.apl.lasttimecounter.model.ItemUnit;
+import org.zaregoto.apl.lasttimecounter.model.Item;
 import org.zaregoto.apl.lasttimecounter.model.ItemType;
 import org.zaregoto.apl.lasttimecounter.R;
 
@@ -31,11 +30,11 @@ public class InputItemDialogFragment extends DialogFragment implements SelectTyp
     private final String TAG = "InputItemDialogFragment";
     private View root;
 
-    ItemUnit item = null;
+    Item item = null;
     ItemType type;
 
 
-    public static InputItemDialogFragment newInstance(ItemUnit item) {
+    public static InputItemDialogFragment newInstance(Item item) {
 
         InputItemDialogFragment instance = new InputItemDialogFragment();
 
@@ -183,7 +182,7 @@ public class InputItemDialogFragment extends DialogFragment implements SelectTyp
             btn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    ItemUnit _item = item;
+                    Item _item = item;
 
                     EditText _name = content.findViewById(R.id.name);
                     EditText _detail = content.findViewById(R.id.detail);
@@ -206,7 +205,7 @@ public class InputItemDialogFragment extends DialogFragment implements SelectTyp
             btn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    ItemUnit _item = item;
+                    Item _item = item;
 
                     EditText _name = content.findViewById(R.id.name);
                     EditText _detail = content.findViewById(R.id.detail);
@@ -226,7 +225,7 @@ public class InputItemDialogFragment extends DialogFragment implements SelectTyp
             btn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    ItemUnit _item = item;
+                    Item _item = item;
 
                     _item.setLastTime(selectedDay);
                     mInputDialogListener.redoItem(_item);
@@ -236,7 +235,7 @@ public class InputItemDialogFragment extends DialogFragment implements SelectTyp
 
         }
 
-//        final ItemUnit finalItem = item;
+//        final Item finalItem = item;
 //        builder.setMessage(R.string.fragment_item_input_dialog_name);
 //        builder.setPositiveButton(R.string.fragment_item_input_dialog_ok, new DialogInterface.OnClickListener() {
 //            @Override
@@ -297,7 +296,7 @@ public class InputItemDialogFragment extends DialogFragment implements SelectTyp
     }
 
 
-    public void update(ItemUnit item) throws IOException {
+    public void update(Item item) throws IOException {
 
         String str = "";
 
@@ -338,7 +337,7 @@ public class InputItemDialogFragment extends DialogFragment implements SelectTyp
     }
 
 
-    private boolean isNewItem(ItemUnit item) {
+    private boolean isNewItem(Item item) {
         if (item.getId() < 0) {
             return true;
         }
@@ -348,9 +347,9 @@ public class InputItemDialogFragment extends DialogFragment implements SelectTyp
     }
 
     public interface InputDialogListener {
-        void addItem(ItemUnit item);
-        void updateItem(ItemUnit item);
+        void addItem(Item item);
+        void updateItem(Item item);
 
-        void redoItem(ItemUnit item);
+        void redoItem(Item item);
     }
 }

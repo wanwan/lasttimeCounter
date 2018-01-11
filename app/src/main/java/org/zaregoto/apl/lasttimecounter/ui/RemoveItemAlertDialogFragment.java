@@ -10,7 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.TextView;
 import org.zaregoto.apl.lasttimecounter.R;
-import org.zaregoto.apl.lasttimecounter.model.ItemUnit;
+import org.zaregoto.apl.lasttimecounter.model.Item;
 
 
 public class RemoveItemAlertDialogFragment extends DialogFragment {
@@ -20,13 +20,13 @@ public class RemoveItemAlertDialogFragment extends DialogFragment {
     private static final String ARGS_MSG_ID = "ARGS_MSG";
 
     private AlertDialogListener mListener;
-    private ItemUnit item;
+    private Item item;
 
     private View content;
     private String msg;
     private String title;
 
-    public static RemoveItemAlertDialogFragment newInstance(ItemUnit item, String title, String msg) {
+    public static RemoveItemAlertDialogFragment newInstance(Item item, String title, String msg) {
 
         RemoveItemAlertDialogFragment instance = new RemoveItemAlertDialogFragment();
 
@@ -101,8 +101,8 @@ public class RemoveItemAlertDialogFragment extends DialogFragment {
     }
 
     public interface AlertDialogListener {
-        void removeItemConfirm(ItemUnit item);
-        void cancelRemoveItem(ItemUnit item);
+        void removeItemConfirm(Item item);
+        void cancelRemoveItem(Item item);
     }
 
     public void setAlertDialogListener(AlertDialogListener listener) {
