@@ -34,7 +34,7 @@ public class MainActivity
         RemoveItemAlertDialogFragment.AlertDialogListener {
 
     private static final String TAG = "MainActivity";
-    private InputItemDialogFragment itemInputDialog;
+    private InputItemDialogFragment inputItemDialog;
     private ArrayList<ListableUnit> items = new ArrayList<>();
     private ItemListAdapter adapter;
 
@@ -71,8 +71,8 @@ public class MainActivity
                     Alarm alarm = new Alarm(Alarm.ALARM_TYPE.ALARM_TYPE_NONE, 0);
                     Item item = new Item(name, detail, type, now, now, alarm);
 
-                    itemInputDialog = InputItemDialogFragment.newInstance(item);
-                    itemInputDialog.show(getFragmentManager(), "");
+                    inputItemDialog = InputItemDialogFragment.newInstance(item);
+                    inputItemDialog.show(getFragmentManager(), "");
                 }
             });
         }
@@ -175,8 +175,8 @@ public class MainActivity
         ListableUnit item = adapter.getItem(pos);
 
         if (item instanceof Item) {
-            itemInputDialog = InputItemDialogFragment.newInstance((Item) item);
-            itemInputDialog.show(getFragmentManager(), "");
+            inputItemDialog = InputItemDialogFragment.newInstance((Item) item);
+            inputItemDialog.show(getFragmentManager(), "");
         }
     }
 

@@ -56,7 +56,12 @@ public class InputItemDialogFragment extends DialogFragment implements SelectTyp
             type = item.getType();
         }
 
-        selectedDay = new Date();
+        if (isNewItem(item)) {
+            selectedDay = new Date();
+        }
+        else {
+            selectedDay = item.getLastTime();
+        }
 
         // Use the Builder class for convenient dialog construction
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
