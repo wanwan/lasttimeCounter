@@ -2,7 +2,9 @@ package org.zaregoto.apl.lasttimecounter.model;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+import org.zaregoto.apl.lasttimecounter.ItemHistory;
 
+import java.util.ArrayList;
 import java.util.Date;
 
 public class Item implements Comparable<Item>, Parcelable, ListableUnit {
@@ -17,7 +19,6 @@ public class Item implements Comparable<Item>, Parcelable, ListableUnit {
     private Date lastTime;
 
     private Alarm alarm;
-
 
     private Item() {
         id = -1;

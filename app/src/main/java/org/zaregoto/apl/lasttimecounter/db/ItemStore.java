@@ -5,6 +5,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Environment;
+import org.zaregoto.apl.lasttimecounter.ItemHistory;
 import org.zaregoto.apl.lasttimecounter.model.*;
 import org.zaregoto.apl.lasttimecounter.ui.MainActivity;
 
@@ -35,6 +36,8 @@ public class ItemStore {
     static final String INSERT_ALARMS = "insert into alarms (_id, alarm_type, day_after_lastdate) values (?, ?, ?) ;";
     static final String UPDATE_ALARMS = "update alarms set alarm_type=?, day_after_lastdate=? where _id=? ;";
     static final String DELETE_ALARMS = "delete from alarms where _id = ?;";
+
+    static final String QUERY_HISTORIES  = "select do_date from histories where _id = ?";
 
     static final String READ_SEQ_NO = "select seq from sqlite_sequence where name = ?";
 
@@ -358,6 +361,38 @@ public class ItemStore {
         }
 
         return new ItemType(typeId, section, filename, label);
+    }
+
+
+    public static ArrayList<ItemHistory> getHistoriesFromItem(Context context, Item item) {
+
+        ItemDBHelper dbhelper = new ItemDBHelper(context.getApplicationContext());
+        SQLiteDatabase db = dbhelper.getReadableDatabase();
+        ArrayList<ItemHistory> ret = new ArrayList<>();
+        ItemHistory history;
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+
+        if (null != db && null != item) {
+            String[] args = new String[]{String.valueOf(item.getId())};
+            Cursor c = db.rawQuery(QUERY_HISTORIES, args);
+            if (null != c && c.getCount() >0) {
+                c.moveToFirst();
+                for (int i = 0; i < c.getCount(); i++) {
+
+                    try {
+                        Date d = sdf.parse(c.getString(c.getColumnIndex("do_date")));
+                        history = new ItemHistory(d);
+                        ret.add(history);
+                    } catch (ParseException e) {
+                        e.printStackTrace();
+                    }
+
+                }
+            }
+
+        }
+
+        return ret;
     }
 
 

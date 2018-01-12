@@ -7,12 +7,22 @@ import java.util.Date;
 
 public class ItemHistory {
 
-    private ArrayList<Date> history;
+    private Date history;
+
 
     private ItemHistory() {
     }
 
-    public static ItemHistory getHistoryFromItem(Item item) {
-        return new ItemHistory();
+    public ItemHistory(Date date) {
+        history = date;
     }
+
+    public Date getHistory() {
+        return history;
+    }
+
+    public void setHistory(Date history) {
+        this.history = history;
+    }
+
 }
