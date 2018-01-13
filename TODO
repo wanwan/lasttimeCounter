@@ -1,12 +1,8 @@
 [TODO]
 
-* 再実行 -> 実行履歴表示のフローを作成する
-  -> 再実行は作成
-  -> redo 時の name/detail/alarm の編集をどうする?
-     -> とりあえず編集でボタンのl disable ということは可能か? or 無条件で update?
-
 * ソート機能の実装
-  - last date
+  - last date / last date desc
+  - notification limit
 
 * フィルタ機能の実装
   - type
@@ -111,3 +107,8 @@
   -> newInstance で作成
   -> data については 非 NULL で呼び元が作成, dialog 側が保持, commit 時に更新
   -> callback を onAttach -> 手動で登録 というフローにとりあえずしておく
+
+* 再実行 -> 実行履歴表示のフローを作成する
+  -> 再実行は作成
+  -> redo 時の name/detail/alarm の編集をどうする?
+     -> とりあえず編集でボタンの disable ということは可能か? or 無条件で update?

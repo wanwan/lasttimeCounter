@@ -386,6 +386,7 @@ public class ItemStore {
                     } catch (ParseException e) {
                         e.printStackTrace();
                     }
+                    c.moveToNext();
 
                 }
             }
