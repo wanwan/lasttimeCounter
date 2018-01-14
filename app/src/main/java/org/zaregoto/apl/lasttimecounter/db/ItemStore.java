@@ -43,12 +43,12 @@ public class ItemStore {
 
 
     public static boolean loadInitialData(Context context, ArrayList<ListableUnit> items) {
-        return loadData(context, items, OrderType.ORDER_TYPE_CURRENT_TO_OLD);
+        return loadData(context, items, ListableUnit.SORT_TYPE.SORT_TYPE_NEWER_TO_OLD);
     }
 
 
 
-    public static boolean loadData(Context context, ArrayList<ListableUnit> items, OrderType orderType) {
+    public static boolean loadData(Context context, ArrayList<ListableUnit> items, ListableUnit.SORT_TYPE orderType) {
 
         ItemDBHelper dbhelper = new ItemDBHelper(context.getApplicationContext());
         SQLiteDatabase db = dbhelper.getReadableDatabase();
@@ -66,17 +66,20 @@ public class ItemStore {
         Alarm alarm;
 
         Item item;
-
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
         if (null != db) {
-            if (OrderType.ORDER_TYPE_CURRENT_TO_OLD == orderType) {
+            if (ListableUnit.SORT_TYPE.SORT_TYPE_NEWER_TO_OLD == orderType) {
                 cursor = db.rawQuery(QUERY_TABLE_NEW_TO_OLD, null);
                 items.add(new ItemHeader("current"));
             }
-            else {
+            else if (ListableUnit.SORT_TYPE.SORT_TYPE_OLDER_TO_NEW == orderType) {
                 cursor = db.rawQuery(QUERY_TABLE_OLD_TO_NEW, null);
                 items.add(new ItemHeader("oldest"));
+            }
+            else {
+                // TODO: NEARLEST_ALARM
+                cursor = null;
             }
 
             if (null != cursor) {
@@ -443,9 +446,8 @@ public class ItemStore {
     }
 
 
-    public enum OrderType {
-
-        ORDER_TYPE_CURRENT_TO_OLD,
-        ORDER_TYPE_OLD_TO_CURRENT
-    }
+//    public enum OrderType {
+//        ORDER_TYPE_CURRENT_TO_OLD,
+//        ORDER_TYPE_OLD_TO_CURRENT
+//    }
 }

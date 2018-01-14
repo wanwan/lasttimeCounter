@@ -26,6 +26,10 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
+import static org.zaregoto.apl.lasttimecounter.model.ListableUnit.SORT_TYPE.SORT_TYPE_NEARLEST_ALARM;
+import static org.zaregoto.apl.lasttimecounter.model.ListableUnit.SORT_TYPE.SORT_TYPE_NEWER_TO_OLD;
+import static org.zaregoto.apl.lasttimecounter.model.ListableUnit.SORT_TYPE.SORT_TYPE_OLDER_TO_NEW;
+
 public class MainActivity
         extends AppCompatActivity
         implements InputItemDialogFragment.InputDialogListener,
@@ -38,9 +42,9 @@ public class MainActivity
     private ArrayList<ListableUnit> items = new ArrayList<>();
     private ItemListAdapter adapter;
 
-    private ItemStore.OrderType orderType = ItemStore.OrderType.ORDER_TYPE_CURRENT_TO_OLD;
+    //private ItemStore.OrderType orderType = ItemStore.OrderType.ORDER_TYPE_CURRENT_TO_OLD;
+    private ListableUnit.SORT_TYPE sortType = SORT_TYPE_NEWER_TO_OLD;
 
-    private ArrayList<ItemAction> itemActions = new ArrayList();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -84,6 +88,12 @@ public class MainActivity
 
                 switch (menuItem.getItemId()) {
                     case R.id.sort:
+                        toggleSortType();
+                        if (null != items) {
+                            items.clear();
+                            ItemStore.loadData(MainActivity.this, items, sortType);
+                        }
+                        adapter.notifyDataSetChanged();
                         break;
                     case R.id.filter:
                         break;
@@ -132,7 +142,7 @@ public class MainActivity
             // reload data
             items.clear();
             ;
-            ItemStore.loadData(this, items, orderType);
+            ItemStore.loadData(this, items, sortType);
             adapter.notifyDataSetChanged();
         }
     }
@@ -144,8 +154,8 @@ public class MainActivity
 
             // reload data
             items.clear();
-            ;
-            ItemStore.loadData(this, items, orderType);
+
+            ItemStore.loadData(this, items, sortType);
             adapter.notifyDataSetChanged();
         }
     }
@@ -160,7 +170,7 @@ public class MainActivity
                 // reload data
                 items.clear();
                 ;
-                ItemStore.loadData(this, items, orderType);
+                ItemStore.loadData(this, items, sortType);
                 adapter.notifyDataSetChanged();
             } catch (ItemDBException e) {
                 e.printStackTrace();
@@ -182,23 +192,6 @@ public class MainActivity
 
     @Override
     public boolean onItemLongClick(AdapterView<?> adapterView, View view, final int pos, long id) {
-
-//        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-//        builder.setTitle("title");
-//        builder.setMessage("message");
-//        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-//            @Override
-//            public void onClick(DialogInterface dialog, int which) {
-//                // OK button pressed
-//                ListableUnit item = adapter.getItem(pos);
-//                adapter.remove(item);
-//                ItemStore.deleteData(MainActivity.this, item);
-//            }
-//        });
-//        builder.setNegativeButton("Cancel", null);
-//
-//        AlertDialog dialog = builder.create();
-//        dialog.show();
 
         Vibrator vibrator = (Vibrator) getSystemService(VIBRATOR_SERVICE);
         vibrator.vibrate(100);
@@ -222,5 +215,20 @@ public class MainActivity
     @Override
     public void cancelRemoveItem(Item item) {
         Log.d(TAG, "*** cancelRemoveItem called ***");
+    }
+
+
+    private void toggleSortType() {
+        switch (sortType) {
+            case SORT_TYPE_NEWER_TO_OLD:
+                sortType = SORT_TYPE_OLDER_TO_NEW;
+                break;
+            case SORT_TYPE_OLDER_TO_NEW:
+                sortType = SORT_TYPE_NEARLEST_ALARM;
+                break;
+            case SORT_TYPE_NEARLEST_ALARM:
+                sortType = SORT_TYPE_NEWER_TO_OLD;
+                break;
+        }
     }
 }
