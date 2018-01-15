@@ -4,6 +4,7 @@ import android.app.FragmentManager;
 import android.os.Vibrator;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
+import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -94,6 +95,12 @@ public class MainActivity
                             ItemStore.loadData(MainActivity.this, items, sortType);
                         }
                         adapter.notifyDataSetChanged();
+
+                        DrawerLayout dl = findViewById(R.id.drawer_layout);
+                        if (null != dl) {
+                            dl.closeDrawers();
+                        }
+
                         break;
                     case R.id.filter:
                         break;
