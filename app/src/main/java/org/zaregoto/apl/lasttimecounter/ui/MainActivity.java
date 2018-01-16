@@ -12,7 +12,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
-import org.zaregoto.apl.lasttimecounter.ItemAction;
 import org.zaregoto.apl.lasttimecounter.ItemListAdapter;
 import org.zaregoto.apl.lasttimecounter.db.ItemDBException;
 import org.zaregoto.apl.lasttimecounter.model.Alarm;
@@ -36,16 +35,16 @@ public class MainActivity
         implements InputItemDialogFragment.InputDialogListener,
         AdapterView.OnItemClickListener,
         AdapterView.OnItemLongClickListener,
-        RemoveItemAlertDialogFragment.AlertDialogListener {
+        RemoveItemAlertDialogFragment.AlertDialogListener,
+        SelectTypeDialogFragment.SelectTypeDialogListener {
 
     private static final String TAG = "MainActivity";
     private InputItemDialogFragment inputItemDialog;
     private ArrayList<ListableUnit> items = new ArrayList<>();
     private ItemListAdapter adapter;
 
-    //private ItemStore.OrderType orderType = ItemStore.OrderType.ORDER_TYPE_CURRENT_TO_OLD;
     private ListableUnit.SORT_TYPE sortType = SORT_TYPE_NEWER_TO_OLD;
-
+    private ItemType selectedType;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -103,6 +102,11 @@ public class MainActivity
 
                         break;
                     case R.id.filter:
+
+                        SelectTypeDialogFragment typeSelectDialog = SelectTypeDialogFragment.newInstance(true);
+                        typeSelectDialog.setDialogListener(MainActivity.this);
+                        typeSelectDialog.show(getFragmentManager(), "");
+
                         break;
                     case R.id.config:
                         break;
@@ -237,5 +241,15 @@ public class MainActivity
                 sortType = SORT_TYPE_NEWER_TO_OLD;
                 break;
         }
+    }
+
+    @Override
+    public void selectType(ItemType type) {
+        this.selectedType = type;
+
+        selectedType = type;
+        items.clear();
+        ItemStore.loadData(MainActivity.this, items, sortType, selectedType);
+        adapter.notifyDataSetChanged();
     }
 }

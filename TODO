@@ -32,6 +32,9 @@
   - "+" btn
     追加
 
+* icon をもうすこし選定する
+  -> ここからひっぱるか
+
 * backup / restore
   - databases で基本的に backup / 復元ができるように.
   - backup は databases 以下を残せばいける.
@@ -41,7 +44,6 @@
   - ".dump" 等命令は SQLiteOpenHelper 経由では不正と怒られるのでとりあえず丸コピーで.
     - restore は convert と同じという理解で良いと思う
 
-* lastdate の配列 (実行日時) をテーブル化し外部参照で見れるようにする.
 
 * 自動テスト作成
 
@@ -74,6 +76,10 @@
 * type の default の設定をおこなう.
   type_id = 0 が自然 itemtypes の autoincrement まわりを弄るなりして 0, default のエントリを用意する
   or hit しない場合は default にする (外部参照制約が掛けられなくなるが)
+
+* callback と activity の関係を整理する
+
+* DB のデータ変更時に, 他の activity 等での表示更新のチャンスを与えるため localbroadcast を実装する
 
 [suspend]
 
@@ -112,3 +118,5 @@
   -> 再実行は作成
   -> redo 時の name/detail/alarm の編集をどうする?
      -> とりあえず編集でボタンの disable ということは可能か? or 無条件で update?
+
+* lastdate の配列 (実行日時) をテーブル化し外部参照で見れるようにする.

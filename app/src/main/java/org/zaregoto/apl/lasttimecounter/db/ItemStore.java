@@ -22,24 +22,26 @@ import java.util.Date;
 
 public class ItemStore {
 
-    static final String QUERY_TABLE_NEW_TO_OLD = "select items._id as _id, name, detail, type_id, lasttime, createtime, alarm_type, day_after_lastdate from items left join alarms on items._id = alarms._id order by lasttime desc;";
-    static final String QUERY_TABLE_OLD_TO_NEW = "select items._id as _id, name, detail, type_id, lasttime, createtime, alarm_type, day_after_lastdate from items left join alarms on items._id = alarms._id order by lasttime;";
-    static final String QUERY_ITEMS = "select items._id as _id, name, detail, type_id, lasttime, createtime, alarm_type, day_after_lastdate from items left join alarms on items._id = alarms._id where items._id = ?;";
-    static final String INSERT_TABLE = "insert into items (name, detail, type_id, lasttime, createtime) values (?, ?, ?, ?, ?) ;";
-    static final String UPDATE_TABLE = "update items set name=?, detail=?, type_id=?, lasttime=?, createtime=? where _id=? ;";
-    static final String DELETE_TABLE = "delete from items where _id = ?;";
+    private static final String QUERY_TABLE_NEW_TO_OLD = "select items._id as _id, name, detail, type_id, lasttime, createtime, alarm_type, day_after_lastdate from items left join alarms on items._id = alarms._id order by lasttime desc;";
+    private static final String QUERY_TABLE_OLD_TO_NEW = "select items._id as _id, name, detail, type_id, lasttime, createtime, alarm_type, day_after_lastdate from items left join alarms on items._id = alarms._id order by lasttime;";
+    private static final String QUERY_TABLE_NEW_TO_OLD_TYPEID = "select items._id as _id, name, detail, type_id, lasttime, createtime, alarm_type, day_after_lastdate from items left join alarms on items._id = alarms._id where type_id = ? order by lasttime desc;";
+    private static final String QUERY_TABLE_OLD_TO_NEW_TYPEID = "select items._id as _id, name, detail, type_id, lasttime, createtime, alarm_type, day_after_lastdate from items left join alarms on items._id = alarms._id where type_id = ? order by lasttime;";
+    private static final String QUERY_ITEMS = "select items._id as _id, name, detail, type_id, lasttime, createtime, alarm_type, day_after_lastdate from items left join alarms on items._id = alarms._id where items._id = ?;";
+    private static final String INSERT_TABLE = "insert into items (name, detail, type_id, lasttime, createtime) values (?, ?, ?, ?, ?) ;";
+    private static final String UPDATE_TABLE = "update items set name=?, detail=?, type_id=?, lasttime=?, createtime=? where _id=? ;";
+    private static final String DELETE_TABLE = "delete from items where _id = ?;";
 
-    static final String QUERY_ITEMTYPES = "select type_id, section, filename, label from itemtypes; ";
-    static final String QUERY_ITEMTYPE_BY_TYPEID = "select section, filename from itemtypes where type_id = ?; ";
+    private static final String QUERY_ITEMTYPES = "select type_id, section, filename, label from itemtypes; ";
+    private static final String QUERY_ITEMTYPE_BY_TYPEID = "select section, filename from itemtypes where type_id = ?; ";
 
-    static final String QUERY_ALARMS  = "select _id, alarm_type, day_after_lastdate from alarms where _id = ?;";
-    static final String INSERT_ALARMS = "insert into alarms (_id, alarm_type, day_after_lastdate) values (?, ?, ?) ;";
-    static final String UPDATE_ALARMS = "update alarms set alarm_type=?, day_after_lastdate=? where _id=? ;";
-    static final String DELETE_ALARMS = "delete from alarms where _id = ?;";
+    private static final String QUERY_ALARMS  = "select _id, alarm_type, day_after_lastdate from alarms where _id = ?;";
+    private static final String INSERT_ALARMS = "insert into alarms (_id, alarm_type, day_after_lastdate) values (?, ?, ?) ;";
+    private static final String UPDATE_ALARMS = "update alarms set alarm_type=?, day_after_lastdate=? where _id=? ;";
+    private static final String DELETE_ALARMS = "delete from alarms where _id = ?;";
 
-    static final String QUERY_HISTORIES  = "select do_date from histories where _id = ?";
+    private static final String QUERY_HISTORIES  = "select do_date from histories where _id = ?";
 
-    static final String READ_SEQ_NO = "select seq from sqlite_sequence where name = ?";
+    private static final String READ_SEQ_NO = "select seq from sqlite_sequence where name = ?";
 
 
     public static boolean loadInitialData(Context context, ArrayList<ListableUnit> items) {
@@ -47,8 +49,13 @@ public class ItemStore {
     }
 
 
-
     public static boolean loadData(Context context, ArrayList<ListableUnit> items, ListableUnit.SORT_TYPE orderType) {
+        return loadData(context, items, orderType, null);
+    }
+
+
+
+    public static boolean loadData(Context context, ArrayList<ListableUnit> items, ListableUnit.SORT_TYPE orderType, ItemType itemType) {
 
         ItemDBHelper dbhelper = new ItemDBHelper(context.getApplicationContext());
         SQLiteDatabase db = dbhelper.getReadableDatabase();
@@ -69,17 +76,36 @@ public class ItemStore {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
         if (null != db) {
-            if (ListableUnit.SORT_TYPE.SORT_TYPE_NEWER_TO_OLD == orderType) {
-                cursor = db.rawQuery(QUERY_TABLE_NEW_TO_OLD, null);
-                items.add(new ItemHeader("current"));
-            }
-            else if (ListableUnit.SORT_TYPE.SORT_TYPE_OLDER_TO_NEW == orderType) {
-                cursor = db.rawQuery(QUERY_TABLE_OLD_TO_NEW, null);
-                items.add(new ItemHeader("oldest"));
+
+            if (null != itemType) {
+                String[] args = new String[]{String.valueOf(itemType.getTypeId())};
+
+                if (ListableUnit.SORT_TYPE.SORT_TYPE_NEWER_TO_OLD == orderType) {
+                    cursor = db.rawQuery(QUERY_TABLE_NEW_TO_OLD_TYPEID, args);
+                    items.add(new ItemHeader("current"));
+                }
+                else if (ListableUnit.SORT_TYPE.SORT_TYPE_OLDER_TO_NEW == orderType) {
+                    cursor = db.rawQuery(QUERY_TABLE_OLD_TO_NEW_TYPEID, args);
+                    items.add(new ItemHeader("oldest"));
+                }
+                else {
+                    // TODO: NEARLEST_ALARM
+                    cursor = null;
+                }
             }
             else {
-                // TODO: NEARLEST_ALARM
-                cursor = null;
+                if (ListableUnit.SORT_TYPE.SORT_TYPE_NEWER_TO_OLD == orderType) {
+                    cursor = db.rawQuery(QUERY_TABLE_NEW_TO_OLD, null);
+                    items.add(new ItemHeader("current"));
+                }
+                else if (ListableUnit.SORT_TYPE.SORT_TYPE_OLDER_TO_NEW == orderType) {
+                    cursor = db.rawQuery(QUERY_TABLE_OLD_TO_NEW, null);
+                    items.add(new ItemHeader("oldest"));
+                }
+                else {
+                    // TODO: NEARLEST_ALARM
+                    cursor = null;
+                }
             }
 
             if (null != cursor) {
@@ -123,6 +149,8 @@ public class ItemStore {
 
         return true;
     }
+
+
 
 
 

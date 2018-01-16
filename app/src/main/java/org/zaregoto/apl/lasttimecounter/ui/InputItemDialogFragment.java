@@ -102,7 +102,7 @@ public class InputItemDialogFragment extends DialogFragment implements SelectTyp
             typeIcon.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    SelectTypeDialogFragment typeSelectDialog = SelectTypeDialogFragment.newInstance();
+                    SelectTypeDialogFragment typeSelectDialog = SelectTypeDialogFragment.newInstance(false);
                     typeSelectDialog.setDialogListener(InputItemDialogFragment.this);
                     typeSelectDialog.show(getFragmentManager(), "");
                 }
@@ -119,7 +119,7 @@ public class InputItemDialogFragment extends DialogFragment implements SelectTyp
             typeIcon.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    SelectTypeDialogFragment typeSelectDialog = SelectTypeDialogFragment.newInstance();
+                    SelectTypeDialogFragment typeSelectDialog = SelectTypeDialogFragment.newInstance(false);
                     typeSelectDialog.setDialogListener(InputItemDialogFragment.this);
                     typeSelectDialog.show(getFragmentManager(), "");
                 }

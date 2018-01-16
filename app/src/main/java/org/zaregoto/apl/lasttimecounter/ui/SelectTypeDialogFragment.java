@@ -4,7 +4,9 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.os.Bundle;
+import android.support.design.widget.NavigationView;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -20,13 +22,16 @@ import java.util.ArrayList;
 
 public class SelectTypeDialogFragment extends DialogFragment {
 
+    private static final String ARGS_CANCELABLE_ID = "cancelable";
+
     private final String TAG = "TypeDialogFragment";
     private SelectTypeDialogFragment.SelectTypeDialogListener mDialogListener;
 
-    public static SelectTypeDialogFragment newInstance() {
+    public static SelectTypeDialogFragment newInstance(boolean cancelable) {
 
         SelectTypeDialogFragment instance = new SelectTypeDialogFragment();
         Bundle args = new Bundle();
+        args.putBoolean(ARGS_CANCELABLE_ID, cancelable);
 
         instance.setArguments(args);
 
@@ -37,14 +42,19 @@ public class SelectTypeDialogFragment extends DialogFragment {
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
 
-        DisplayMetrics metrics = getResources().getDisplayMetrics();
+        boolean cancelable = false;
+
+        Bundle args = getArguments();
+        if (null != args) {
+            cancelable = args.getBoolean(ARGS_CANCELABLE_ID);
+        }
+
+        final DisplayMetrics metrics = getResources().getDisplayMetrics();
         int dialogWidth = (int) (metrics.widthPixels * 0.8);
         int dialogHeight = (int) (metrics.heightPixels * 0.65);
         double iconViewRatio = dialogHeight / dialogWidth;
         ArrayList<ItemType> types = ItemStore.getAllItemTyps(getActivity());
         final GridTypeAdapter adapter = new GridTypeAdapter(getActivity(), android.R.layout.simple_list_item_1, types);
-
-        Log.d(TAG, "***** width: height " + dialogWidth + " : " + dialogHeight + "*****\n");
 
         // Use the Builder class for convenient dialog construction
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
@@ -72,90 +82,16 @@ public class SelectTypeDialogFragment extends DialogFragment {
 
         }
 
-
-//        GridLayout gridLayout = content.findViewById(R.id.gridview);
-//        if (null != gridLayout) {
-//            gridLayout.removeAllViews();
-//
-//            //ArrayList<ItemType> types = ItemStore.getAllItemTyps(getActivity());
-//            int total = types.size();
-//            int column = 4;
-//            int row = total / column;
-//
-//            gridLayout.setColumnCount(column);
-//            gridLayout.setRowCount(row + 1);
-//
-//            AssetManager am;
-//            InputStream is;
-//
-//            am = getActivity().getAssets();
-//
-//            for (int i = 0, c = 0, r = 0; i < total; i++, c++) {
-//                if (c == column) {
-//                    c = 0;
-//                    r++;
-//                }
-//
-//                ItemType itemType = types.get(i);
-//                String filename = itemType.getFilename();
-//                String section = itemType.getSection();
-//                Drawable drawable = null;
-//
-//                try {
-//                    is = am.open("typeicons" + "/" + section + "/" + filename);
-//                    if (null != is) {
-//                        drawable = Drawable.createFromStream(is, null);
-//
-//                        View typeView = inflater.inflate(R.layout.item_type, null);
-//                        Log.d(TAG, "typeView: " + typeView.getId());
-//                        //Log.d(TAG, "***** type icon width: height " + typeView.getWidth() + " " + typeView.getHeight());
-//
-//                        //double iconViewRatio = typeView.getHeight() / typeView.getWidth();
-//                        if (null != typeView) {
-//                            ImageView iconView = typeView.findViewById(R.id.type_icon);
-//                            TextView labelView = typeView.findViewById(R.id.type_label);
-//
-//                            iconView.setImageDrawable(drawable);
-//                            labelView.setText("aaaa");
-//
-//                            Log.d(TAG, "iconView: " + iconView.getId() + " labelView: " + labelView.getId());
-//                        }
-//
-//                        GridLayout.Spec rowSpan = GridLayout.spec(GridLayout.UNDEFINED, 1);
-//                        GridLayout.Spec colspan = GridLayout.spec(GridLayout.UNDEFINED, 1);
-//
-//                        int iconWidth = dialogWidth / column;
-//                        int iconHeight = (int) (iconWidth * iconViewRatio);
-//
-//                        GridLayout.LayoutParams gridParam = new GridLayout.LayoutParams(rowSpan, colspan);
-//                        gridParam.width = iconWidth;
-//                        gridParam.height = iconHeight;
-//                        gridLayout.addView(typeView, gridParam);
-//
-//                        typeView.setOnClickListener(new View.OnClickListener() {
-//                            @Override
-//                            public void onClick(View view) {
-//                                Log.d(TAG, "*** CLICKED" + view.getId() + " ***\n");
-//                            }
-//                        });
-//                    }
-//
-//                } catch (IOException e) {
-//                    e.printStackTrace();
-//                    Log.d(TAG, "cannot read drawable from asset manager");
-//                }
-//            }
-//        }
-
-
-//        builder.setMessage(R.string.fragment_type_select_dialog_name);
-//        builder.setPositiveButton(R.string.fragment_item_input_dialog_ok, new DialogInterface.OnClickListener() {
-//            @Override
-//            public void onClick(DialogInterface dialogInterface, int i) {
-//
-//            }
-//        });
-
+        if (cancelable) {
+            builder.setNegativeButton("cancel", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+                    if (null != mDialogListener) {
+                        mDialogListener.selectType(null);
+                    }
+                }
+            });
+        }
 
         // Create the AlertDialog object and return it
         Dialog dialog = builder.create();
@@ -192,6 +128,7 @@ public class SelectTypeDialogFragment extends DialogFragment {
     public void setDialogListener(SelectTypeDialogListener listener) {
         this.mDialogListener = listener;
     }
+
 
     public interface SelectTypeDialogListener {
         void selectType(ItemType type);
