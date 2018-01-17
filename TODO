@@ -4,13 +4,12 @@
   - last date / last date desc
   - notification limit
 
-* フィルタ機能の実装
-  - type
-
 * notification 機能の追加
   -> おおまかな日にち (1week/2week/1month/3month/6month/1year)
   -> snooze (+1day/+3day/+1week/+2week/+1month)
   -> db で直近の snooze の日数 + 区分 (これがないと再編集で表示がむずかしいのでは?)
+
+* detail のコピーを history に入れて, detail を history 事に管理する
 
 * item を dialog 側で作成しているが, 空の item を activity 側で作成して修正を activity listener に一括させる.
   -> 表示用のコピーを渡すのはありだが同期問題がでるのをどうするか?
@@ -120,3 +119,6 @@
      -> とりあえず編集でボタンの disable ということは可能か? or 無条件で update?
 
 * lastdate の配列 (実行日時) をテーブル化し外部参照で見れるようにする.
+
+* フィルタ機能の実装
+  - type
