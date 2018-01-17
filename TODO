@@ -1,9 +1,5 @@
 [TODO]
 
-* ソート機能の実装
-  - last date / last date desc
-  - notification limit
-
 * notification 機能の追加
   -> おおまかな日にち (1week/2week/1month/3month/6month/1year)
   -> snooze (+1day/+3day/+1week/+2week/+1month)
@@ -14,6 +10,8 @@
 * item を dialog 側で作成しているが, 空の item を activity 側で作成して修正を activity listener に一括させる.
   -> 表示用のコピーを渡すのはありだが同期問題がでるのをどうするか?
   -> getActivity().getCurrentItem() というような方法で取るのもok?
+
+* 現在のフィルタと sort を表示させる.
 
 * UI インターフェースを何に何を振るか考える
   listview
@@ -122,3 +120,7 @@
 
 * フィルタ機能の実装
   - type
+
+* ソート機能の実装
+  - last date / last date desc
+  - notification limit

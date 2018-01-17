@@ -22,14 +22,33 @@ import java.util.Date;
 
 public class ItemStore {
 
-    private static final String QUERY_TABLE_NEW_TO_OLD = "select items._id as _id, name, detail, type_id, lasttime, createtime, alarm_type, day_after_lastdate from items left join alarms on items._id = alarms._id order by lasttime desc;";
-    private static final String QUERY_TABLE_OLD_TO_NEW = "select items._id as _id, name, detail, type_id, lasttime, createtime, alarm_type, day_after_lastdate from items left join alarms on items._id = alarms._id order by lasttime;";
-    private static final String QUERY_TABLE_NEW_TO_OLD_TYPEID = "select items._id as _id, name, detail, type_id, lasttime, createtime, alarm_type, day_after_lastdate from items left join alarms on items._id = alarms._id where type_id = ? order by lasttime desc;";
-    private static final String QUERY_TABLE_OLD_TO_NEW_TYPEID = "select items._id as _id, name, detail, type_id, lasttime, createtime, alarm_type, day_after_lastdate from items left join alarms on items._id = alarms._id where type_id = ? order by lasttime;";
-    private static final String QUERY_ITEMS = "select items._id as _id, name, detail, type_id, lasttime, createtime, alarm_type, day_after_lastdate from items left join alarms on items._id = alarms._id where items._id = ?;";
+    private static final String QUERY_TABLE_NEW_TO_OLD
+            = "select items._id as _id, name, detail, type_id, lasttime, createtime, alarm_type, day_after_lastdate " +
+            "from items left join alarms on items._id = alarms._id order by lasttime desc;";
+    private static final String QUERY_TABLE_OLD_TO_NEW
+            = "select items._id as _id, name, detail, type_id, lasttime, createtime, alarm_type, day_after_lastdate " +
+            "from items left join alarms on items._id = alarms._id order by lasttime;";
+    private static final String QUERY_TABLE_ALARM_LIMIT
+            = "select items._id as _id, name, detail, type_id, lasttime, createtime, alarm_type, day_after_lastdate, " +
+            "date(lasttime, '+'||day_after_lastdate||' days') as alarm_limit_date " +
+            "from items left join alarms on items._id = alarms._id where day_after_lastdate is not null order by alarm_limit_date;";
+    private static final String QUERY_TABLE_NEW_TO_OLD_TYPEID
+            = "select items._id as _id, name, detail, type_id, lasttime, createtime, alarm_type, day_after_lastdate " +
+            "from items left join alarms on items._id = alarms._id where type_id = ? order by lasttime desc;";
+    private static final String QUERY_TABLE_OLD_TO_NEW_TYPEID
+            = "select items._id as _id, name, detail, type_id, lasttime, createtime, alarm_type, day_after_lastdate " +
+            "from items left join alarms on items._id = alarms._id where type_id = ? order by lasttime;";
+    private static final String QUERY_TABLE_ALARM_LIMIT_TYPEID
+            = "select items._id as _id, name, detail, type_id, lasttime, createtime, alarm_type, day_after_lastdate, " +
+            "date(lasttime, '+'||day_after_lastdate||' days') as alarm_limit_date " +
+            "from items left join alarms on items._id = alarms._id where day_after_lastdate is not null and type_id = ? order by alarm_limit_date;";
+    private static final String QUERY_ITEMS
+            = "select items._id as _id, name, detail, type_id, lasttime, createtime, alarm_type, day_after_lastdate " +
+            "from items left join alarms on items._id = alarms._id where items._id = ?;";
     private static final String INSERT_TABLE = "insert into items (name, detail, type_id, lasttime, createtime) values (?, ?, ?, ?, ?) ;";
     private static final String UPDATE_TABLE = "update items set name=?, detail=?, type_id=?, lasttime=?, createtime=? where _id=? ;";
     private static final String DELETE_TABLE = "delete from items where _id = ?;";
+
 
     private static final String QUERY_ITEMTYPES = "select type_id, section, filename, label from itemtypes; ";
     private static final String QUERY_ITEMTYPE_BY_TYPEID = "select section, filename from itemtypes where type_id = ?; ";
@@ -59,7 +78,7 @@ public class ItemStore {
 
         ItemDBHelper dbhelper = new ItemDBHelper(context.getApplicationContext());
         SQLiteDatabase db = dbhelper.getReadableDatabase();
-        Cursor cursor;
+        Cursor cursor = null;
         int _id;
         String name;
         String detail;
@@ -77,72 +96,73 @@ public class ItemStore {
 
         if (null != db) {
 
-            if (null != itemType) {
-                String[] args = new String[]{String.valueOf(itemType.getTypeId())};
+            try {
 
-                if (ListableUnit.SORT_TYPE.SORT_TYPE_NEWER_TO_OLD == orderType) {
-                    cursor = db.rawQuery(QUERY_TABLE_NEW_TO_OLD_TYPEID, args);
-                    items.add(new ItemHeader("current"));
-                }
-                else if (ListableUnit.SORT_TYPE.SORT_TYPE_OLDER_TO_NEW == orderType) {
-                    cursor = db.rawQuery(QUERY_TABLE_OLD_TO_NEW_TYPEID, args);
-                    items.add(new ItemHeader("oldest"));
-                }
-                else {
-                    // TODO: NEARLEST_ALARM
-                    cursor = null;
-                }
-            }
-            else {
-                if (ListableUnit.SORT_TYPE.SORT_TYPE_NEWER_TO_OLD == orderType) {
-                    cursor = db.rawQuery(QUERY_TABLE_NEW_TO_OLD, null);
-                    items.add(new ItemHeader("current"));
-                }
-                else if (ListableUnit.SORT_TYPE.SORT_TYPE_OLDER_TO_NEW == orderType) {
-                    cursor = db.rawQuery(QUERY_TABLE_OLD_TO_NEW, null);
-                    items.add(new ItemHeader("oldest"));
-                }
-                else {
-                    // TODO: NEARLEST_ALARM
-                    cursor = null;
-                }
-            }
+                if (null != itemType) {
+                    String[] args = new String[]{String.valueOf(itemType.getTypeId())};
 
-            if (null != cursor) {
-                cursor.moveToFirst();
-                for (int i = 0; i < cursor.getCount(); i++) {
-                    _id = cursor.getInt(cursor.getColumnIndex("_id"));
-                    name = cursor.getString(cursor.getColumnIndex("name"));
-                    detail = cursor.getString(cursor.getColumnIndex("detail"));
-                    type_id = cursor.getInt(cursor.getColumnIndex("type_id"));
+                    if (ListableUnit.SORT_TYPE.SORT_TYPE_NEWER_TO_OLD == orderType) {
+                        cursor = db.rawQuery(QUERY_TABLE_NEW_TO_OLD_TYPEID, args);
+                        items.add(new ItemHeader("current"));
+                    } else if (ListableUnit.SORT_TYPE.SORT_TYPE_OLDER_TO_NEW == orderType) {
+                        cursor = db.rawQuery(QUERY_TABLE_OLD_TO_NEW_TYPEID, args);
+                        items.add(new ItemHeader("oldest"));
+                    } else {
+                        cursor = db.rawQuery(QUERY_TABLE_ALARM_LIMIT_TYPEID, args);
+                        items.add(new ItemHeader("alarm limit"));
+                    }
+                } else {
+                    if (ListableUnit.SORT_TYPE.SORT_TYPE_NEWER_TO_OLD == orderType) {
+                        cursor = db.rawQuery(QUERY_TABLE_NEW_TO_OLD, null);
+                        items.add(new ItemHeader("current"));
+                    } else if (ListableUnit.SORT_TYPE.SORT_TYPE_OLDER_TO_NEW == orderType) {
+                        cursor = db.rawQuery(QUERY_TABLE_OLD_TO_NEW, null);
+                        items.add(new ItemHeader("oldest"));
+                    } else {
+                        cursor = db.rawQuery(QUERY_TABLE_ALARM_LIMIT, null);
+                        items.add(new ItemHeader("alarm limit"));
+                    }
+                }
 
-                    if (! cursor.isNull(cursor.getColumnIndex("alarm_type"))) {
-                        alarm_type = cursor.getInt(cursor.getColumnIndex("alarm_type"));
-                        day_after_lastdate = cursor.getInt(cursor.getColumnIndex("day_after_lastdate"));
-                        alarm = new Alarm(alarm_type, day_after_lastdate);
-                    }
-                    else {
-                        alarm = new Alarm(Alarm.ALARM_TYPE.ALARM_TYPE_NONE);
-                    }
+                if (null != cursor) {
+                    cursor.moveToFirst();
+                    for (int i = 0; i < cursor.getCount(); i++) {
+                        _id = cursor.getInt(cursor.getColumnIndex("_id"));
+                        name = cursor.getString(cursor.getColumnIndex("name"));
+                        detail = cursor.getString(cursor.getColumnIndex("detail"));
+                        type_id = cursor.getInt(cursor.getColumnIndex("type_id"));
 
-                    type = ItemType.createItemType(context, type_id);
-                    try {
-                        lasttime = sdf.parse(cursor.getString(cursor.getColumnIndex("lasttime")));
-                    } catch (ParseException e) {
-                        lasttime = null;
-                        e.printStackTrace();
+                        if (!cursor.isNull(cursor.getColumnIndex("alarm_type"))) {
+                            alarm_type = cursor.getInt(cursor.getColumnIndex("alarm_type"));
+                            day_after_lastdate = cursor.getInt(cursor.getColumnIndex("day_after_lastdate"));
+                            alarm = new Alarm(alarm_type, day_after_lastdate);
+                        } else {
+                            alarm = new Alarm(Alarm.ALARM_TYPE.ALARM_TYPE_NONE);
+                        }
+
+                        type = ItemType.createItemType(context, type_id);
+                        try {
+                            lasttime = sdf.parse(cursor.getString(cursor.getColumnIndex("lasttime")));
+                        } catch (ParseException e) {
+                            lasttime = null;
+                            e.printStackTrace();
+                        }
+                        try {
+                            createtime = sdf.parse(cursor.getString(cursor.getColumnIndex("createtime")));
+                        } catch (ParseException e) {
+                            createtime = null;
+                            e.printStackTrace();
+                        }
+                        item = new Item(_id, name, detail, type, lasttime, createtime, alarm);
+                        if (null != items) {
+                            items.add(item);
+                        }
+                        cursor.moveToNext();
                     }
-                    try {
-                        createtime = sdf.parse(cursor.getString(cursor.getColumnIndex("createtime")));
-                    } catch (ParseException e) {
-                        createtime = null;
-                        e.printStackTrace();
-                    }
-                    item = new Item(_id, name, detail, type, lasttime, createtime, alarm);
-                    if (null != items) {
-                        items.add(item);
-                    }
-                    cursor.moveToNext();
+                }
+            } finally {
+                if (null != cursor) {
+                    cursor.close();
                 }
             }
         }
