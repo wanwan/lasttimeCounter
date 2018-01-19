@@ -1,6 +1,7 @@
 package org.zaregoto.apl.lasttimecounter.ui;
 
 import android.app.FragmentManager;
+import android.content.Intent;
 import android.os.Vibrator;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
@@ -20,6 +21,7 @@ import org.zaregoto.apl.lasttimecounter.model.ListableUnit;
 import org.zaregoto.apl.lasttimecounter.model.ItemType;
 import org.zaregoto.apl.lasttimecounter.R;
 import org.zaregoto.apl.lasttimecounter.db.ItemStore;
+import org.zaregoto.apl.lasttimecounter.service.NotificationService;
 
 import java.io.File;
 import java.io.IOException;
@@ -51,6 +53,9 @@ public class MainActivity
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_main);
+
+        startService(new Intent(this, NotificationService.class));
+
 
         ItemStore.loadInitialData(this, items);
         ListView lv = findViewById(R.id.mainlist);
