@@ -6,11 +6,6 @@ import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.os.IBinder;
-import android.util.Log;
-import org.zaregoto.apl.lasttimecounter.ui.MainActivity;
-
-import java.text.SimpleDateFormat;
-import java.util.Date;
 
 
 public class NotificationService extends Service {
@@ -39,8 +34,8 @@ public class NotificationService extends Service {
     private void scheduleNotification(){
 
         Context context = getBaseContext();
-        Intent intent = new Intent(BootReceiver.ALARM_RECEIVER_INTENT_TRIGGER);
-        intent.setClass(this, BootReceiver.class);
+        Intent intent = new Intent(MessageReceiver.ALARM_RECEIVER_INTENT_TRIGGER);
+        intent.setClass(this, MessageReceiver.class);
 
         PendingIntent pendingIntent
                 = PendingIntent.getBroadcast(context, -1, intent, PendingIntent.FLAG_UPDATE_CURRENT);

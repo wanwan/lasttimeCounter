@@ -23,7 +23,7 @@
         <service android:name=".service.NotificationService" >
 
         </service>
-        <receiver android:name=".service.BootReceiver">
+        <receiver android:name=".service.MessageReceiver">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>

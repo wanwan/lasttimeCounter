@@ -40,7 +40,7 @@ public class ItemStore {
             "from items left join alarms on items._id = alarms._id where type_id = ? order by lasttime;";
     private static final String QUERY_TABLE_ALARM_LIMIT_TYPEID
             = "select items._id as _id, name, detail, type_id, lasttime, createtime, alarm_type, day_after_lastdate, " +
-            "date(lasttime, '+'||day_after_lastdate||' days') as alarm_limit_date " +
+            "datetime(lasttime, '+'||day_after_lastdate||' days') as alarm_limit_date " +
             "from items left join alarms on items._id = alarms._id where day_after_lastdate is not null and type_id = ? order by alarm_limit_date;";
     private static final String QUERY_ITEMS
             = "select items._id as _id, name, detail, type_id, lasttime, createtime, alarm_type, day_after_lastdate " +
@@ -493,9 +493,8 @@ public class ItemStore {
         return ret;
     }
 
+    public static ArrayList<Item> checkAlarmList(Context context, Date now) {
+        return null;
+    }
 
-//    public enum OrderType {
-//        ORDER_TYPE_CURRENT_TO_OLD,
-//        ORDER_TYPE_OLD_TO_CURRENT
-//    }
 }

@@ -5,6 +5,8 @@
   -> snooze (+1day/+3day/+1week/+2week/+1month)
   -> db で直近の snooze の日数 + 区分 (これがないと再編集で表示がむずかしいのでは?)
 
+* date 関連を全部 date or datetime で統一する
+
 * detail のコピーを history に入れて, detail を history 事に管理する
 
 * item を dialog 側で作成しているが, 空の item を activity 側で作成して修正を activity listener に一括させる.

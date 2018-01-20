@@ -21,8 +21,8 @@ public class ItemDBHelper extends SQLiteOpenHelper {
             "name string not null, " +
             "detail string," +
             "type_id integer not null," +
-            "lasttime string not null," +
-            "createtime string not null, " +
+            "lasttime datetime not null ," +
+            "createtime datetime not null, " +
             "foreign key(type_id) references itemtypes(type_id));";
     static final String DROP_ITEMS_TABLE = "drop table items;";
     static final String ITEMS_TABLE_NAME = "items";
