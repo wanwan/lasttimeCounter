@@ -21,8 +21,8 @@ public class ItemDBHelper extends SQLiteOpenHelper {
             "name string not null, " +
             "detail string," +
             "type_id integer not null," +
-            "lasttime datetime not null ," +
-            "createtime datetime not null, " +
+            "lasttime date not null check ( lasttime like '____-__-__ __:__:__')," +
+            "createtime date not null check ( createtime like '____-__-__ __:__:__'), " +
             "foreign key(type_id) references itemtypes(type_id));";
     static final String DROP_ITEMS_TABLE = "drop table items;";
     static final String ITEMS_TABLE_NAME = "items";
@@ -37,8 +37,10 @@ public class ItemDBHelper extends SQLiteOpenHelper {
     static final String ITEMTYPES_TABLE_NAME = "itemtypes";
 
     static final String CREATE_HISTORIES_TABLE = "create table histories ( " +
-            "_id integer, " +
-            "do_date string not null );";
+            "_id integer not null, " +
+            "do_date date not null check ( do_date like '____-__-__ __:__:__'), " +
+            "detail string," +
+            "foreign key(_id) references items(_id) );";
     static final String DROP_HISTORIES_TABLE = "drop table histories;";
     static final String HISTORIES_TABLE_NAME = "histories";
 
