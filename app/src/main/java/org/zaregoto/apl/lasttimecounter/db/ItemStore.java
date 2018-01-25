@@ -59,8 +59,10 @@ public class ItemStore {
     private static final String DELETE_ALARMS = "delete from alarms where _id = ?;";
 
     private static final String QUERY_HISTORIES  = "select do_date from histories where _id = ?";
+    private static final String DELETE_HISTORIES = "delete from histories where _id = ?";
 
     private static final String READ_SEQ_NO = "select seq from sqlite_sequence where name = ?";
+
 
 
     public static boolean loadInitialData(Context context, ArrayList<ListableUnit> items) {
@@ -278,14 +280,13 @@ public class ItemStore {
                 db.beginTransaction();
 
                 args[0] = ((Item) item).getId();
+                db.execSQL(DELETE_HISTORIES, args);
                 db.execSQL(DELETE_TABLE, args);
 
                 Alarm alarm = ((Item) item).getAlarm();
                 if (null != alarm) {
                     db.execSQL(DELETE_ALARMS, args);
                 }
-
-                // TODO: drop histories
 
                 db.setTransactionSuccessful();
             }

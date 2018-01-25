@@ -40,7 +40,8 @@ public class ItemDBHelper extends SQLiteOpenHelper {
             "_id integer not null, " +
             "do_date date not null check ( do_date like '____-__-__ __:__:__'), " +
             "detail string," +
-            "foreign key(_id) references items(_id) );";
+            "foreign key(_id) references items(_id)" +
+            " );";
     static final String DROP_HISTORIES_TABLE = "drop table histories;";
     static final String HISTORIES_TABLE_NAME = "histories";
 
