@@ -45,6 +45,12 @@ public class ItemStore {
     private static final String QUERY_ITEMS
             = "select items._id as _id, name, detail, type_id, lasttime, createtime, alarm_type, day_after_lastdate " +
             "from items left join alarms on items._id = alarms._id where items._id = ?;";
+
+    private static final String QUERY_ITEM_ALARM_LIMIT
+            = "select items._id as _id, name, detail, type_id, lasttime, createtime, alarm_type, day_after_lastdate, " +
+            "datetime(lasttime, '+'||day_after_lastdate||' days') as alarm_limit_date " +
+            "from items left join alarms on items._id = alarms._id where day_after_lastdate is not null and alarm_limit_date >= ?;";
+
     private static final String INSERT_TABLE = "insert into items (name, detail, type_id, lasttime, createtime) values (?, ?, ?, ?, ?) ;";
     private static final String UPDATE_TABLE = "update items set name=?, detail=?, type_id=?, lasttime=?, createtime=? where _id=? ;";
     private static final String DELETE_TABLE = "delete from items where _id = ?;";
@@ -495,6 +501,13 @@ public class ItemStore {
     }
 
     public static ArrayList<Item> checkAlarmList(Context context, Date now) {
+
+        SimpleDateFormat spf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        String str = spf.format(now);
+
+
+
+
         return null;
     }
 
