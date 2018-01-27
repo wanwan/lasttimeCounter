@@ -6,7 +6,6 @@ import android.app.DialogFragment;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
-import android.support.design.widget.NavigationView;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -53,7 +52,7 @@ public class SelectTypeDialogFragment extends DialogFragment {
         int dialogWidth = (int) (metrics.widthPixels * 0.8);
         int dialogHeight = (int) (metrics.heightPixels * 0.65);
         double iconViewRatio = dialogHeight / dialogWidth;
-        ArrayList<ItemType> types = ItemStore.getAllItemTyps(getActivity());
+        ArrayList<ItemType> types = ItemStore.getAllItemTypes(getActivity());
         final GridTypeAdapter adapter = new GridTypeAdapter(getActivity(), android.R.layout.simple_list_item_1, types);
 
         // Use the Builder class for convenient dialog construction

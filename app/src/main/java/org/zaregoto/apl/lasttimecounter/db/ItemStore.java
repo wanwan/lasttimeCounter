@@ -84,61 +84,66 @@ public class ItemStore {
 
     public static boolean loadData(Context context, ArrayList<ListableUnit> items, ListableUnit.SORT_TYPE orderType, ItemType itemType) {
 
-        ItemDBHelper dbhelper = new ItemDBHelper(context.getApplicationContext());
-        SQLiteDatabase db = dbhelper.getReadableDatabase();
+        ItemDBHelper dbhelper = null;
+        SQLiteDatabase db = null;
         Cursor cursor = null;
 
         Item item;
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
-        if (null != db) {
+        try {
+            dbhelper = new ItemDBHelper(context.getApplicationContext());
+            db = dbhelper.getReadableDatabase();
 
-            try {
+            if (null != itemType) {
+                String[] args = new String[]{String.valueOf(itemType.getTypeId())};
 
-                if (null != itemType) {
-                    String[] args = new String[]{String.valueOf(itemType.getTypeId())};
-
-                    if (ListableUnit.SORT_TYPE.SORT_TYPE_NEWER_TO_OLD == orderType) {
-                        cursor = db.rawQuery(QUERY_TABLE_NEW_TO_OLD_TYPEID, args);
-                        items.add(new ItemHeader("current"));
-                    } else if (ListableUnit.SORT_TYPE.SORT_TYPE_OLDER_TO_NEW == orderType) {
-                        cursor = db.rawQuery(QUERY_TABLE_OLD_TO_NEW_TYPEID, args);
-                        items.add(new ItemHeader("oldest"));
-                    } else {
-                        cursor = db.rawQuery(QUERY_TABLE_ALARM_LIMIT_TYPEID, args);
-                        items.add(new ItemHeader("alarm limit"));
-                    }
+                if (ListableUnit.SORT_TYPE.SORT_TYPE_NEWER_TO_OLD == orderType) {
+                    cursor = db.rawQuery(QUERY_TABLE_NEW_TO_OLD_TYPEID, args);
+                    items.add(new ItemHeader("current"));
+                } else if (ListableUnit.SORT_TYPE.SORT_TYPE_OLDER_TO_NEW == orderType) {
+                    cursor = db.rawQuery(QUERY_TABLE_OLD_TO_NEW_TYPEID, args);
+                    items.add(new ItemHeader("oldest"));
                 } else {
-                    if (ListableUnit.SORT_TYPE.SORT_TYPE_NEWER_TO_OLD == orderType) {
-                        cursor = db.rawQuery(QUERY_TABLE_NEW_TO_OLD, null);
-                        items.add(new ItemHeader("current"));
-                    } else if (ListableUnit.SORT_TYPE.SORT_TYPE_OLDER_TO_NEW == orderType) {
-                        cursor = db.rawQuery(QUERY_TABLE_OLD_TO_NEW, null);
-                        items.add(new ItemHeader("oldest"));
-                    } else {
-                        cursor = db.rawQuery(QUERY_TABLE_ALARM_LIMIT, null);
-                        items.add(new ItemHeader("alarm limit"));
-                    }
+                    cursor = db.rawQuery(QUERY_TABLE_ALARM_LIMIT_TYPEID, args);
+                    items.add(new ItemHeader("alarm limit"));
                 }
-
-                if (null != cursor) {
-                    cursor.moveToFirst();
-                    for (int i = 0; i < cursor.getCount(); i++) {
-
-                        item = getItemFromCursor(context, cursor);
-
-                        if (null != items) {
-                            items.add(item);
-                        }
-                        cursor.moveToNext();
-                    }
-                }
-            } finally {
-                if (null != cursor) {
-                    cursor.close();
+            } else {
+                if (ListableUnit.SORT_TYPE.SORT_TYPE_NEWER_TO_OLD == orderType) {
+                    cursor = db.rawQuery(QUERY_TABLE_NEW_TO_OLD, null);
+                    items.add(new ItemHeader("current"));
+                } else if (ListableUnit.SORT_TYPE.SORT_TYPE_OLDER_TO_NEW == orderType) {
+                    cursor = db.rawQuery(QUERY_TABLE_OLD_TO_NEW, null);
+                    items.add(new ItemHeader("oldest"));
+                } else {
+                    cursor = db.rawQuery(QUERY_TABLE_ALARM_LIMIT, null);
+                    items.add(new ItemHeader("alarm limit"));
                 }
             }
+
+            if (null != cursor) {
+                cursor.moveToFirst();
+                for (int i = 0; i < cursor.getCount(); i++) {
+
+                    item = getItemFromCursor(context, cursor);
+
+                    if (null != items) {
+                        items.add(item);
+                    }
+                    cursor.moveToNext();
+                }
+            }
+        } finally {
+            if (null != cursor) {
+                cursor.close();
+            }
+            if (null != db) {
+                db.close();
+            }
+            if (null != dbhelper) {
+                dbhelper.close();
+            }
         }
+
 
         return true;
     }
@@ -152,7 +157,7 @@ public class ItemStore {
 
         ItemDBHelper dbhelper = null;
         SQLiteDatabase db = null;
-        Cursor cursor;
+        Cursor cursor = null;
         String[] args;
         Item item;
         ArrayList<Item> ret = new ArrayList<>();
@@ -179,6 +184,9 @@ public class ItemStore {
             }
         }
         finally {
+            if (null != cursor) {
+                cursor.close();
+            }
             if (null != db) {
                 db.close();
             }
@@ -195,36 +203,43 @@ public class ItemStore {
 
     public static boolean insertData(Context context, Item item) {
 
-        ItemDBHelper dbhelper = new ItemDBHelper(context.getApplicationContext());
-        SQLiteDatabase db = dbhelper.getWritableDatabase();
+        ItemDBHelper dbhelper = null;
+        SQLiteDatabase db = null;
         Object[] args = new Object[5];
         Object[] alarmargs = new Object[3];
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
-        if (null != db) {
-            try {
-                db.beginTransaction();
+        try {
+            dbhelper = new ItemDBHelper(context.getApplicationContext());
+            db = dbhelper.getWritableDatabase();
 
-                args[0] = item.getName();
-                args[1] = item.getDetail();
-                args[2] = item.getType().getTypeId();
-                args[3] = sdf.format(item.getLastTime());
-                args[4] = sdf.format(item.getCreatetime());
-                db.execSQL(INSERT_TABLE, args);
+            db.beginTransaction();
 
-                Integer itemId = readSeqNo(db, "items");
+            args[0] = item.getName();
+            args[1] = item.getDetail();
+            args[2] = item.getType().getTypeId();
+            args[3] = sdf.format(item.getLastTime());
+            args[4] = sdf.format(item.getCreatetime());
+            db.execSQL(INSERT_TABLE, args);
 
-                Alarm alarm = item.getAlarm();
-                if (null != alarm && null != itemId) {
-                    alarmargs[0] = itemId;
-                    alarmargs[1] = alarm.getType().getTypeId();
-                    alarmargs[2] = alarm.getDays();
+            Integer itemId = readSeqNo(db, "items");
 
-                    db.execSQL(INSERT_ALARMS, alarmargs);
-                }
-                db.setTransactionSuccessful();
-            } finally {
+            Alarm alarm = item.getAlarm();
+            if (null != alarm && null != itemId) {
+                alarmargs[0] = itemId;
+                alarmargs[1] = alarm.getType().getTypeId();
+                alarmargs[2] = alarm.getDays();
+
+                db.execSQL(INSERT_ALARMS, alarmargs);
+            }
+            db.setTransactionSuccessful();
+        } finally {
+            if (null != db) {
                 db.endTransaction();
+                db.close();
+            }
+            if (null != dbhelper) {
+                dbhelper.close();
             }
         }
 
@@ -235,50 +250,57 @@ public class ItemStore {
     public static boolean updateData(MainActivity context, Item item) {
 
         // "update items set name=?, detail=?, type_id=?, lasttime=?, createtime=? where _id=? ;";
-        ItemDBHelper dbhelper = new ItemDBHelper(context.getApplicationContext());
-        SQLiteDatabase db = dbhelper.getWritableDatabase();
+        ItemDBHelper dbhelper = null;
+        SQLiteDatabase db = null;
         Object[] args = new Object[6];
         Object[] alarmargs = new Object[3];
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
-        if (null != db) {
-            try {
-                db.beginTransaction();
+        try {
+            dbhelper = new ItemDBHelper(context.getApplicationContext());
+            db = dbhelper.getWritableDatabase();
 
-                args[5] = item.getId();
+            db.beginTransaction();
 
-                args[0] = item.getName();
-                args[1] = item.getDetail();
-                args[2] = item.getType().getTypeId();
-                args[3] = sdf.format(item.getLastTime());
-                args[4] = sdf.format(item.getCreatetime());
-                db.execSQL(UPDATE_TABLE, args);
+            args[5] = item.getId();
 
-                Alarm alarm = item.getAlarm();
-                if (null != alarm) {
-                    String[] _o = new String[]{String.valueOf(item.getId())};
-                    Cursor c = db.rawQuery(QUERY_ALARMS, _o);
-                    if (0 == c.getCount()) {
+            args[0] = item.getName();
+            args[1] = item.getDetail();
+            args[2] = item.getType().getTypeId();
+            args[3] = sdf.format(item.getLastTime());
+            args[4] = sdf.format(item.getCreatetime());
+            db.execSQL(UPDATE_TABLE, args);
 
-                        alarmargs[0] = new Integer(item.getId());
-                        alarmargs[1] = alarm.getType().getTypeId();
-                        alarmargs[2] = alarm.getDays();
+            Alarm alarm = item.getAlarm();
+            if (null != alarm) {
+                String[] _o = new String[]{String.valueOf(item.getId())};
+                Cursor c = db.rawQuery(QUERY_ALARMS, _o);
+                if (0 == c.getCount()) {
 
-                        db.execSQL(INSERT_ALARMS, alarmargs);
-                    }
-                    else {
-                        alarmargs[2] = item.getId();
+                    alarmargs[0] = new Integer(item.getId());
+                    alarmargs[1] = alarm.getType().getTypeId();
+                    alarmargs[2] = alarm.getDays();
 
-                        alarmargs[0] = alarm.getType().getTypeId();
-                        alarmargs[1] = alarm.getDays();
-                        db.execSQL(UPDATE_ALARMS, alarmargs);
-                    }
+                    db.execSQL(INSERT_ALARMS, alarmargs);
                 }
+                else {
+                    alarmargs[2] = item.getId();
 
-                db.setTransactionSuccessful();
+                    alarmargs[0] = alarm.getType().getTypeId();
+                    alarmargs[1] = alarm.getDays();
+                    db.execSQL(UPDATE_ALARMS, alarmargs);
+                }
             }
-            finally {
+
+            db.setTransactionSuccessful();
+        }
+        finally {
+            if (null != db) {
                 db.endTransaction();
+                db.close();
+            }
+            if (null != dbhelper) {
+                dbhelper.close();
             }
         }
 
@@ -288,27 +310,37 @@ public class ItemStore {
 
     public static boolean deleteData(Context context, ListableUnit item) {
 
-        ItemDBHelper dbhelper = new ItemDBHelper(context.getApplicationContext());
-        SQLiteDatabase db = dbhelper.getWritableDatabase();
+        ItemDBHelper dbhelper = null;
+        SQLiteDatabase db = null;
         Object[] args = new Object[1];
 
-        if (null != db && item instanceof Item) {
-            try {
-                db.beginTransaction();
+        if (!(item instanceof Item)) {
+            return false;
+        }
 
-                args[0] = ((Item) item).getId();
-                db.execSQL(DELETE_HISTORIES, args);
-                db.execSQL(DELETE_TABLE, args);
+        try {
+            dbhelper = new ItemDBHelper(context.getApplicationContext());
+            db = dbhelper.getWritableDatabase();
+            db.beginTransaction();
 
-                Alarm alarm = ((Item) item).getAlarm();
-                if (null != alarm) {
-                    db.execSQL(DELETE_ALARMS, args);
-                }
+            args[0] = ((Item) item).getId();
+            db.execSQL(DELETE_HISTORIES, args);
+            db.execSQL(DELETE_TABLE, args);
 
-                db.setTransactionSuccessful();
+            Alarm alarm = ((Item) item).getAlarm();
+            if (null != alarm) {
+                db.execSQL(DELETE_ALARMS, args);
             }
-            finally {
+
+            db.setTransactionSuccessful();
+        }
+        finally {
+            if (null != db) {
                 db.endTransaction();
+                db.close();
+            }
+            if (null != dbhelper) {
+                dbhelper.close();
             }
         }
 
@@ -318,74 +350,80 @@ public class ItemStore {
 
     public static void redoData(Context context, Item item) throws ItemDBException {
 
+        ItemDBHelper dbhelper = null;
+        SQLiteDatabase db = null;
         int itemId;
         String prevLasttime;
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
         if (null != context) {
-            ItemDBHelper dbhelper = new ItemDBHelper(context.getApplicationContext());
+            try {
+                dbhelper = new ItemDBHelper(context.getApplicationContext());
+                db = dbhelper.getReadableDatabase();
 
-            if (null != dbhelper) {
-                SQLiteDatabase db = dbhelper.getReadableDatabase();
+                db.beginTransaction();
+
+                String[] _o = new String[]{String.valueOf(item.getId())};
+                Cursor cursor = db.rawQuery(QUERY_ITEMS, _o);
+                if (cursor.getCount() > 0) {
+                    cursor.moveToFirst();
+
+                    itemId = cursor.getInt(cursor.getColumnIndex("_id"));
+                    prevLasttime = cursor.getString(cursor.getColumnIndex("lasttime"));
+
+                    cursor.close();
+
+                    // add histories
+                    ContentValues cv = new ContentValues();
+                    cv.put("_id", itemId);
+                    cv.put("do_date", prevLasttime);
+                    db.insert("histories", null, cv);
+
+                    // modify lasttime date in items table
+                    cv = new ContentValues();
+                    cv.put("lasttime", sdf.format(item.getLastTime()));
+                    String selection = "_id = ?";
+                    String[] args = new String[]{String.valueOf(itemId)};
+                    db.update("items", cv, selection, args);
+
+                }
+                else {
+                    throw new ItemDBException();
+                }
+
+                db.setTransactionSuccessful();
+            }
+            finally {
                 if (null != db) {
-                    try {
-                        db.beginTransaction();
-
-                        String[] _o = new String[]{String.valueOf(item.getId())};
-                        Cursor cursor = db.rawQuery(QUERY_ITEMS, _o);
-                        if (cursor.getCount() > 0) {
-                            cursor.moveToFirst();
-
-                            itemId = cursor.getInt(cursor.getColumnIndex("_id"));
-                            prevLasttime = cursor.getString(cursor.getColumnIndex("lasttime"));
-
-                            cursor.close();
-
-                            // add histories
-                            ContentValues cv = new ContentValues();
-                            cv.put("_id", itemId);
-                            cv.put("do_date", prevLasttime);
-                            db.insert("histories", null, cv);
-
-                            // modify lasttime date in items table
-                            cv = new ContentValues();
-                            cv.put("lasttime", sdf.format(item.getLastTime()));
-                            String selection = "_id = ?";
-                            String[] args = new String[]{String.valueOf(itemId)};
-                            db.update("items", cv, selection, args);
-
-                        }
-                        else {
-                            throw new ItemDBException();
-                        }
-
-                        db.setTransactionSuccessful();
-                    }
-                    finally {
-                        db.endTransaction();
-                    }
+                    db.endTransaction();
+                    db.close();
+                }
+                if (null != dbhelper) {
+                    dbhelper.close();
                 }
             }
-
         }
     }
 
 
 
 
-    public static ArrayList<ItemType> getAllItemTyps(Context context) {
+    public static ArrayList<ItemType> getAllItemTypes(Context context) {
 
-        ItemDBHelper dbhelper = new ItemDBHelper(context.getApplicationContext());
-        SQLiteDatabase db = dbhelper.getReadableDatabase();
+        ItemDBHelper dbhelper = null;
+        SQLiteDatabase db = null;
         Cursor cursor;
-        int typeId = -1;
-        String filename = null;
-        String section = null;
-        String label = null;
+        int typeId;
+        String filename;
+        String section;
+        String label;
         ArrayList<ItemType> ret = new ArrayList<>();
         ItemType _itemType;
 
-        if (null != db) {
+        try {
+            dbhelper = new ItemDBHelper(context.getApplicationContext());
+            db = dbhelper.getReadableDatabase();
+
             cursor = db.rawQuery(QUERY_ITEMTYPES, null);
             if (null != cursor) {
                 cursor.moveToFirst();
@@ -399,6 +437,13 @@ public class ItemStore {
                     cursor.moveToNext();
                 }
             }
+        } finally {
+            if (null != db) {
+                db.close();
+            }
+            if (null != dbhelper) {
+                dbhelper.close();
+            }
         }
 
         return ret;
@@ -408,15 +453,18 @@ public class ItemStore {
     // TODO:
     public static ItemType getItemType(Context context, int typeId) {
 
-        ItemDBHelper dbhelper = new ItemDBHelper(context.getApplicationContext());
-        SQLiteDatabase db = dbhelper.getReadableDatabase();
+        ItemDBHelper dbhelper = null;
+        SQLiteDatabase db = null;
         String[] args = new String[1];
         Cursor cursor;
         String filename = null;
         String section = null;
         String label = null;
 
-        if (null != db) {
+        try {
+            dbhelper = new ItemDBHelper(context.getApplicationContext());
+            db = dbhelper.getReadableDatabase();
+
             args[0] = Integer.toString(typeId);
             cursor = db.rawQuery(QUERY_ITEMTYPE_BY_TYPEID, args);
             if (null != cursor) {
@@ -428,6 +476,14 @@ public class ItemStore {
                 }
             }
         }
+        finally {
+            if (null != db) {
+                db.close();
+            }
+            if (null != dbhelper) {
+                dbhelper.close();
+            }
+        }
 
         return new ItemType(typeId, section, filename, label);
     }
@@ -435,13 +491,20 @@ public class ItemStore {
 
     public static ArrayList<ItemHistory> getHistoriesFromItem(Context context, Item item) {
 
-        ItemDBHelper dbhelper = new ItemDBHelper(context.getApplicationContext());
-        SQLiteDatabase db = dbhelper.getReadableDatabase();
+        ItemDBHelper dbhelper = null;
+        SQLiteDatabase db = null;
         ArrayList<ItemHistory> ret = new ArrayList<>();
         ItemHistory history;
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
-        if (null != db && null != item) {
+        if (null == item) {
+            return ret;
+        }
+
+        try {
+            dbhelper = new ItemDBHelper(context.getApplicationContext());
+            db = dbhelper.getReadableDatabase();
+
             String[] args = new String[]{String.valueOf(item.getId())};
             Cursor c = db.rawQuery(QUERY_HISTORIES, args);
             if (null != c && c.getCount() >0) {
@@ -460,6 +523,13 @@ public class ItemStore {
                 }
             }
 
+        } finally {
+            if (null != db) {
+                db.close();
+            }
+            if (null != dbhelper) {
+                dbhelper.close();
+            }
         }
 
         return ret;
