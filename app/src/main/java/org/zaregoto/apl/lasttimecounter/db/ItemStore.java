@@ -87,17 +87,6 @@ public class ItemStore {
         ItemDBHelper dbhelper = new ItemDBHelper(context.getApplicationContext());
         SQLiteDatabase db = dbhelper.getReadableDatabase();
         Cursor cursor = null;
-        int _id;
-        String name;
-        String detail;
-        int type_id;
-        ItemType type;
-        Date lasttime;
-        Date createtime;
-
-        int alarm_type;
-        int day_after_lastdate;
-        Alarm alarm;
 
         Item item;
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -135,33 +124,9 @@ public class ItemStore {
                 if (null != cursor) {
                     cursor.moveToFirst();
                     for (int i = 0; i < cursor.getCount(); i++) {
-                        _id = cursor.getInt(cursor.getColumnIndex("_id"));
-                        name = cursor.getString(cursor.getColumnIndex("name"));
-                        detail = cursor.getString(cursor.getColumnIndex("detail"));
-                        type_id = cursor.getInt(cursor.getColumnIndex("type_id"));
 
-                        if (!cursor.isNull(cursor.getColumnIndex("alarm_type"))) {
-                            alarm_type = cursor.getInt(cursor.getColumnIndex("alarm_type"));
-                            day_after_lastdate = cursor.getInt(cursor.getColumnIndex("day_after_lastdate"));
-                            alarm = new Alarm(alarm_type, day_after_lastdate);
-                        } else {
-                            alarm = new Alarm(Alarm.ALARM_TYPE.ALARM_TYPE_NONE);
-                        }
+                        item = getItemFromCursor(context, cursor);
 
-                        type = ItemType.createItemType(context, type_id);
-                        try {
-                            lasttime = sdf.parse(cursor.getString(cursor.getColumnIndex("lasttime")));
-                        } catch (ParseException e) {
-                            lasttime = null;
-                            e.printStackTrace();
-                        }
-                        try {
-                            createtime = sdf.parse(cursor.getString(cursor.getColumnIndex("createtime")));
-                        } catch (ParseException e) {
-                            createtime = null;
-                            e.printStackTrace();
-                        }
-                        item = new Item(_id, name, detail, type, lasttime, createtime, alarm);
                         if (null != items) {
                             items.add(item);
                         }
@@ -179,6 +144,52 @@ public class ItemStore {
     }
 
 
+
+    public static ArrayList<Item> checkAlarmList(Context context, Date now) {
+
+        SimpleDateFormat spf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        String str = spf.format(now);
+
+        ItemDBHelper dbhelper = null;
+        SQLiteDatabase db = null;
+        Cursor cursor;
+        String[] args;
+        Item item;
+        ArrayList<Item> ret = new ArrayList<>();
+
+        try {
+            dbhelper = new ItemDBHelper(context.getApplicationContext());
+            db = dbhelper.getReadableDatabase();
+
+            args = new String[1];
+            args[0] = str;
+            cursor = db.rawQuery(QUERY_ITEM_ALARM_LIMIT, args);
+
+            if (null != cursor && cursor.getCount() > 0) {
+                cursor.moveToFirst();
+                for (int i = 0; i < cursor.getCount(); i++) {
+
+                    item = getItemFromCursor(context, cursor);
+                    if (null != item) {
+                        ret.add(item);
+                    }
+
+                    cursor.moveToNext();
+                }
+            }
+        }
+        finally {
+            if (null != db) {
+                db.close();
+            }
+            if (null != dbhelper) {
+                dbhelper.close();
+            }
+        }
+
+
+        return ret;
+    }
 
 
 
@@ -500,15 +511,52 @@ public class ItemStore {
         return ret;
     }
 
-    public static ArrayList<Item> checkAlarmList(Context context, Date now) {
 
-        SimpleDateFormat spf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        String str = spf.format(now);
+    private static Item getItemFromCursor(Context context, Cursor cursor) {
 
+        int _id;
+        String name;
+        String detail;
+        int type_id;
+        int alarm_type;
+        int day_after_lastdate;
+        Alarm alarm;
+        ItemType type;
+        Date lasttime;
+        Date createtime;
+        Item item;
 
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
+        _id = cursor.getInt(cursor.getColumnIndex("_id"));
+        name = cursor.getString(cursor.getColumnIndex("name"));
+        detail = cursor.getString(cursor.getColumnIndex("detail"));
+        type_id = cursor.getInt(cursor.getColumnIndex("type_id"));
 
-        return null;
+        if (!cursor.isNull(cursor.getColumnIndex("alarm_type"))) {
+            alarm_type = cursor.getInt(cursor.getColumnIndex("alarm_type"));
+            day_after_lastdate = cursor.getInt(cursor.getColumnIndex("day_after_lastdate"));
+            alarm = new Alarm(alarm_type, day_after_lastdate);
+        } else {
+            alarm = new Alarm(Alarm.ALARM_TYPE.ALARM_TYPE_NONE);
+        }
+
+        type = ItemType.createItemType(context, type_id);
+        try {
+            lasttime = sdf.parse(cursor.getString(cursor.getColumnIndex("lasttime")));
+        } catch (ParseException e) {
+            lasttime = null;
+            e.printStackTrace();
+        }
+        try {
+            createtime = sdf.parse(cursor.getString(cursor.getColumnIndex("createtime")));
+        } catch (ParseException e) {
+            createtime = null;
+            e.printStackTrace();
+        }
+        item = new Item(_id, name, detail, type, lasttime, createtime, alarm);
+
+        return item;
     }
 
 }
