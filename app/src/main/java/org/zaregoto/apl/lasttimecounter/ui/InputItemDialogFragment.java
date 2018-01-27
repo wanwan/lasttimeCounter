@@ -28,7 +28,7 @@ public class InputItemDialogFragment extends DialogFragment implements SelectTyp
     private Date selectedDay;
 
     private final String TAG = "InputItemDialogFragment";
-    private View root;
+    private View dialogView = null;
 
     Item item = null;
     ItemType type;
@@ -66,25 +66,25 @@ public class InputItemDialogFragment extends DialogFragment implements SelectTyp
         // Use the Builder class for convenient dialog construction
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 
-        final View content;
+        //final View content;
         LayoutInflater inflater = (LayoutInflater)getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         if (isNewItem(item)) {
-            content = inflater.inflate(R.layout.fragment_insert_item_dialog, null);
+            dialogView = inflater.inflate(R.layout.fragment_insert_item_dialog, null);
         }
         else {
-            content = inflater.inflate(R.layout.fragment_update_item_dialog, null);
+            dialogView = inflater.inflate(R.layout.fragment_update_item_dialog, null);
         }
 
-        builder.setView(content);
+        builder.setView(dialogView);
         if (null != item) {
-            EditText name = content.findViewById(R.id.name);
+            EditText name = dialogView.findViewById(R.id.name);
             name.setText(item.getName());
-            EditText detail = content.findViewById(R.id.detail);
+            EditText detail = dialogView.findViewById(R.id.detail);
             detail.setText(item.getDetail());
         }
 
 
-        ImageView typeIcon = content.findViewById(R.id.type_icon);
+        ImageView typeIcon = dialogView.findViewById(R.id.type_icon);
         if (null != typeIcon) {
             if (null != item) {
                 try {
@@ -109,7 +109,7 @@ public class InputItemDialogFragment extends DialogFragment implements SelectTyp
             });
         }
 
-        TextView typeLabel = content.findViewById(R.id.type_label);
+        TextView typeLabel = dialogView.findViewById(R.id.type_label);
         if (null != typeLabel) {
 
             if (null != item) {
@@ -127,7 +127,7 @@ public class InputItemDialogFragment extends DialogFragment implements SelectTyp
         }
 
 
-        EditText dateText = content.findViewById(R.id.date);
+        EditText dateText = dialogView.findViewById(R.id.date);
         if (null != dateText) {
             final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
             String str = sdf.format(selectedDay);
@@ -142,7 +142,7 @@ public class InputItemDialogFragment extends DialogFragment implements SelectTyp
                     dpd.setOnDateSetListener(new DatePickerDialog.OnDateSetListener() {
                         @Override
                         public void onDateSet(DatePicker datePicker, int year, int month, int day) {
-                            EditText et = content.findViewById(R.id.date);
+                            EditText et = dialogView.findViewById(R.id.date);
                             if (null != et) {
                                 String _str = year + "-" + (month+1) + "-" + day;
                                 et.setText(_str);
@@ -159,7 +159,7 @@ public class InputItemDialogFragment extends DialogFragment implements SelectTyp
         }
 
 
-        EditText alarmText = content.findViewById(R.id.alarm);
+        EditText alarmText = dialogView.findViewById(R.id.alarm);
         if (null != alarmText) {
 
             Alarm alarm = item.getAlarm();
@@ -183,14 +183,14 @@ public class InputItemDialogFragment extends DialogFragment implements SelectTyp
         if (isNewItem(item)) {
             builder.setMessage(R.string.fragment_item_input_dialog_name);
 
-            Button btn = content.findViewById(R.id.insertBtn);
+            Button btn = dialogView.findViewById(R.id.insertBtn);
             btn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     Item _item = item;
 
-                    EditText _name = content.findViewById(R.id.name);
-                    EditText _detail = content.findViewById(R.id.detail);
+                    EditText _name = dialogView.findViewById(R.id.name);
+                    EditText _detail = dialogView.findViewById(R.id.detail);
                     String name = (_name != null) ? _name.getText().toString() : "";
                     String detail = (_detail != null) ? _detail.getText().toString() : "";
 
@@ -206,14 +206,14 @@ public class InputItemDialogFragment extends DialogFragment implements SelectTyp
         else {
             builder.setMessage(R.string.fragment_item_input_dialog_name);
 
-            Button btn = content.findViewById(R.id.updateBtn);
+            Button btn = dialogView.findViewById(R.id.updateBtn);
             btn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     Item _item = item;
 
-                    EditText _name = content.findViewById(R.id.name);
-                    EditText _detail = content.findViewById(R.id.detail);
+                    EditText _name = dialogView.findViewById(R.id.name);
+                    EditText _detail = dialogView.findViewById(R.id.detail);
                     String name = (_name != null) ? _name.getText().toString() : "";
                     String detail = (_detail != null) ? _detail.getText().toString() : "";
 
@@ -226,7 +226,7 @@ public class InputItemDialogFragment extends DialogFragment implements SelectTyp
                 }
             });
 
-            btn = content.findViewById(R.id.redoBtn);
+            btn = dialogView.findViewById(R.id.redoBtn);
             btn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -246,8 +246,8 @@ public class InputItemDialogFragment extends DialogFragment implements SelectTyp
 //            @Override
 //            public void onClick(DialogInterface dialogInterface, int i) {
 //
-//                EditText _name = content.findViewById(R.id.name);
-//                EditText _detail = content.findViewById(R.id.detail);
+//                EditText _name = dialogView.findViewById(R.id.name);
+//                EditText _detail = dialogView.findViewById(R.id.detail);
 //                String name = (_name != null) ? _name.getText().toString() : "";
 //                String detail = (_detail != null) ? _detail.getText().toString() : "";
 //
@@ -305,26 +305,26 @@ public class InputItemDialogFragment extends DialogFragment implements SelectTyp
 
         String str = "";
 
-        if (null != root) {
-            EditText _name = root.findViewById(R.id.name);
+        if (null != dialogView) {
+            EditText _name = dialogView.findViewById(R.id.name);
             _name.setText(item.getName());
-            EditText _detail = root.findViewById(R.id.detail);
+            EditText _detail = dialogView.findViewById(R.id.detail);
             _detail.setText(item.getDetail());
 
-            EditText _dateText = root.findViewById(R.id.date);
+            EditText _dateText = dialogView.findViewById(R.id.date);
             final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
             str = sdf.format(selectedDay);
             _dateText.setText(str);
 
-            ImageView _typeIcon = root.findViewById(R.id.type_icon);
+            ImageView _typeIcon = dialogView.findViewById(R.id.type_icon);
             Drawable drawable = null;
             drawable = item.getType().getAsDrawableImage(getActivity());
             _typeIcon.setImageDrawable(drawable);
 
-            TextView _typeLabel = root.findViewById(R.id.type_label);
+            TextView _typeLabel = dialogView.findViewById(R.id.type_label);
             _typeLabel.setText(item.getType().getLabel());
 
-            EditText alarmText = root.findViewById(R.id.alarm);
+            EditText alarmText = dialogView.findViewById(R.id.alarm);
             Alarm alarm = item.getAlarm();
             str = alarm.getAlarmLabel(getActivity());
             alarmText.setText(str);
