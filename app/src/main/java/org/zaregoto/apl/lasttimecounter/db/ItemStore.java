@@ -46,10 +46,10 @@ public class ItemStore {
             = "select items._id as _id, name, detail, type_id, lasttime, createtime, alarm_type, day_after_lastdate " +
             "from items left join alarms on items._id = alarms._id where items._id = ?;";
 
-    private static final String QUERY_ITEM_ALARM_LIMIT
+    private static final String QUERY_ITEM_CHECK_ALARM_LIMIT
             = "select items._id as _id, name, detail, type_id, lasttime, createtime, alarm_type, day_after_lastdate, " +
             "datetime(lasttime, '+'||day_after_lastdate||' days') as alarm_limit_date " +
-            "from items left join alarms on items._id = alarms._id where day_after_lastdate is not null and alarm_limit_date >= ?;";
+            "from items left join alarms on items._id = alarms._id where day_after_lastdate is not null and alarm_limit_date <= ?;";
 
     private static final String INSERT_TABLE = "insert into items (name, detail, type_id, lasttime, createtime) values (?, ?, ?, ?, ?) ;";
     private static final String UPDATE_TABLE = "update items set name=?, detail=?, type_id=?, lasttime=?, createtime=? where _id=? ;";
@@ -168,7 +168,7 @@ public class ItemStore {
 
             args = new String[1];
             args[0] = str;
-            cursor = db.rawQuery(QUERY_ITEM_ALARM_LIMIT, args);
+            cursor = db.rawQuery(QUERY_ITEM_CHECK_ALARM_LIMIT, args);
 
             if (null != cursor && cursor.getCount() > 0) {
                 cursor.moveToFirst();
