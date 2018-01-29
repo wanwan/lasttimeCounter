@@ -33,7 +33,6 @@ public class MessageReceiver extends BroadcastReceiver {
             Date now = new Date();
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
             ArrayList<Item> items;
-            Item item;
 
             String str;
             str = sdf.format(now);
@@ -41,13 +40,8 @@ public class MessageReceiver extends BroadcastReceiver {
 
             // check alarm
             items = ItemStore.checkAlarmList(context, now);
-            if (null != items && !items.isEmpty()) {
-                Iterator<Item> it = items.iterator();
-                while (it.hasNext()) {
-                    item = it.next();
-                    showItemInNotification(context, item);
-                }
-            }
+            showItemInNotification(context, items);
+
         }
         else {
             Date now = new Date();
@@ -60,13 +54,22 @@ public class MessageReceiver extends BroadcastReceiver {
         }
     }
 
-    private void showItemInNotification(Context context, Item item) {
+    private void showItemInNotification(Context context, ArrayList<Item> items) {
 
         NotificationManager manager= (NotificationManager)context.getSystemService(Context.NOTIFICATION_SERVICE);
 
-        Notification.Builder builder = new Notification.Builder(context);
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(context);
         builder.setSmallIcon(android.R.drawable.ic_dialog_alert);
-        builder.setContentText(item.getName());
+        builder.setContentText("LasttimeCounter ALARM");
+
+        Iterator<Item> it = items.iterator();
+        NotificationCompat.InboxStyle style = new NotificationCompat.InboxStyle();
+        Item item;
+        while (it.hasNext()) {
+            item = it.next();
+            style.addLine(item.getName());
+        }
+        builder.setStyle(style);
         Notification n = builder.build();
 
         manager.notify(1, n);
