@@ -2,6 +2,7 @@ package org.zaregoto.apl.lasttimecounter.service;
 
 import android.app.Notification;
 import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -9,6 +10,7 @@ import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 import org.zaregoto.apl.lasttimecounter.db.ItemStore;
 import org.zaregoto.apl.lasttimecounter.model.Item;
+import org.zaregoto.apl.lasttimecounter.ui.MainActivity;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -58,9 +60,15 @@ public class MessageReceiver extends BroadcastReceiver {
 
         NotificationManager manager= (NotificationManager)context.getSystemService(Context.NOTIFICATION_SERVICE);
 
+        // Content Activity is a activity that is transferred from a list content.
+        Intent resultIntent = new Intent(context, MainActivity.class);
+        PendingIntent resultPendingIntent = PendingIntent.getActivity(context, 0, resultIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+
         NotificationCompat.Builder builder = new NotificationCompat.Builder(context);
         builder.setSmallIcon(android.R.drawable.ic_dialog_alert);
         builder.setContentText("LasttimeCounter ALARM");
+        builder.setContentIntent(resultPendingIntent);
+        builder.setAutoCancel(true);
 
         Iterator<Item> it = items.iterator();
         NotificationCompat.InboxStyle style = new NotificationCompat.InboxStyle();
