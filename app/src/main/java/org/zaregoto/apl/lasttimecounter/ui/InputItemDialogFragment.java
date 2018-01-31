@@ -230,9 +230,13 @@ public class InputItemDialogFragment extends DialogFragment implements SelectTyp
             btn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
+
                     Item _item = item;
+                    EditText _detail = dialogView.findViewById(R.id.detail);
+                    String detail = (_detail != null) ? _detail.getText().toString() : "";
 
                     _item.setLastTime(selectedDay);
+                    _item.setDetail(detail);
                     mInputDialogListener.redoItem(_item);
                     dismiss();
                 }

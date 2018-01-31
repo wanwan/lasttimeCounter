@@ -27,12 +27,15 @@ public class HistoryAdapter extends ArrayAdapter<ItemHistory> {
 
         if (history instanceof ItemHistory) {
 
-            convertView = mInflater.inflate(android.R.layout.simple_list_item_1, parent, false);
+            convertView = mInflater.inflate(R.layout.adapter_list_history_unit, parent, false);
 
             String _str = spf.format(history.getHistory());
 
-            TextView tv = convertView.findViewById(android.R.id.text1);
+            TextView tv = convertView.findViewById(R.id.do_date);
             tv.setText(_str);
+
+            tv = convertView.findViewById(R.id.detail);
+            tv.setText(history.getDetail());
         }
 
         return convertView;

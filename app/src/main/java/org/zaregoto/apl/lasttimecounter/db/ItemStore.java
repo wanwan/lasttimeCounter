@@ -64,7 +64,7 @@ public class ItemStore {
     private static final String UPDATE_ALARMS = "update alarms set alarm_type=?, day_after_lastdate=? where _id=? ;";
     private static final String DELETE_ALARMS = "delete from alarms where _id = ?;";
 
-    private static final String QUERY_HISTORIES  = "select do_date from histories where _id = ?";
+    private static final String QUERY_HISTORIES  = "select do_date, detail from histories where _id = ?";
     private static final String DELETE_HISTORIES = "delete from histories where _id = ?";
 
     private static final String READ_SEQ_NO = "select seq from sqlite_sequence where name = ?";
@@ -353,6 +353,7 @@ public class ItemStore {
         ItemDBHelper dbhelper = null;
         SQLiteDatabase db = null;
         int itemId;
+        String itemDetail;
         String prevLasttime;
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
@@ -369,6 +370,7 @@ public class ItemStore {
                     cursor.moveToFirst();
 
                     itemId = cursor.getInt(cursor.getColumnIndex("_id"));
+                    itemDetail = cursor.getString(cursor.getColumnIndex("detail"));
                     prevLasttime = cursor.getString(cursor.getColumnIndex("lasttime"));
 
                     cursor.close();
@@ -377,11 +379,13 @@ public class ItemStore {
                     ContentValues cv = new ContentValues();
                     cv.put("_id", itemId);
                     cv.put("do_date", prevLasttime);
+                    cv.put("detail", itemDetail);
                     db.insert("histories", null, cv);
 
                     // modify lasttime date in items table
                     cv = new ContentValues();
                     cv.put("lasttime", sdf.format(item.getLastTime()));
+                    cv.put("detail", item.getDetail());
                     String selection = "_id = ?";
                     String[] args = new String[]{String.valueOf(itemId)};
                     db.update("items", cv, selection, args);
@@ -513,7 +517,8 @@ public class ItemStore {
 
                     try {
                         Date d = sdf.parse(c.getString(c.getColumnIndex("do_date")));
-                        history = new ItemHistory(d);
+                        String detail = c.getString(c.getColumnIndex("detail"));
+                        history = new ItemHistory(d, detail);
                         ret.add(history);
                     } catch (ParseException e) {
                         e.printStackTrace();
