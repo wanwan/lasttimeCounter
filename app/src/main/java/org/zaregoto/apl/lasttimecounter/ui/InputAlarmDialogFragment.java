@@ -94,6 +94,11 @@ public class InputAlarmDialogFragment extends DialogFragment {
             }
         });
 
+        if (null != alarm && null != spinner) {
+            spinner.setSelection(alarm.getType().getInt());
+        }
+
+
         return builder.create();
     }
 
