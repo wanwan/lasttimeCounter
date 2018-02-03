@@ -78,6 +78,36 @@ public class InputAlarmDialogFragment extends DialogFragment {
             });
         }
 
+        CalendarView cv = content.findViewById(R.id.alarmCalendar);
+        if (null != cv) {
+            Date today = new Date();
+            Calendar _c = GregorianCalendar.getInstance();
+            _c.setTime(today);
+            _c.add(Calendar.DAY_OF_MONTH, 1);
+            Date tomorrow = _c.getTime();
+
+            cv.setMinDate(tomorrow.getTime());
+
+            cv.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
+                @Override
+                public void onSelectedDayChange(CalendarView calendarView, int year, int month, int dayOfMonth) {
+
+                    Calendar c = new GregorianCalendar(year, month, dayOfMonth);
+                    Date selectedDay = c.getTime();
+
+                    Date now = new Date();
+
+                    if (selectedDay.after(now)) {
+                        int diffDays = (int) Math.ceil((selectedDay.getTime() - now.getTime()) / (float)(24*60*60*1000));
+                        alarm.setDays(Integer.valueOf(diffDays));
+
+                        updateSpinner();
+                    }
+                }
+            });
+        }
+
+
         builder.setView(content);
         builder.setPositiveButton(R.string.fragment_item_input_dialog_ok, new DialogInterface.OnClickListener() {
             @Override
@@ -135,8 +165,15 @@ public class InputAlarmDialogFragment extends DialogFragment {
         }
     }
 
+    private void updateSpinner() {
 
-    public Date calcLimitDate() {
+        Spinner spinner = content.findViewById(R.id.alarmSpinner);
+        if (null != spinner) {
+            spinner.setSelection(alarm.getType().getPos());
+        }
+    }
+
+    private Date calcLimitDate() {
         Date now = new Date();
         Date limitDate;
 

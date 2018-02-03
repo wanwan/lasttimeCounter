@@ -182,14 +182,14 @@ public class Alarm implements Parcelable {
 
     public void setDays(Integer days) {
         for (ALARM_TYPE _type: ALARM_TYPE.values()) {
-            if (_type.getDefaultDurationDays().intValue() == days) {
+            if (null != _type.getDefaultDurationDays() && _type.getDefaultDurationDays().intValue() == days) {
                 this.type = _type;
                 this.days = days;
                 return;
             }
         }
 
-        this.type = ALARM_TYPE.ALARM_TYPE_DAY_BY_DAY;
+        this.type = ALARM_TYPE.ALARM_TYPE_SET_SPECIFIC_DAY;
         this.days = days;
     }
 
