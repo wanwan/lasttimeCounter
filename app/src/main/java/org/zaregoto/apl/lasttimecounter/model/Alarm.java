@@ -17,16 +17,16 @@ public class Alarm implements Parcelable {
         ALARM_TYPE_3MONTH(6, 90, 6),
         ALARM_TYPE_6MONTH(7, 180, 7),
         ALARM_TYPE_1YEAR(8, 365, 8),
-        ALARM_TYPE_SET_SPECIFIC_DAY(9, null, 9),;
+        ALARM_TYPE_SET_SPECIFIC_DAY(-1, null, 9),;
 
         private final int typeId;
         private final Integer defaultDurationDays;
-        private final int strIdx;
+        private final int pos;
 
-        ALARM_TYPE(int id, Integer days, int strIdx) {
+        ALARM_TYPE(int id, Integer days, int pos) {
             this.typeId = id;
             this.defaultDurationDays = days;
-            this.strIdx = strIdx;
+            this.pos = pos;
         }
 
         public int getInt() {
@@ -73,38 +73,38 @@ public class Alarm implements Parcelable {
             return ret;
         }
 
-        public static ALARM_TYPE getAlarmTypeByStrIdx(int strIdx) {
+        public static ALARM_TYPE getAlarmTypeByPos(int strIdx) {
 
             ALARM_TYPE ret;
 
-            if (strIdx == ALARM_TYPE_NONE.getStrIdx()) {
+            if (strIdx == ALARM_TYPE_NONE.getPos()) {
                 ret = ALARM_TYPE_NONE;
             }
-            else if (strIdx == ALARM_TYPE_DAY_BY_DAY.getStrIdx()) {
+            else if (strIdx == ALARM_TYPE_DAY_BY_DAY.getPos()) {
                 ret = ALARM_TYPE_DAY_BY_DAY;
             }
-            else if (strIdx == ALARM_TYPE_1WEEK.getStrIdx()) {
+            else if (strIdx == ALARM_TYPE_1WEEK.getPos()) {
                 ret = ALARM_TYPE_1WEEK;
             }
-            else if (strIdx == ALARM_TYPE_2WEEK.getStrIdx()) {
+            else if (strIdx == ALARM_TYPE_2WEEK.getPos()) {
                 ret = ALARM_TYPE_2WEEK;
             }
-            else if (strIdx == ALARM_TYPE_1MONTH.getStrIdx()) {
+            else if (strIdx == ALARM_TYPE_1MONTH.getPos()) {
                 ret = ALARM_TYPE_1MONTH;
             }
-            else if (strIdx == ALARM_TYPE_2MONTH.getStrIdx()) {
+            else if (strIdx == ALARM_TYPE_2MONTH.getPos()) {
                 ret = ALARM_TYPE_2MONTH;
             }
-            else if (strIdx == ALARM_TYPE_3MONTH.getStrIdx()) {
+            else if (strIdx == ALARM_TYPE_3MONTH.getPos()) {
                 ret = ALARM_TYPE_3MONTH;
             }
-            else if (strIdx == ALARM_TYPE_6MONTH.getStrIdx()) {
+            else if (strIdx == ALARM_TYPE_6MONTH.getPos()) {
                 ret = ALARM_TYPE_6MONTH;
             }
-            else if (strIdx == ALARM_TYPE_1YEAR.getStrIdx()) {
+            else if (strIdx == ALARM_TYPE_1YEAR.getPos()) {
                 ret = ALARM_TYPE_1YEAR;
             }
-            else if (strIdx == ALARM_TYPE_SET_SPECIFIC_DAY.getStrIdx()) {
+            else if (strIdx == ALARM_TYPE_SET_SPECIFIC_DAY.getPos()) {
                 ret = ALARM_TYPE_SET_SPECIFIC_DAY;
             }
             else {
@@ -117,8 +117,8 @@ public class Alarm implements Parcelable {
             return typeId;
         }
 
-        public int getStrIdx() {
-            return strIdx;
+        public int getPos() {
+            return pos;
         }
 
         public Integer getDefaultDurationDays() {
@@ -165,6 +165,15 @@ public class Alarm implements Parcelable {
 
     public void setType(ALARM_TYPE type) {
         this.type = type;
+        switch (type) {
+            case ALARM_TYPE_SET_SPECIFIC_DAY:
+                // do nothing
+                break;
+            default:
+                days = type.getDefaultDurationDays();
+                break;
+        }
+
     }
 
     public Integer getDays() {
@@ -172,6 +181,15 @@ public class Alarm implements Parcelable {
     }
 
     public void setDays(Integer days) {
+        for (ALARM_TYPE _type: ALARM_TYPE.values()) {
+            if (_type.getDefaultDurationDays().intValue() == days) {
+                this.type = _type;
+                this.days = days;
+                return;
+            }
+        }
+
+        this.type = ALARM_TYPE.ALARM_TYPE_DAY_BY_DAY;
         this.days = days;
     }
 
@@ -180,8 +198,8 @@ public class Alarm implements Parcelable {
         String[] array;
         if (null != type) {
             array = context.getResources().getStringArray(R.array.alarm_type_array);
-            if (null != array && type.getStrIdx() < array.length) {
-                str = array[type.getStrIdx()];
+            if (null != array && type.getPos() < array.length) {
+                str = array[type.getPos()];
             }
         }
 

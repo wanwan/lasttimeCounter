@@ -12,6 +12,11 @@ import android.widget.*;
 import org.zaregoto.apl.lasttimecounter.R;
 import org.zaregoto.apl.lasttimecounter.model.Alarm;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
+
 public class InputAlarmDialogFragment extends DialogFragment {
 
     private static final String ARGS_ALARM_ID = "ALARM_ID";
@@ -60,20 +65,10 @@ public class InputAlarmDialogFragment extends DialogFragment {
                 @Override
                 public void onItemSelected(AdapterView<?> adapterView, View view, int pos, long id) {
 
-                    Alarm.ALARM_TYPE _type = Alarm.ALARM_TYPE.getAlarmTypeByStrIdx(pos);
+                    Alarm.ALARM_TYPE _type = Alarm.ALARM_TYPE.getAlarmTypeByPos(pos);
                     alarm.setType(_type);
 
-                    if (Alarm.ALARM_TYPE.ALARM_TYPE_SET_SPECIFIC_DAY == _type) {
-                        CalendarView cv = content.findViewById(R.id.alarmCalendar);
-                        if (null != cv) {
-                            cv.setEnabled(true);
-                        }
-                    } else {
-                        CalendarView cv = content.findViewById(R.id.alarmCalendar);
-                        if (null != cv) {
-                            cv.setEnabled(false);
-                        }
-                    }
+                    updateCalendarView();
                 }
 
                 @Override
@@ -97,7 +92,6 @@ public class InputAlarmDialogFragment extends DialogFragment {
         if (null != alarm && null != spinner) {
             spinner.setSelection(alarm.getType().getInt());
         }
-
 
         return builder.create();
     }
@@ -130,4 +124,28 @@ public class InputAlarmDialogFragment extends DialogFragment {
     }
 
 
+    private void updateCalendarView() {
+
+        Date _limitDate = calcLimitDate();
+        long limitDate = _limitDate.getTime();
+
+        CalendarView cv = content.findViewById(R.id.alarmCalendar);
+        if (null != cv) {
+            cv.setDate(limitDate);
+        }
+    }
+
+
+    public Date calcLimitDate() {
+        Date now = new Date();
+        Date limitDate;
+
+        Calendar c = GregorianCalendar.getInstance();
+        c.setTime(now);
+        c.add(Calendar.DAY_OF_MONTH, alarm.getDays());
+
+        limitDate = c.getTime();
+
+        return limitDate;
+    }
 }
