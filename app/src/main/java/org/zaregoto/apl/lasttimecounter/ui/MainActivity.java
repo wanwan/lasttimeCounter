@@ -28,9 +28,9 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
-import static org.zaregoto.apl.lasttimecounter.model.ListableUnit.SORT_TYPE.SORT_TYPE_NEARLEST_ALARM;
-import static org.zaregoto.apl.lasttimecounter.model.ListableUnit.SORT_TYPE.SORT_TYPE_NEWER_TO_OLD;
-import static org.zaregoto.apl.lasttimecounter.model.ListableUnit.SORT_TYPE.SORT_TYPE_OLDER_TO_NEW;
+import static org.zaregoto.apl.lasttimecounter.ui.MainActivity.SORT_TYPE.SORT_TYPE_NEARLEST_ALARM;
+import static org.zaregoto.apl.lasttimecounter.ui.MainActivity.SORT_TYPE.SORT_TYPE_NEWER_TO_OLD;
+import static org.zaregoto.apl.lasttimecounter.ui.MainActivity.SORT_TYPE.SORT_TYPE_OLDER_TO_NEW;
 
 public class MainActivity
         extends AppCompatActivity
@@ -40,24 +40,40 @@ public class MainActivity
         RemoveItemAlertDialogFragment.AlertDialogListener,
         SelectTypeDialogFragment.SelectTypeDialogListener {
 
+    public static final String ARG_ID_SORT_TYPE = "SORT_TYPE";
+
+    public enum SORT_TYPE {
+        SORT_TYPE_NEWER_TO_OLD,
+        SORT_TYPE_OLDER_TO_NEW,
+        SORT_TYPE_NEARLEST_ALARM,
+    }
+
     private static final String TAG = "MainActivity";
     private InputItemDialogFragment inputItemDialog;
     private ArrayList<ListableUnit> items = new ArrayList<>();
     private ItemListAdapter adapter;
 
-    private ListableUnit.SORT_TYPE sortType = SORT_TYPE_NEWER_TO_OLD;
+    private SORT_TYPE sortType = SORT_TYPE_NEWER_TO_OLD;
     private ItemType selectedType;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        Intent intent = getIntent();
+        if (null != intent) {
+            sortType = (SORT_TYPE) intent.getSerializableExtra(ARG_ID_SORT_TYPE);
+            if (null == sortType) {
+                sortType = SORT_TYPE_NEWER_TO_OLD;
+            }
+        }
+
         setContentView(R.layout.activity_main);
 
         startService(new Intent(this, NotificationService.class));
 
-
-        ItemStore.loadInitialData(this, items);
+        //ItemStore.loadInitialData(this, items);
+        ItemStore.loadData(MainActivity.this, items, sortType);
         ListView lv = findViewById(R.id.mainlist);
         if (null != lv) {
             adapter = new ItemListAdapter(this, 0, items);
@@ -257,4 +273,6 @@ public class MainActivity
         ItemStore.loadData(MainActivity.this, items, sortType, selectedType);
         adapter.notifyDataSetChanged();
     }
+
+
 }

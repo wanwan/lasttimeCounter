@@ -72,17 +72,17 @@ public class ItemStore {
 
 
     public static boolean loadInitialData(Context context, ArrayList<ListableUnit> items) {
-        return loadData(context, items, ListableUnit.SORT_TYPE.SORT_TYPE_NEWER_TO_OLD);
+        return loadData(context, items, MainActivity.SORT_TYPE.SORT_TYPE_NEWER_TO_OLD);
     }
 
 
-    public static boolean loadData(Context context, ArrayList<ListableUnit> items, ListableUnit.SORT_TYPE orderType) {
+    public static boolean loadData(Context context, ArrayList<ListableUnit> items, MainActivity.SORT_TYPE orderType) {
         return loadData(context, items, orderType, null);
     }
 
 
 
-    public static boolean loadData(Context context, ArrayList<ListableUnit> items, ListableUnit.SORT_TYPE orderType, ItemType itemType) {
+    public static boolean loadData(Context context, ArrayList<ListableUnit> items, MainActivity.SORT_TYPE orderType, ItemType itemType) {
 
         ItemDBHelper dbhelper = null;
         SQLiteDatabase db = null;
@@ -97,10 +97,10 @@ public class ItemStore {
             if (null != itemType) {
                 String[] args = new String[]{String.valueOf(itemType.getTypeId())};
 
-                if (ListableUnit.SORT_TYPE.SORT_TYPE_NEWER_TO_OLD == orderType) {
+                if (MainActivity.SORT_TYPE.SORT_TYPE_NEWER_TO_OLD == orderType) {
                     cursor = db.rawQuery(QUERY_TABLE_NEW_TO_OLD_TYPEID, args);
                     items.add(new ItemHeader("current"));
-                } else if (ListableUnit.SORT_TYPE.SORT_TYPE_OLDER_TO_NEW == orderType) {
+                } else if (MainActivity.SORT_TYPE.SORT_TYPE_OLDER_TO_NEW == orderType) {
                     cursor = db.rawQuery(QUERY_TABLE_OLD_TO_NEW_TYPEID, args);
                     items.add(new ItemHeader("oldest"));
                 } else {
@@ -108,10 +108,10 @@ public class ItemStore {
                     items.add(new ItemHeader("alarm limit"));
                 }
             } else {
-                if (ListableUnit.SORT_TYPE.SORT_TYPE_NEWER_TO_OLD == orderType) {
+                if (MainActivity.SORT_TYPE.SORT_TYPE_NEWER_TO_OLD == orderType) {
                     cursor = db.rawQuery(QUERY_TABLE_NEW_TO_OLD, null);
                     items.add(new ItemHeader("current"));
-                } else if (ListableUnit.SORT_TYPE.SORT_TYPE_OLDER_TO_NEW == orderType) {
+                } else if (MainActivity.SORT_TYPE.SORT_TYPE_OLDER_TO_NEW == orderType) {
                     cursor = db.rawQuery(QUERY_TABLE_OLD_TO_NEW, null);
                     items.add(new ItemHeader("oldest"));
                 } else {

@@ -62,6 +62,7 @@ public class MessageReceiver extends BroadcastReceiver {
 
         // Content Activity is a activity that is transferred from a list content.
         Intent resultIntent = new Intent(context, MainActivity.class);
+        resultIntent.putExtra(MainActivity.ARG_ID_SORT_TYPE, MainActivity.SORT_TYPE.SORT_TYPE_NEARLEST_ALARM);
         PendingIntent resultPendingIntent = PendingIntent.getActivity(context, 0, resultIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
         NotificationCompat.Builder builder = new NotificationCompat.Builder(context);
