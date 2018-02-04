@@ -39,6 +39,6 @@ public class NotificationService extends Service {
 
         PendingIntent pendingIntent
                 = PendingIntent.getBroadcast(context, -1, intent, PendingIntent.FLAG_UPDATE_CURRENT);
-        am.setInexactRepeating(AlarmManager.RTC, System.currentTimeMillis(), 5000, pendingIntent);
+        am.setInexactRepeating(AlarmManager.RTC, System.currentTimeMillis(), 10*60*1000, pendingIntent);
     }
 }

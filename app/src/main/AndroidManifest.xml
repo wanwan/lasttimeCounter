@@ -28,6 +28,10 @@
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>
+            <!-- may be this is not work for Android O only for debug... -->
+            <intent-filter>
+                <action android:name="org.zaregoto.apl.lasttimecounter.ALARM_TRIGGER" />
+            </intent-filter>
         </receiver>
 
     </application>
