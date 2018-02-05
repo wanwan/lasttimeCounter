@@ -10,20 +10,7 @@
                 android:id="@+id/filter"
                 android:icon="@drawable/ic_menu_gallery"
                 android:title="Filter"/>
-        <item
-                android:id="@+id/config"
-                android:icon="@drawable/ic_menu_manage"
-                android:title="Config"/>
 
-        <item
-                android:id="@+id/backup"
-                android:icon="@drawable/ic_menu_manage"
-                android:title="@string/backup"/>
-
-        <item
-                android:id="@+id/restore"
-                android:icon="@drawable/ic_menu_manage"
-                android:title="@string/restore"/>
 
     </group>
 

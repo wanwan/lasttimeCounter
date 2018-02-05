@@ -129,32 +129,7 @@ public class MainActivity
                         typeSelectDialog.show(getFragmentManager(), "");
 
                         break;
-                    case R.id.config:
-                        break;
-                    case R.id.backup:
-                        ProgressDialogFragment progressDialog = new ProgressDialogFragment();
-                        progressDialog.show(getFragmentManager(), "");
 
-                        String filename;
-                        filename = "lasttimecounter-";
-                        SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmss");
-                        Date now = new Date();
-                        String datestr = sdf.format(now);
-                        filename = filename + datestr;
-
-                        File destDir = new File("/mnt/sdcard");
-
-                        try {
-                            ItemStore.makeBackup(MainActivity.this, destDir, filename);
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        } finally {
-                            progressDialog.dismiss();
-                        }
-
-                        break;
-                    case R.id.restore:
-                        break;
                     default:
                         break;
                 }
