@@ -9,6 +9,12 @@
     <string name="restore">Restore</string>
     <string name="fragment_progress_dialog_name"/>
     <string name="fragment_progress_dialog_cancel"/>
+    <string name="history_label">Histories</string>
+    <string name="history_detail_label">Show Histories</string>
+    <string name="delete_label">Delete</string>
+    <string name="delete_detail_label">Delete item</string>
+    <string name="redo_item_label">Redo</string>
+    <string name="redo_item_detail_label">Redo item</string>
 
     <string-array name="planets_array">
         <item>None</item>

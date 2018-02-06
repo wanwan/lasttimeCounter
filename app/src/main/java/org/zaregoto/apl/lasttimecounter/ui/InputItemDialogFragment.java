@@ -5,6 +5,7 @@ import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.util.Log;
@@ -22,24 +23,32 @@ import java.util.Date;
 
 public class InputItemDialogFragment extends DialogFragment implements SelectTypeDialogFragment.SelectTypeDialogListener, InputAlarmDialogFragment.InputAlarmDialogListener {
 
-    public static final String ARGS_ITEM_ID = "item";
+    public enum INPUT_ITEM_DIALOG_MODE {
+        ADD_MODE,
+        EDIT_MODE,
+        REDO_MODE
+    }
 
+    private static final String ARGS_ITEM_ID = "item";
+    private static final String ARGS_MODE_ID = "mode";
     private InputDialogListener mInputDialogListener;
     private Date selectedDay;
 
     private final String TAG = "InputItemDialogFragment";
     private View dialogView = null;
 
-    Item item = null;
-    ItemType type;
+    private Item item = null;
+    private ItemType type;
 
+    private INPUT_ITEM_DIALOG_MODE mode;
 
-    public static InputItemDialogFragment newInstance(Item item) {
+    public static InputItemDialogFragment newInstance(Item item, INPUT_ITEM_DIALOG_MODE _mode) {
 
         InputItemDialogFragment instance = new InputItemDialogFragment();
 
         Bundle args = new Bundle();
         args.putParcelable(ARGS_ITEM_ID, item);
+        args.putSerializable(ARGS_MODE_ID, _mode);
         instance.setArguments(args);
 
         return instance;
@@ -51,6 +60,7 @@ public class InputItemDialogFragment extends DialogFragment implements SelectTyp
 
         if (null != getArguments()) {
             item = getArguments().getParcelable(ARGS_ITEM_ID);
+            mode = (INPUT_ITEM_DIALOG_MODE) getArguments().getSerializable(ARGS_MODE_ID);
         }
         if (null != item) {
             type = item.getType();
@@ -68,7 +78,7 @@ public class InputItemDialogFragment extends DialogFragment implements SelectTyp
 
         //final View content;
         LayoutInflater inflater = (LayoutInflater)getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        if (isNewItem(item)) {
+        if (isEdit()) {
             dialogView = inflater.inflate(R.layout.fragment_insert_item_dialog, null);
         }
         else {
@@ -180,13 +190,11 @@ public class InputItemDialogFragment extends DialogFragment implements SelectTyp
         }
 
 
-        if (isNewItem(item)) {
+        if (isEdit()) {
             builder.setMessage(R.string.fragment_item_input_dialog_name);
-
-            Button btn = dialogView.findViewById(R.id.insertBtn);
-            btn.setOnClickListener(new View.OnClickListener() {
+            builder.setPositiveButton("aaa", new DialogInterface.OnClickListener() {
                 @Override
-                public void onClick(View view) {
+                public void onClick(DialogInterface dialogInterface, int i) {
                     Item _item = item;
 
                     EditText _name = dialogView.findViewById(R.id.name);
@@ -199,38 +207,14 @@ public class InputItemDialogFragment extends DialogFragment implements SelectTyp
                     _item.setLastTime(selectedDay);
 
                     mInputDialogListener.addItem(_item);
-                    dismiss();
                 }
             });
         }
         else {
             builder.setMessage(R.string.fragment_item_input_dialog_name);
-
-            Button btn = dialogView.findViewById(R.id.updateBtn);
-            btn.setOnClickListener(new View.OnClickListener() {
+            builder.setPositiveButton("bbb", new DialogInterface.OnClickListener() {
                 @Override
-                public void onClick(View view) {
-                    Item _item = item;
-
-                    EditText _name = dialogView.findViewById(R.id.name);
-                    EditText _detail = dialogView.findViewById(R.id.detail);
-                    String name = (_name != null) ? _name.getText().toString() : "";
-                    String detail = (_detail != null) ? _detail.getText().toString() : "";
-
-                    _item.setName(name);
-                    _item.setDetail(detail);
-                    _item.setLastTime(selectedDay);
-
-                    mInputDialogListener.updateItem(_item);
-                    dismiss();
-                }
-            });
-
-            btn = dialogView.findViewById(R.id.redoBtn);
-            btn.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-
+                public void onClick(DialogInterface dialogInterface, int i) {
                     Item _item = item;
                     EditText _detail = dialogView.findViewById(R.id.detail);
                     String detail = (_detail != null) ? _detail.getText().toString() : "";
@@ -238,7 +222,6 @@ public class InputItemDialogFragment extends DialogFragment implements SelectTyp
                     _item.setLastTime(selectedDay);
                     _item.setDetail(detail);
                     mInputDialogListener.redoItem(_item);
-                    dismiss();
                 }
             });
 
@@ -270,6 +253,13 @@ public class InputItemDialogFragment extends DialogFragment implements SelectTyp
 //        });
 
         return builder.create();
+    }
+
+    private boolean isEdit() {
+        if (mode == INPUT_ITEM_DIALOG_MODE.EDIT_MODE) {
+            return true;
+        }
+        return false;
     }
 
 

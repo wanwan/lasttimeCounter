@@ -96,7 +96,7 @@ public class MainActivity
                     Alarm alarm = new Alarm(Alarm.ALARM_TYPE.ALARM_TYPE_NONE, 0);
                     Item item = new Item(name, detail, type, now, now, alarm);
 
-                    inputItemDialog = InputItemDialogFragment.newInstance(item);
+                    inputItemDialog = InputItemDialogFragment.newInstance(item, InputItemDialogFragment.INPUT_ITEM_DIALOG_MODE.EDIT_MODE);
                     inputItemDialog.show(getFragmentManager(), "");
                 }
             });
@@ -192,7 +192,7 @@ public class MainActivity
         ListableUnit item = adapter.getItem(pos);
 
         if (item instanceof Item) {
-            inputItemDialog = InputItemDialogFragment.newInstance((Item) item);
+            inputItemDialog = InputItemDialogFragment.newInstance((Item) item, InputItemDialogFragment.INPUT_ITEM_DIALOG_MODE.EDIT_MODE);
             inputItemDialog.show(getFragmentManager(), "");
         }
     }

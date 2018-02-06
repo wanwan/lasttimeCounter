@@ -5,6 +5,7 @@ import android.app.FragmentManager;
 import android.content.Context;
 import org.zaregoto.apl.lasttimecounter.model.Item;
 import org.zaregoto.apl.lasttimecounter.model.ListableUnit;
+import org.zaregoto.apl.lasttimecounter.ui.InputItemDialogFragment;
 import org.zaregoto.apl.lasttimecounter.ui.ItemHistoryDialogFragment;
 import org.zaregoto.apl.lasttimecounter.ui.RemoveItemAlertDialogFragment;
 
@@ -48,7 +49,26 @@ public abstract class ItemAction {
         ItemAction action;
         ArrayList<ItemAction> actions = new ArrayList();
 
-        // TODO: 文字列を resources に移動させる
+        action = new ItemAction() {
+            @Override
+            public boolean process(Context context, ListableUnit item) {
+
+                if (item instanceof Item) {
+                    InputItemDialogFragment inputItemDialog = InputItemDialogFragment.newInstance((Item) item, InputItemDialogFragment.INPUT_ITEM_DIALOG_MODE.REDO_MODE);
+                    Activity activity = (Activity) context;
+                    FragmentManager fm = activity.getFragmentManager();
+
+                    inputItemDialog.show(fm, "");
+                }
+
+                return true;
+            }
+        };
+        action.name = context.getString(R.string.redo_item_label);
+        action.detail = context.getString(R.string.redo_item_detail_label);
+        actions.add(action);
+
+
         action = new ItemAction() {
             @Override
             public boolean process(Context context, ListableUnit item) {
@@ -64,8 +84,10 @@ public abstract class ItemAction {
                 return true;
             }
         };
-        action.name = "履歴";
-        action.detail = "実行履歴表示";
+        //action.name = "履歴";
+        //action.detail = "実行履歴表示";
+        action.name = context.getString(R.string.history_label);
+        action.detail = context.getString(R.string.history_detail_label);
         actions.add(action);
 
         action = new ItemAction() {
@@ -81,8 +103,10 @@ public abstract class ItemAction {
                 return true;
             }
         };
-        action.name = "削除";
-        action.detail = "データを削除します";
+        //action.name = "削除";
+        //action.detail = "データを削除します";
+        action.name = context.getString(R.string.delete_label);
+        action.detail = context.getString(R.string.delete_detail_label);
         actions.add(action);
 
         return actions;

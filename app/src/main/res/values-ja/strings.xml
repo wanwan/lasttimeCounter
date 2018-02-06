@@ -9,6 +9,12 @@
     <string name="restore">Restore</string>
     <string name="fragment_progress_dialog_name"/>
     <string name="fragment_progress_dialog_cancel"/>
+    <string name="history_label">履歴</string>
+    <string name="history_detail_label">実行履歴表示</string>
+    <string name="delete_label">削除</string>
+    <string name="delete_detail_label">データを削除する</string>
+    <string name="redo_item_label">再実行</string>
+    <string name="redo_item_detail_label">アイテムを再度実行する</string>
 
     <string-array name="alarm_type_array">
         <item>なし</item>
