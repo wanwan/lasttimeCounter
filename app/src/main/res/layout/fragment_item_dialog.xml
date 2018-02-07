@@ -14,7 +14,7 @@
             android:layout_marginTop="7dip"
             android:layout_marginBottom="7dip"
             android:layout_marginStart="5dip"
-            android:text="Name"
+            android:text="@string/dialog_label_item_name"
             android:id="@+id/nameLbl"
             android:layout_toRightOf="@+id/icons"/>
     <EditText
@@ -35,7 +35,7 @@
             android:layout_marginTop="7dip"
             android:layout_marginBottom="7dip"
             android:layout_marginStart="5dip"
-            android:text="Detail"
+            android:text="@string/dialog_label_item_detail"
             android:id="@+id/detailLbl"
             android:layout_below="@+id/nameLbl"
             android:layout_toRightOf="@+id/icons"/>
@@ -55,7 +55,7 @@
 
 
     <TextView
-            android:text="Date"
+            android:text="@string/dialog_label_item_date"
             android:id="@+id/dateLbl"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -81,7 +81,7 @@
 
 
     <TextView
-            android:text="Alarm"
+            android:text="@string/dialog_label_item_alarm"
             android:id="@+id/alarmLbl"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

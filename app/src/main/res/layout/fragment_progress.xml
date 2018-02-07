@@ -7,7 +7,7 @@
     <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Name"
+            android:text="@string/dialog_label_item_name"
             android:ems="10"
             android:id="@+id/textView"/>
     <ProgressBar

@@ -18,6 +18,10 @@
     <string name="dialog_confirm_btn_create">追加</string>
     <string name="dialog_confirm_btn_redo">再実行</string>
     <string name="dialog_confirm_btn_update">変更</string>
+    <string name="dialog_label_duration">期間</string>
+    <string name="dialog_label_item_name">Name</string>
+    <string name="dialog_label_item_detail">Detail</string>
+    <string name="dialog_label_item_date">Date</string>
 
     <string-array name="alarm_type_array">
         <item>なし</item>

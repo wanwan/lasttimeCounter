@@ -31,5 +31,10 @@
         <item>Set Day By Calendar</item>
     </string-array>
     <string name="dialog_confirm_btn_create">Create</string>
+    <string name="dialog_label_duration">Duration</string>
+    <string name="dialog_label_item_name">Name</string>
+    <string name="dialog_label_item_detail">Detail</string>
+    <string name="dialog_label_item_alarm">Alarm</string>
+    <string name="dialog_label_item_date">Date</string>
 
 </resources>

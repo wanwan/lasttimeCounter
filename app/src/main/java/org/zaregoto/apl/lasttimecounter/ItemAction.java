@@ -84,8 +84,6 @@ public abstract class ItemAction {
                 return true;
             }
         };
-        //action.name = "履歴";
-        //action.detail = "実行履歴表示";
         action.name = context.getString(R.string.history_label);
         action.detail = context.getString(R.string.history_detail_label);
         actions.add(action);
@@ -103,8 +101,6 @@ public abstract class ItemAction {
                 return true;
             }
         };
-        //action.name = "削除";
-        //action.detail = "データを削除します";
         action.name = context.getString(R.string.delete_label);
         action.detail = context.getString(R.string.delete_detail_label);
         actions.add(action);

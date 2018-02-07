@@ -140,6 +140,7 @@ public class InputItemDialogFragment extends DialogFragment implements SelectTyp
             dateText.setText(str);
             dateText.setFocusable(false);
 
+            // TODO: deprecated な method に頼るのは愉快でないのだがなにか良い方法ないか?
             dateText.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
