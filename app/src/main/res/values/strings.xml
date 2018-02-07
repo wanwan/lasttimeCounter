@@ -15,6 +15,8 @@
     <string name="delete_detail_label">Delete item</string>
     <string name="redo_item_label">Redo</string>
     <string name="redo_item_detail_label">Redo item</string>
+    <string name="dialog_confirm_btn_redo">Redo</string>
+    <string name="dialog_confirm_btn_update">Update</string>
 
     <string-array name="planets_array">
         <item>None</item>
@@ -28,5 +30,6 @@
         <item>1 Year</item>
         <item>Set Day By Calendar</item>
     </string-array>
+    <string name="dialog_confirm_btn_create">Create</string>
 
 </resources>

@@ -78,12 +78,7 @@ public class InputItemDialogFragment extends DialogFragment implements SelectTyp
 
         //final View content;
         LayoutInflater inflater = (LayoutInflater)getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        if (isEdit()) {
-            dialogView = inflater.inflate(R.layout.fragment_insert_item_dialog, null);
-        }
-        else {
-            dialogView = inflater.inflate(R.layout.fragment_update_item_dialog, null);
-        }
+        dialogView = inflater.inflate(R.layout.fragment_item_dialog, null);
 
         builder.setView(dialogView);
         if (null != item) {
@@ -106,7 +101,7 @@ public class InputItemDialogFragment extends DialogFragment implements SelectTyp
                 }
             }
             else {
-
+                // TODO: do nothing?
             }
 
             typeIcon.setOnClickListener(new View.OnClickListener() {
@@ -192,7 +187,27 @@ public class InputItemDialogFragment extends DialogFragment implements SelectTyp
 
         if (isEdit()) {
             builder.setMessage(R.string.fragment_item_input_dialog_name);
-            builder.setPositiveButton("aaa", new DialogInterface.OnClickListener() {
+            builder.setPositiveButton(R.string.dialog_confirm_btn_update, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+                    Item _item = item;
+
+                    EditText _name = dialogView.findViewById(R.id.name);
+                    EditText _detail = dialogView.findViewById(R.id.detail);
+                    String name = (_name != null) ? _name.getText().toString() : "";
+                    String detail = (_detail != null) ? _detail.getText().toString() : "";
+
+                    _item.setName(name);
+                    _item.setDetail(detail);
+                    _item.setLastTime(selectedDay);
+
+                    mInputDialogListener.updateItem(_item);
+                }
+            });
+        }
+        else if (isNew()) {
+            builder.setMessage(R.string.fragment_item_input_dialog_name);
+            builder.setPositiveButton(R.string.dialog_confirm_btn_create, new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialogInterface, int i) {
                     Item _item = item;
@@ -212,7 +227,7 @@ public class InputItemDialogFragment extends DialogFragment implements SelectTyp
         }
         else {
             builder.setMessage(R.string.fragment_item_input_dialog_name);
-            builder.setPositiveButton("bbb", new DialogInterface.OnClickListener() {
+            builder.setPositiveButton(R.string.dialog_confirm_btn_redo, new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialogInterface, int i) {
                     Item _item = item;
@@ -253,13 +268,6 @@ public class InputItemDialogFragment extends DialogFragment implements SelectTyp
 //        });
 
         return builder.create();
-    }
-
-    private boolean isEdit() {
-        if (mode == INPUT_ITEM_DIALOG_MODE.EDIT_MODE) {
-            return true;
-        }
-        return false;
     }
 
 
@@ -344,6 +352,24 @@ public class InputItemDialogFragment extends DialogFragment implements SelectTyp
             return false;
         }
     }
+
+
+    private boolean isEdit() {
+        if (mode == INPUT_ITEM_DIALOG_MODE.EDIT_MODE) {
+            return true;
+        }
+        return false;
+    }
+
+    private boolean isNew() {
+        if (mode == INPUT_ITEM_DIALOG_MODE.ADD_MODE) {
+            return true;
+        }
+        return false;
+    }
+
+
+
 
     public interface InputDialogListener {
         void addItem(Item item);

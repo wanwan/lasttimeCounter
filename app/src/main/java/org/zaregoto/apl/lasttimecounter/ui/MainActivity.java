@@ -96,7 +96,7 @@ public class MainActivity
                     Alarm alarm = new Alarm(Alarm.ALARM_TYPE.ALARM_TYPE_NONE, 0);
                     Item item = new Item(name, detail, type, now, now, alarm);
 
-                    inputItemDialog = InputItemDialogFragment.newInstance(item, InputItemDialogFragment.INPUT_ITEM_DIALOG_MODE.EDIT_MODE);
+                    inputItemDialog = InputItemDialogFragment.newInstance(item, InputItemDialogFragment.INPUT_ITEM_DIALOG_MODE.ADD_MODE);
                     inputItemDialog.show(getFragmentManager(), "");
                 }
             });

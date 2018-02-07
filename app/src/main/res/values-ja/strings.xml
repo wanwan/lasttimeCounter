@@ -15,6 +15,9 @@
     <string name="delete_detail_label">データを削除する</string>
     <string name="redo_item_label">再実行</string>
     <string name="redo_item_detail_label">アイテムを再度実行する</string>
+    <string name="dialog_confirm_btn_create">追加</string>
+    <string name="dialog_confirm_btn_redo">再実行</string>
+    <string name="dialog_confirm_btn_update">変更</string>
 
     <string-array name="alarm_type_array">
         <item>なし</item>
