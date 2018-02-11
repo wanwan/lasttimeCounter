@@ -18,7 +18,7 @@
     <string name="dialog_confirm_btn_redo">Redo</string>
     <string name="dialog_confirm_btn_update">Update</string>
 
-    <string-array name="planets_array">
+    <string-array name="alarm_type_array">
         <item>None</item>
         <item>Tomorrow</item>
         <item>1 Week</item>
