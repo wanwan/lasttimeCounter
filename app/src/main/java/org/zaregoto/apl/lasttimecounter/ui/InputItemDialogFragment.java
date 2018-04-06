@@ -334,14 +334,25 @@ public class InputItemDialogFragment extends DialogFragment implements SelectTyp
         }
     }
 
+    public void updateAlarm(Item item) {
+
+        String str;
+
+        if (null != dialogView) {
+            EditText alarmText = dialogView.findViewById(R.id.alarm);
+            Alarm alarm = item.getAlarm();
+            str = alarm.getAlarmLabel(getActivity());
+            alarmText.setText(str);
+        }
+
+    }
+
     @Override
     public void setAlarm(Alarm alarm) {
         item.setAlarm(alarm);
-        try {
-            update(item);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+
+        updateAlarm(item);
+
     }
 
 
