@@ -350,9 +350,7 @@ public class InputItemDialogFragment extends DialogFragment implements SelectTyp
     @Override
     public void setAlarm(Alarm alarm) {
         item.setAlarm(alarm);
-
         updateAlarm(item);
-
     }
 
 

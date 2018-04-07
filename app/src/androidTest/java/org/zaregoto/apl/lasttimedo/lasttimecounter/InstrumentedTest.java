@@ -1,4 +1,4 @@
-package lasttimedo.apl.zaregoto.org.lasttimecounter;
+package org.zaregoto.apl.lasttimedo.lasttimecounter;
 
 import android.content.Context;
 import android.support.test.InstrumentationRegistry;
@@ -15,12 +15,12 @@ import static org.junit.Assert.*;
  * @see <a href="http://d.android.com/tools/testing">Testing documentation</a>
  */
 @RunWith(AndroidJUnit4.class)
-public class ExampleInstrumentedTest {
+public class InstrumentedTest {
     @Test
     public void useAppContext() throws Exception {
         // Context of the app under test.
         Context appContext = InstrumentationRegistry.getTargetContext();
 
-        assertEquals("lasttimedo.apl.zaregoto.org.myapplication", appContext.getPackageName());
+        assertEquals("org.zaregoto.apl.lasttimecounter", appContext.getPackageName());
     }
 }

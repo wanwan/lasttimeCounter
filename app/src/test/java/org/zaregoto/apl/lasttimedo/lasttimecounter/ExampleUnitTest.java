@@ -1,4 +1,4 @@
-package lasttimedo.apl.zaregoto.org.lasttimecounter;
+package org.zaregoto.apl.lasttimedo.lasttimecounter;
 
 import org.junit.Test;
 
